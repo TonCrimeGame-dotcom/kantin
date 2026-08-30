@@ -1,0 +1,19 @@
+.match-screen{min-height:calc(100vh - 72px);padding:18px;display:grid;grid-template-rows:auto 1fr}.match-panel{width:min(520px,100%);margin:auto;padding:clamp(28px,6vw,58px);text-align:center;border:1px solid var(--line);border-radius:26px;background:radial-gradient(circle at 50% 0,#75451c66,transparent 48%),#1b120e;box-shadow:0 25px 70px #0009}.match-icon{display:block;font-size:64px}.match-panel h1{font:900 clamp(30px,6vw,52px) Georgia;margin:8px}.match-panel p{color:var(--muted)}.match-panel .btn{margin:6px}.btn.big{display:block;width:100%;font-size:18px;padding:15px;margin:24px 0 8px}.server-note{display:block;color:#8f8072;margin-top:18px}.radar{width:150px;height:150px;margin:25px auto;border:1px solid #e2b45455;border-radius:50%;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle,#e2b45425 0 5%,transparent 6%)}.radar:before,.radar:after{content:'';position:absolute;background:#e2b45433}.radar:before{width:100%;height:1px}.radar:after{width:1px;height:100%}.radar i{position:absolute;width:50%;height:50%;left:50%;top:0;transform-origin:0 100%;background:linear-gradient(135deg,#e2b45466,transparent);animation:scan 1.6s linear infinite}.radar b{font-size:28px;z-index:1}@keyframes scan{to{transform:rotate(360deg)}}
+
+/* Match selection is also a fixed, single-screen mobile landscape view. */
+@media (orientation:landscape) and (max-height:600px){
+body:has(.match-screen){height:100dvh;min-height:100dvh;overflow:hidden}
+body:has(.match-screen) .topbar{display:none}
+.match-screen{position:relative;width:100%;height:100vh;height:100dvh;min-height:0;padding:6px;display:grid;place-items:center;overflow:hidden}
+.match-screen>button[data-action="home"]{position:absolute;z-index:2;top:max(6px,env(safe-area-inset-top));left:max(6px,env(safe-area-inset-left));padding:7px 10px;font-size:11px;background:#160e0bd9}
+.match-panel{width:min(520px,calc(100% - 24px));max-height:calc(100dvh - 12px);margin:0;padding:10px 22px;border-radius:18px;overflow:hidden}
+.match-icon img{width:min(112px,22vh);height:min(63px,12.5vh);border-radius:9px}
+.match-panel>small{font-size:10px}
+.match-panel h1{font-size:clamp(25px,8vh,40px);line-height:.95;margin:3px 0}
+.match-panel p{margin:5px 0;font-size:12px}
+.match-panel .btn{margin:3px;padding:8px 12px;font-size:12px}
+.match-panel .btn.big{width:min(300px,100%);margin:7px auto 3px;padding:10px;font-size:14px}
+.match-panel .server-note{margin-top:5px;font-size:9px;line-height:1.1}
+.match-panel .radar{width:min(104px,25vh);height:min(104px,25vh);margin:5px auto}
+.match-panel .radar+h2{margin:4px 0;font-size:16px}
+}

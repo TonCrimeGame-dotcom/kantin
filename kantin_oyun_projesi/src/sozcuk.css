@@ -1,0 +1,44 @@
+.word-screen{height:calc(100dvh - 72px);padding:8px;overflow:hidden;background:radial-gradient(circle at 50% 25%,#31523d,#101b15 70%);color:#f8efd9}.word-layout{height:100%;max-width:1280px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,25%);gap:10px}.word-board-wrap{min-width:0;display:grid;place-items:center}.word-board{height:min(100%,calc(100vw - 300px));aspect-ratio:1;display:grid;grid-template-columns:repeat(15,1fr);gap:2px;padding:7px;border:7px solid #82542c;border-radius:12px;background:#26170e;box-shadow:0 16px 35px #0009,inset 0 0 0 2px #d3a75a}.word-cell{position:relative;min-width:0;padding:0;display:grid;place-items:center;border:0;border-radius:3px;background:#d8c793;color:#5f5137;font:900 clamp(6px,.57vw,9px)/1 system-ui}.word-cell.b-L2{background:#8fb8bd}.word-cell.b-L3{background:#4e8793;color:#fff}.word-cell.b-W2{background:#d59b88}.word-cell.b-W3{background:#9d4b43;color:#fff}.word-cell.center::after{content:'★';font-size:clamp(10px,1.2vw,18px)}.word-cell .word-tile{position:absolute;inset:1px}.word-tile{display:grid;place-items:center;border:1px solid #73502e;border-radius:5px;background:linear-gradient(145deg,#f7e5b7,#d4b678);color:#2b2117;box-shadow:0 2px 3px #0007;font:900 clamp(16px,2vw,28px) Georgia,serif}.word-tile small{position:absolute;right:3px;bottom:2px;font:800 clamp(6px,.65vw,10px) system-ui}.word-tile.pending{outline:2px solid #ffd65c;transform:translateY(-1px)}.word-side{min-height:0;padding:10px;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:9px;border:1px solid #d8aa5547;border-radius:16px;background:#0c1510d9;box-shadow:0 15px 35px #0008}.word-score{display:grid;grid-template-columns:1fr 1fr;gap:7px}.word-score article{padding:8px;border:1px solid #ffffff17;border-radius:10px;background:#ffffff08}.word-score article.turn{border-color:#edc761;box-shadow:0 0 13px #edc76122}.word-score small,.word-score b{display:block}.word-score small{overflow:hidden;color:#b9aa98;text-overflow:ellipsis;white-space:nowrap}.word-score b{color:#f1cd73;font:900 24px Georgia,serif}.word-info{display:flex;justify-content:space-between;padding:7px 9px;border-radius:8px;background:#ffffff08;color:#d7cab3;font-size:11px}.word-history{min-height:0;overflow:auto}.word-history h3{margin:0 0 6px;color:#ddbd70;font-size:11px;letter-spacing:.1em}.word-history p{margin:0;padding:6px;border-bottom:1px solid #ffffff0d;font-size:10px}.word-rack-area{display:grid;gap:7px}.word-rack{min-height:58px;padding:6px;display:flex;justify-content:center;gap:5px;border:5px solid #6e4524;border-radius:8px;background:#3b2515;box-shadow:inset 0 4px #a27440}.word-rack .word-tile{position:relative;width:min(46px,12%);aspect-ratio:.8;padding:0}.word-rack .word-tile.selected{outline:3px solid #f6ce56;transform:translateY(-7px)}.word-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}.word-actions button{padding:8px 4px;border:1px solid #c99b48;border-radius:8px;background:linear-gradient(#315c45,#183426);color:#fff4d4;font-size:9px;font-weight:900}.word-actions button.primary{background:linear-gradient(#d5a93f,#9a5d19);color:#211307}.word-status{min-height:30px;padding:7px;border-radius:8px;background:#c69b3315;color:#f3d584;font-size:10px;text-align:center}.family-sozcuk .arcade-art{background:#183326}.arcade-games:has(.family-sozcuk){grid-template-columns:repeat(4,minmax(0,1fr))}.arcade-games:has(.family-sozcuk) .arcade-label strong{font-size:clamp(22px,2.6vw,40px)}
+@media(orientation:landscape) and (max-height:600px){body:has(.word-screen) .topbar{display:none}.word-screen{height:100dvh}.word-layout{grid-template-columns:minmax(0,1fr) 230px}.word-board{height:100%;max-height:100%;}.word-side{padding:6px;gap:5px}.word-rack{min-height:47px}.word-history p{padding:3px}.word-status{min-height:24px;padding:4px}.word-actions button{padding:6px 3px}}
+.lobby-heading-actions>span{font-size:0}.lobby-heading-actions>span::after{content:'4 OYUN · 7 MOD';font-size:11px}
+@media(max-width:760px) and (orientation:portrait){.word-screen{height:auto;min-height:calc(100dvh - 72px);overflow:auto}.word-layout{grid-template-columns:1fr}.word-board{width:100%;height:auto}.word-side{min-height:360px}}
+
+/* Sözcük masası yatay mobilde gerçek ekran yüksekliğine bütünüyle oturur. */
+@media (orientation:landscape){
+  body:has(.word-screen) .topbar{display:none}
+  html:has(.word-screen),body:has(.word-screen),body:has(.word-screen) #app{height:100dvh;min-height:0;overflow:hidden}
+  body:has(.word-screen) #screen{height:100dvh;min-height:0;overflow:hidden}
+  .word-screen{width:100%;height:100dvh;box-sizing:border-box;padding:5px;overflow:hidden}
+  .word-layout{height:100%;min-height:0}
+  .word-board-wrap{height:100%;min-height:0;overflow:hidden}
+  .word-board{width:auto;height:min(calc(100dvh - 10px),calc(100vw - 300px));box-sizing:border-box}
+  .word-side{height:100%;box-sizing:border-box;overflow:hidden}
+  .word-rack-area{min-height:0}
+  .word-actions{grid-template-columns:repeat(4,1fr)}
+}
+.word-tile.dragging{opacity:.45;transform:scale(.92)}
+.word-cell.drag-over{outline:3px solid #ffe06a;filter:brightness(1.18)}
+.word-screen .word-tile{border:0;background-color:transparent;background-image:url('../assets/games/sozcuk/wood-letter-tile-v1.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;color:#24170d;text-shadow:0 1px #fff8;box-shadow:0 3px 4px #0008;font-family:Georgia,serif;font-weight:900}
+.word-screen .word-tile>span{transform:translateY(-1%)}
+.word-screen .word-tile small{right:12%;bottom:10%;color:#2b1b0e;text-shadow:0 1px #fff9}
+.word-screen .word-board{border:0;padding:9.4%;gap:2px;background-color:transparent;background-image:url('../assets/games/sozcuk/realistic-board-base-v1.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:0 14px 32px #000b}
+
+/* Dört kenarlı fiziksel kelime masası düzeni */
+@media (orientation:landscape){
+  .word-screen{position:relative;background:radial-gradient(circle at 50% 48%,#126f79 0,#083b43 48%,#061f25 100%)}
+  .word-layout{position:relative;grid-template-columns:minmax(0,1fr) 258px;gap:8px}
+  .word-table-stage{position:relative;height:100%;display:grid;grid-template-rows:42px minmax(0,1fr) 58px;place-items:center;padding:0 55px;overflow:visible}
+  .word-board{grid-row:2;width:auto;height:min(calc(100dvh - 108px),calc(100vw - 390px));border-radius:3px;transform:perspective(1000px) rotateX(1.2deg)}
+  .word-cell{border:1px solid #d9ffff80;border-radius:1px;background:#159aaa;color:#eaffff}
+  .word-cell.b-L2{background:#74c8a7;color:#143b35}.word-cell.b-L3{background:#243c73;color:#fff}.word-cell.b-W2{background:#efc33e;color:#513b08}.word-cell.b-W3{background:#dc405a;color:#fff}
+  .word-cell .word-tile{inset:1px}
+  .word-tile{border-radius:4px;color:#24170d;box-shadow:0 2px 3px #0008}
+  .word-opponent-rack,.word-rack{height:42px;padding:4px 10px;display:flex;align-items:center;justify-content:center;gap:3px;border:5px solid #087786;border-radius:3px;background:#07464f;box-shadow:0 7px 12px #0007,inset 0 3px #43b8c2}
+  .word-opponent-rack{grid-row:1;width:250px}.word-opponent-rack i{width:27px;height:31px;border:0;background:transparent url('../assets/games/sozcuk/wood-letter-tile-v1.png') center/100% 100% no-repeat;box-shadow:0 2px 2px #0006}
+  .word-table-stage>.word-rack{grid-row:3;width:330px;min-height:0;border-width:5px}.word-table-stage>.word-rack .word-tile{width:38px;height:42px;aspect-ratio:auto}
+  .word-rack-area>.word-status{position:absolute;left:8px;right:8px;bottom:58px}.word-rack-area>.word-actions{position:absolute;left:8px;right:8px;bottom:8px}
+  .word-side{position:relative;padding:8px;grid-template-rows:auto auto minmax(0,1fr) 104px;background:#071518e8;border-color:#4bc2ca55}
+  .word-side-rack{position:absolute;z-index:2;top:50%;width:32px;height:170px;border:6px solid #087786;border-radius:10px;background:#e7eeee;box-shadow:0 8px 16px #0008,inset 0 0 0 4px #63c6cd;transform:translateY(-50%)}
+  .word-side-rack.left{left:8px}.word-side-rack.right{right:8px}
+  .word-bag-asset{position:absolute;z-index:4;top:0;right:218px;width:132px;height:96px;object-fit:contain;filter:drop-shadow(0 8px 9px #0009);pointer-events:none}
+}

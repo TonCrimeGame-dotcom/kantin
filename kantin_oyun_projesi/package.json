@@ -1,0 +1,12 @@
+{
+  "name": "kantin-oyunlari",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node tests/engine.test.js && node tests/matchmaker.test.js && node tests/user-registry.test.js && node tests/game-room.test.js"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}

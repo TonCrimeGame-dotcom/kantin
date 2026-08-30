@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 840" role="img" aria-labelledby="title desc">
+  <title id="title">KANTİN açık kutu tavla yüzeyi</title>
+  <desc id="desc">İki iç tablalı, 12 üst ve 12 alt üçgen haneli, ortası menteşeli ve iki yanında pul toplama hazneleri bulunan tavla kutusu.</desc>
+  <defs>
+    <linearGradient id="darkWood" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1b1513"/><stop offset=".24" stop-color="#4d3730"/><stop offset=".52" stop-color="#211816"/><stop offset=".78" stop-color="#68493c"/><stop offset="1" stop-color="#17110f"/>
+    </linearGradient>
+    <linearGradient id="maple" x1="0" y1="0" x2=".9" y2="1">
+      <stop stop-color="#f1dfc5"/><stop offset=".46" stop-color="#d8bfa1"/><stop offset="1" stop-color="#f5e7d2"/>
+    </linearGradient>
+    <linearGradient id="tray" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#c7ac8e"/><stop offset=".16" stop-color="#f0deca"/><stop offset=".82" stop-color="#e0c8ac"/><stop offset="1" stop-color="#9f8068"/>
+    </linearGradient>
+    <linearGradient id="charcoalPoint" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#211d1c"/><stop offset=".48" stop-color="#4c4340"/><stop offset="1" stop-color="#1b1716"/>
+    </linearGradient>
+    <linearGradient id="terracottaPoint" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#70402f"/><stop offset=".48" stop-color="#ad6d51"/><stop offset="1" stop-color="#603426"/>
+    </linearGradient>
+    <pattern id="fineGrain" width="140" height="46" patternUnits="userSpaceOnUse">
+      <path d="M-12 8C32 1 64 19 152 5M-12 25C45 18 84 39 152 21M-12 41C36 35 91 51 152 37" fill="none" stroke="#6d4937" stroke-opacity=".08" stroke-width="2"/>
+    </pattern>
+    <filter id="outerShadow" x="-10%" y="-12%" width="120%" height="130%"><feDropShadow dx="0" dy="17" stdDeviation="17" flood-color="#000" flood-opacity=".62"/></filter>
+    <filter id="innerShadow" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity=".5"/></filter>
+    <g id="topCharcoal"><path d="M0 0h68L34 300Z" fill="url(#charcoalPoint)"/><circle cx="34" cy="316" r="8" fill="#302a28"/></g>
+    <g id="topTerracotta"><path d="M0 0h68L34 300Z" fill="url(#terracottaPoint)"/><circle cx="34" cy="316" r="8" fill="#985f47"/></g>
+    <g id="bottomCharcoal"><path d="M0 320h68L34 20Z" fill="url(#charcoalPoint)"/><circle cx="34" cy="4" r="8" fill="#302a28"/></g>
+    <g id="bottomTerracotta"><path d="M0 320h68L34 20Z" fill="url(#terracottaPoint)"/><circle cx="34" cy="4" r="8" fill="#985f47"/></g>
+  </defs>
+
+  <g filter="url(#outerShadow)">
+    <rect x="16" y="16" width="1168" height="808" rx="28" fill="url(#darkWood)" stroke="#0b0807" stroke-width="14"/>
+    <rect x="34" y="34" width="1132" height="772" rx="19" fill="#9c7661" stroke="#c7a27e" stroke-opacity=".45" stroke-width="4"/>
+
+    <!-- İki bağımsız açık ahşap oyun alanı -->
+    <rect x="124" y="48" width="442" height="744" rx="6" fill="url(#maple)" stroke="#33221c" stroke-width="5"/>
+    <rect x="634" y="48" width="442" height="744" rx="6" fill="url(#maple)" stroke="#33221c" stroke-width="5"/>
+    <path d="M124 48h442v744H124zM634 48h442v744H634z" fill="url(#fineGrain)"/>
+
+    <!-- 24 sabit üçgen hane: 12 üst, 12 alt. Zar ve pullar bu SVG'ye gömülü değildir. -->
+    <g opacity=".97">
+      <use href="#topCharcoal" x="127" y="50"/><use href="#topTerracotta" x="200" y="50"/>
+      <use href="#topCharcoal" x="273" y="50"/><use href="#topTerracotta" x="346" y="50"/>
+      <use href="#topCharcoal" x="419" y="50"/><use href="#topTerracotta" x="492" y="50"/>
+      <use href="#topCharcoal" x="637" y="50"/><use href="#topTerracotta" x="710" y="50"/>
+      <use href="#topCharcoal" x="783" y="50"/><use href="#topTerracotta" x="856" y="50"/>
+      <use href="#topCharcoal" x="929" y="50"/><use href="#topTerracotta" x="1002" y="50"/>
+
+      <use href="#bottomTerracotta" x="127" y="470"/><use href="#bottomCharcoal" x="200" y="470"/>
+      <use href="#bottomTerracotta" x="273" y="470"/><use href="#bottomCharcoal" x="346" y="470"/>
+      <use href="#bottomTerracotta" x="419" y="470"/><use href="#bottomCharcoal" x="492" y="470"/>
+      <use href="#bottomTerracotta" x="637" y="470"/><use href="#bottomCharcoal" x="710" y="470"/>
+      <use href="#bottomTerracotta" x="783" y="470"/><use href="#bottomCharcoal" x="856" y="470"/>
+      <use href="#bottomTerracotta" x="929" y="470"/><use href="#bottomCharcoal" x="1002" y="470"/>
+    </g>
+
+    <!-- Yan pul toplama hazneleri; pullar ayrıca DOM katmanında çizilir -->
+    <g filter="url(#innerShadow)">
+      <rect x="48" y="48" width="62" height="744" rx="8" fill="url(#tray)" stroke="#34231d" stroke-width="5"/>
+      <rect x="1090" y="48" width="62" height="744" rx="8" fill="url(#tray)" stroke="#34231d" stroke-width="5"/>
+      <path d="M51 420h56M1093 420h56" stroke="#60463a" stroke-width="5"/>
+      <path d="M57 65v337M57 438v337M1143 65v337M1143 438v337" stroke="#fff" stroke-opacity=".28" stroke-width="3"/>
+    </g>
+
+    <!-- Orta bar ve kutu menteşeleri -->
+    <rect x="566" y="36" width="68" height="768" rx="9" fill="url(#darkWood)" stroke="#0d0908" stroke-width="6"/>
+    <rect x="580" y="52" width="40" height="736" rx="7" fill="#17110f" fill-opacity=".42" stroke="#bc8a65" stroke-opacity=".3"/>
+    <g fill="#b9a995" stroke="#3d352e" stroke-width="2">
+      <rect x="574" y="104" width="52" height="32" rx="6"/><rect x="574" y="704" width="52" height="32" rx="6"/>
+      <circle cx="586" cy="120" r="4" fill="#554b43"/><circle cx="614" cy="120" r="4" fill="#554b43"/>
+      <circle cx="586" cy="720" r="4" fill="#554b43"/><circle cx="614" cy="720" r="4" fill="#554b43"/>
+    </g>
+
+    <!-- Köşe ve kasa detayları -->
+    <path d="M33 112V37h78M1167 112V37h-78M33 728v75h78M1167 728v75h-78" fill="none" stroke="#e7c49a" stroke-opacity=".26" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#9f9589" stroke="#29231e" stroke-width="3"><rect x="5" y="383" width="28" height="74" rx="7"/><rect x="1167" y="383" width="28" height="74" rx="7"/></g>
+  </g>
+</svg>

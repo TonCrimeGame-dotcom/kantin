@@ -1,0 +1,6 @@
+node_modules/
+data/users.json
+data/users.json.tmp
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal

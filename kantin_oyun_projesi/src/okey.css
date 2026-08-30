@@ -1,0 +1,771 @@
+.okey-table-screen{width:100%;height:100dvh;overflow:hidden;padding:0;background:radial-gradient(circle at 50% 10%,#6e4e39,#1b120e 72%);}
+body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #screen{height:100dvh}
+.okey-wood-frame{width:100%;height:100%;padding:0;background:none;filter:none}
+.okey-felt{position:relative;width:100%;height:100%;overflow:hidden;border-radius:0;background:radial-gradient(circle at 50% 42%,#176493 0,#0c4f7b 48%,#073653 100%);box-shadow:inset 0 0 55px #001321bb}
+.okey-player{position:absolute;z-index:4;display:grid;grid-template-columns:clamp(30px,4.2vw,52px) auto;grid-template-rows:1fr 1fr;align-items:center;gap:0 8px;padding:5px 9px;border:1px solid #b9e6ff99;border-radius:10px;background:#063653dc;color:white;text-align:left;box-shadow:0 5px 14px #001a2aaa;}
+.okey-player>span{grid-row:1/3;width:clamp(30px,4.2vw,52px);aspect-ratio:1;display:grid;place-items:center;border-radius:7px;background:linear-gradient(#74b9dc,#2778a3);font:900 clamp(16px,2vw,25px) Georgia,serif}.okey-player b{font-size:clamp(9px,1vw,13px)}.okey-player small{color:#bce3f6;font-size:clamp(7px,.72vw,10px)}
+.okey-player.turn{border-color:#ffe17a;box-shadow:0 0 19px #ffd44d99}.okey-player.top{top:1.5%;left:50%;transform:translateX(-50%)}.okey-player.left{top:28%;left:1.5%}.okey-player.right{top:28%;right:1.5%}
+.okey-center{position:absolute;z-index:5;left:72%;top:43%;transform:translate(-50%,-50%);display:flex;align-items:end;gap:clamp(8px,1.5vw,20px)}
+.okey-stock{position:relative;width:clamp(42px,4.6vw,59px);height:clamp(56px,6.5vw,82px);display:grid;place-items:center;border:0;border-radius:7px;background:url('../assets/games/okey101/tile-ivory-v2.png') center/100% 100% no-repeat;box-shadow:-4px 0 #e7dcc2,-8px 0 #cdbf9f,-12px 0 #f0e6ce,0 5px 5px #00172577;color:#3b2b1d;transform:rotate(90deg)}.okey-stock span{z-index:1;align-self:center;padding:2px 7px;border-radius:99px;background:#392719d9;color:#fff;font:900 clamp(13px,1.7vw,21px) Georgia,serif;transform:rotate(-90deg)}.okey-stock small{z-index:1;align-self:end;margin-bottom:6px;color:#6c5136;font-size:6px;font-weight:900;transform:rotate(-90deg)}
+.okey-indicator{padding:7px 11px;display:grid;grid-template-columns:auto auto;align-items:center;gap:3px 8px;border:1px solid #ffffff25;border-radius:11px;background:#063653c9}.okey-indicator small{grid-column:1/3;color:#99d9f4;font-size:7px;font-weight:900}.okey-indicator .tile{grid-row:2/4}.okey-indicator b{font-size:clamp(9px,1vw,12px)}
+.okey-discard{display:grid;place-items:center;gap:2px}.okey-discard small{font-size:7px;font-weight:900}
+.okey-open-melds{position:absolute;z-index:2;top:13%;left:17%;right:16%;bottom:40%;padding:8px;display:flex;justify-content:center;align-content:start;flex-wrap:wrap;gap:5px;overflow:hidden;border:1px solid #bce7ff32;border-radius:5px;background-color:#0b5b8c25;background-image:linear-gradient(90deg,transparent calc(50% - .5px),#bce7ff38 50%,transparent calc(50% + .5px)),linear-gradient(transparent calc(50% - .5px),#bce7ff38 50%,transparent calc(50% + .5px)),repeating-linear-gradient(90deg,#bce7ff16 0 1px,transparent 1px 34px),repeating-linear-gradient(#bce7ff16 0 1px,transparent 1px 34px);box-shadow:inset 0 0 28px #00314e55}.okey-open-melds .meld{position:relative;z-index:2;padding:3px;border:1px solid transparent;background:#001c2b91}.okey-open-melds button.meld{cursor:pointer}.okey-open-melds button.meld:hover{border-color:#65d891}.okey-open-melds .meld.draft{border-color:#f1c95d;box-shadow:0 0 12px #e2b45455}.okey-open-melds .tile{width:clamp(21px,2.6vw,34px);height:clamp(29px,3.7vw,48px);font-size:clamp(11px,1.5vw,17px)}.empty-table{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#b6d7e6;font-size:9px;opacity:.55;white-space:nowrap}
+.okey-turn-message{position:absolute;z-index:6;left:50%;bottom:40.5%;transform:translateX(-50%);padding:5px 12px;border-radius:99px;background:#001b2dc9;color:#e5f7ff;font-size:clamp(8px,.9vw,12px);font-weight:800;white-space:nowrap}
+.okey-rack{--rack-tile-height:clamp(60px,10.5vh,75px);position:absolute;z-index:5;left:12%;right:14%;bottom:0;height:clamp(176px,42%,230px);padding:0;background:url('../assets/games/okey101/rack-beech-v2.png') center/100% 100% no-repeat;filter:drop-shadow(0 9px 10px #00121dbb)}
+.okey-rack-row{position:absolute;left:5.5%;right:5.5%;height:var(--rack-tile-height);min-width:0;display:flex;align-items:end;gap:0}.okey-rack-row:nth-child(1){bottom:59%}.okey-rack-row:nth-child(2){bottom:21%}.okey-rack-row .tile{margin-right:clamp(-9px,-.7vw,-7px)}.okey-rack-row .tile.group-start{margin-left:clamp(16px,1.5vw,20px)}
+.okey-felt .tile{position:relative;display:grid;grid-template-rows:1fr auto;place-items:center;border:0;background-color:transparent;background-image:url('../assets/games/okey101/tile-ivory-v2.png');background-position:center;background-size:100% 100%;background-repeat:no-repeat;box-shadow:none;text-shadow:0 1px #fff8,0 2px 2px #0003;line-height:1}.okey-felt .tile-number{align-self:end}.okey-felt .tile-pip{align-self:start;margin-top:3px;font-size:.3em;line-height:1;opacity:.28}
+.okey-rack .tile{width:clamp(48px,4.4vw,58px);height:100%;min-width:0;max-width:96%;justify-self:center;align-self:end;border-radius:5px;font-size:clamp(18px,2.3vw,28px);font-weight:950;box-shadow:none;touch-action:none}.okey-rack .tile:hover{transform:translateY(-3px)}.okey-rack .tile.selected{transform:translateY(-5px);outline:2px solid #5dff91}.okey-rack .tile.dragging{z-index:4;opacity:.62;transform:translateY(-9px) scale(1.05)}
+.okey-me{position:absolute;z-index:6;left:2%;bottom:3%;width:11%;padding:5px;display:grid;place-items:center;border-radius:10px;background:#052f49dc;text-align:center}.okey-me span{width:clamp(34px,5vw,64px);aspect-ratio:1;display:grid;place-items:center;border:2px solid #e2b454;border-radius:8px;background:#684327;font:900 clamp(17px,2.5vw,30px) Georgia,serif}.okey-me b{max-width:100%;overflow:hidden;text-overflow:ellipsis;font-size:clamp(8px,1vw,12px)}
+.okey-actions{position:absolute;z-index:7;right:.8%;bottom:1%;width:12.8%;display:grid;grid-template-columns:1fr 1fr;gap:3px}.okey-action{min-height:clamp(25px,4.7vh,34px);padding:3px;border:1px solid #ffffff2d;border-radius:7px;background:#183f55;color:white;font-size:clamp(6px,.72vw,9px);font-weight:900}.okey-action.draw{background:#248b56}.okey-action.commit{background:#b67d25}.okey-action.discard{background:#b64b35}.okey-action:disabled{opacity:.35;cursor:not-allowed}
+.okey-discard-lane{position:absolute;z-index:4;width:clamp(34px,4.2vw,52px);height:clamp(54px,8vh,72px);pointer-events:none}.okey-discard-lane>span{position:absolute;inset:0;transform:translate(calc(var(--i)*2px),calc(var(--i)*-2px));filter:drop-shadow(0 2px 2px #00172599)}.okey-discard-lane .tile{width:clamp(29px,3.3vw,42px);height:clamp(42px,5.2vw,61px);font-size:clamp(11px,1.4vw,17px)}.okey-discard-lane.left{left:12%;top:30%}.okey-discard-lane.right{right:12%;top:30%}.okey-discard-lane.top{left:58%;top:4%}.okey-discard-lane.mine{right:15%;bottom:42%}
+.okey-menu{position:absolute;z-index:8;left:1.3%;top:2%;display:flex;gap:5px}.okey-menu button{width:clamp(29px,3.7vw,45px);aspect-ratio:1;border:1px solid #ffffff2d;border-radius:50%;background:#073a59d9;font-size:clamp(13px,1.7vw,21px)}
+.okey-action.meld,.okey-action.pair,.okey-action.commit{display:none}.okey-smart-tools{position:absolute;z-index:9;right:.8%;bottom:18%;width:10.8%;display:grid;grid-template-columns:1fr;gap:3px}.okey-smart-tools button{min-height:clamp(26px,4.4vh,36px);padding:5px 3px;border:1px solid #e6bd6870;border-radius:7px;background:linear-gradient(#b57a24,#734014);color:#fff2d1;font-size:clamp(7px,.75vw,10px);font-weight:900;box-shadow:0 3px 7px #00172599}.okey-smart-tools button.active{border-color:#fff1a0;background:linear-gradient(#e2a83e,#8c5115);box-shadow:0 0 10px #ffd66b88,inset 0 0 0 1px #fff3a066}.okey-smart-tools button:disabled{opacity:.35}.okey-101-counter{position:absolute;z-index:9;left:61.5%;top:7%;bottom:auto;transform:translateX(-50%);min-width:78px;padding:4px 6px;display:grid;grid-template-columns:auto auto;align-items:end;border:1px solid #e3bd6a77;border-radius:9px;background:#102a39f2;color:#f2d184;text-align:center}.okey-101-counter small{grid-column:1/3;font-size:6px;font-weight:900}.okey-101-counter b{font:900 20px Georgia,serif}.okey-101-counter span{font-size:9px}.okey-101-counter.ready{border-color:#62df8a;box-shadow:0 0 13px #55d98077;color:#7aec9c}
+.okey-turn-clock{position:absolute;z-index:9;right:2%;top:2%;width:48px;aspect-ratio:1;display:grid;grid-template-columns:1fr auto;place-content:center;border:2px solid #5ed68a;border-radius:50%;background:#082838e8;text-align:center}.okey-turn-clock b{font:900 18px Georgia,serif}.okey-turn-clock small{font-size:7px}.okey-turn-clock i{grid-column:1/3;color:#b9d8e5;font-size:7px}.okey-turn-clock.urgent{border-color:#ec665a;color:#ff9b91;box-shadow:0 0 15px #ec4c4199}
+@media(orientation:landscape) and (max-height:560px){.okey-player{padding:3px 6px}.okey-open-melds{top:13%;bottom:41%}.okey-center{top:40%}.okey-rack{height:clamp(176px,42%,210px);bottom:0;padding:0;background-size:100% 100%}.okey-rack .tile{height:100%}.okey-turn-message{bottom:42%}.okey-smart-tools{right:.6%;bottom:18%;width:11.2%}.okey-smart-tools button{min-height:24px;padding:3px}.okey-101-counter{top:7%;bottom:auto}.okey-actions{bottom:1%}}
+.okey-open-melds{bottom:43%}
+@media(orientation:landscape) and (max-height:560px){.okey-open-melds{bottom:44%}}
+.okey-stock,.okey-felt .tile{background-image:url('../assets/games/okey101/tile-reference-v3.png')}
+.okey-felt .tile-pip{width:1.05em;height:1.05em;display:grid;place-items:center;border-radius:50%;background:#b9aa8c35;font-size:.42em;opacity:.92}
+.okey-felt .tile-number{position:absolute;left:50%;top:18%;transform:translateX(-50%);align-self:auto;line-height:1}
+.okey-felt .tile-pip{position:absolute;left:50%;top:64%;transform:translateX(-50%);margin:0;align-self:auto;line-height:1}
+.okey-tile-dragging{position:fixed!important;z-index:1000!important;margin:0!important;padding:0!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;border:0!important;border-radius:4px!important;appearance:none;background-color:transparent!important;background-image:url('../assets/games/okey101/tile-reference-v3.png')!important;background-position:center 48%!important;background-size:110% 108%!important;background-repeat:no-repeat!important;box-shadow:none!important;text-shadow:0 1px #fff8,0 2px 2px #0003!important;font-size:clamp(22px,2.5vw,32px)!important;font-weight:950!important;line-height:1!important;pointer-events:none!important;opacity:.96!important;transform:scale(1.06)!important;filter:drop-shadow(0 12px 10px #001725aa)}
+.okey-tile-dragging .tile-number{position:absolute;left:50%;top:17%;transform:translateX(-50%);line-height:1}
+.okey-tile-dragging .tile-pip{position:absolute;left:50%;top:65%;width:1.05em;height:1.05em;margin:0;display:grid;place-items:center;border-radius:50%;background:#b9aa8c35;font-size:.42em;line-height:1;opacity:.92;transform:translateX(-50%)}
+.okey-rack-row .tile,.okey-rack-row .tile.group-start{position:absolute;margin:0;transition:left .14s ease,transform .14s ease}
+.okey-open-melds{display:grid;grid-template-columns:2fr 1fr;grid-auto-rows:max-content;align-content:start;justify-content:stretch;justify-items:start;padding:27px 8px 8px;background-image:linear-gradient(90deg,transparent calc(66.66% - .75px),#bce7ff70 66.66%,transparent calc(66.66% + .75px)),repeating-linear-gradient(90deg,#bce7ff16 0 1px,transparent 1px 34px),repeating-linear-gradient(#bce7ff16 0 1px,transparent 1px 34px)}
+.okey-open-melds .meld-zone-title{position:absolute;top:7px;color:#bfe8fb;font-size:clamp(7px,.72vw,10px);font-weight:950;letter-spacing:.08em;opacity:.8}.okey-open-melds .series-title{left:33.33%;transform:translateX(-50%)}.okey-open-melds .pairs-title{left:83.33%;transform:translateX(-50%)}
+.okey-open-melds .series-meld{grid-column:1}.okey-open-melds .pair-meld{grid-column:2}.okey-open-melds .empty-table{grid-column:1/3}
+.okey-open-melds{grid-template-columns:60% 12% 28%;background-image:linear-gradient(90deg,transparent calc(60% - .75px),#bce7ff70 60%,transparent calc(60% + .75px),transparent calc(72% - .75px),#bce7ff70 72%,transparent calc(72% + .75px)),repeating-linear-gradient(90deg,#bce7ff16 0 1px,transparent 1px 34px),repeating-linear-gradient(#bce7ff16 0 1px,transparent 1px 34px)}
+.okey-open-melds .series-title{left:30%}.okey-open-melds .pairs-title{left:86%}.okey-open-melds .pair-meld{grid-column:3}.okey-open-melds .empty-table{grid-column:1/4}.okey-center{left:67%}
+.okey-center{left:66%;top:35%;width:clamp(48px,5vw,64px);display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;justify-items:center;align-items:center;gap:7px;transform:translate(-50%,-50%)}
+.okey-indicator{grid-row:1;width:clamp(42px,4.6vw,59px);height:clamp(56px,6.5vw,82px);padding:0;border:0;border-radius:7px;background:none;display:block}.okey-indicator small,.okey-indicator b{display:none}.okey-indicator .tile{width:100%;height:100%;display:grid}
+.okey-stock{grid-row:2;transform:none}.okey-stock span,.okey-stock small{transform:none}.okey-stock small{display:none}
+.okey-center{box-sizing:border-box;width:clamp(64px,5.8vw,74px);padding:7px 7px 12px;gap:3px;border:1px solid #bce7ff55;border-radius:7px;background:#073247d9;box-shadow:inset 0 0 16px #001d30aa,0 5px 12px #00172566}
+.okey-center .okey-indicator,.okey-center .okey-stock{width:clamp(46px,4.5vw,58px);height:clamp(62px,6.2vw,79px);margin:0}
+.okey-center .okey-stock{box-shadow:0 4px #e7dcc2,0 8px #cdbf9f,0 12px #f0e6ce,0 15px 7px #00172577}
+.okey-center .okey-stock span{width:clamp(25px,2.4vw,31px);height:clamp(25px,2.4vw,31px);padding:0;display:grid;place-items:center;border-radius:50%;background:#30271fe8;font-size:clamp(11px,1.4vw,17px)}
+.okey-open-melds{top:9%;left:12%;right:15%;bottom:42%;border:0;background:#062d4530;background-image:none;box-shadow:none;overflow:hidden}
+.okey-open-melds::before,.okey-open-melds::after{content:'';position:absolute;z-index:0;top:0;bottom:0;pointer-events:none}
+.okey-open-melds::before{left:0;width:60%;border:1px solid #bce7ff62;background-image:repeating-linear-gradient(90deg,#bce7ff22 0 1px,transparent 1px 28px),repeating-linear-gradient(#bce7ff22 0 1px,transparent 1px 28px);box-shadow:inset 0 0 22px #001d3066}
+.okey-open-melds::after{right:0;width:28%;border:1px solid #bce7ff62;background-image:repeating-linear-gradient(90deg,#bce7ff5c 0 1px,transparent 1px 25%);box-shadow:inset 0 0 18px #001d3055}
+.okey-open-melds .meld,.okey-open-melds .meld-zone-title,.okey-open-melds .empty-table{z-index:2}.okey-open-melds .pair-meld{flex-direction:column}
+.okey-center{left:61.5%;top:34%;width:clamp(46px,4.6vw,59px);padding:0;gap:3px;border:0;border-radius:0;background:transparent;box-shadow:none}
+.okey-open-melds .empty-table{left:30%}
+.series-zone-content,.pair-zone-content{position:absolute;z-index:1;top:27px;bottom:4px;display:flex;align-content:flex-start;overflow:hidden}
+.series-zone-content{left:4px;width:calc(60% - 8px);flex-wrap:wrap;align-items:flex-start;gap:7px 8px}
+.pair-zone-content{right:2px;width:calc(28% - 4px);flex-flow:row-reverse wrap;align-items:flex-start;justify-content:flex-start;gap:8px 0}
+.series-zone-content .meld{display:flex;gap:0;margin:0;padding:0}.series-zone-content .meld .tile+ .tile{margin-left:-1px}
+.pair-zone-content .meld{box-sizing:border-box;width:25%;display:flex;flex-direction:column;align-items:center;gap:0;margin:0;padding:0}.pair-zone-content .meld .tile+ .tile{margin-top:-1px}
+.okey-open-melds{top:13%;left:13%}
+.okey-open-melds .empty-table{display:none}
+.okey-turn-message{display:none}
+.okey-player{max-width:11%;overflow:hidden}.okey-player b,.okey-player small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.okey-player.top{top:.8%}.okey-player.left{left:.6%;top:29%}.okey-player.right{right:.6%;top:29%}
+.okey-discard-lane.left{left:7%;top:39%}.okey-discard-lane.right{right:7%;top:39%}.okey-discard-lane.top{left:72%;top:1%}.okey-discard-lane.mine{right:9%;bottom:43%}
+.okey-action.discard.drop-ready{opacity:1;outline:3px solid #ffe377;box-shadow:0 0 18px #ffd84faa;transform:scale(1.05)}
+.okey-actions{display:none}
+.okey-smart-tools{right:.8%;bottom:15%;width:10.8%;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.okey-smart-tools button:last-child{grid-column:1/-1}
+.okey-stock[role="button"]{cursor:pointer;transition:filter .15s ease,box-shadow .15s ease}
+.okey-stock[role="button"]:not(.disabled):hover{filter:brightness(1.12);box-shadow:0 4px #e7dcc2,0 8px #cdbf9f,0 12px #f0e6ce,0 0 15px #ffe377}
+.okey-stock.disabled{cursor:not-allowed;opacity:.72}
+.okey-discard-tray{position:absolute;z-index:8;right:.8%;bottom:1%;box-sizing:border-box;width:10.8%;height:clamp(58px,11vh,82px);display:grid;place-content:center;gap:2px;border:2px dashed #8eb8c788;border-radius:10px;background:#062b3aa8;color:#a9cbd7;text-align:center;opacity:.55;transition:.15s ease}
+.okey-discard-tray span{font-size:clamp(18px,2vw,27px);line-height:.8}.okey-discard-tray small{font-size:clamp(6px,.58vw,8px);font-weight:950}
+.okey-discard-tray.enabled{border-color:#e6bd68;color:#ffe3a0;opacity:1;box-shadow:inset 0 0 14px #00162299}
+.okey-discard-tray.drop-ready{border-style:solid;border-color:#ffe377;background:#8b4a20;box-shadow:0 0 18px #ffd84faa,inset 0 0 15px #ffd84f44;transform:scale(1.05)}
+.okey-discard-lane.can-take{z-index:7;pointer-events:auto;cursor:pointer}
+.okey-discard-lane.can-take::after{content:'';position:absolute;inset:-5px;border:2px solid #ffe377;border-radius:8px;box-shadow:0 0 15px #ffd84f99;animation:okey-take-pulse 1.25s ease-in-out infinite}
+@keyframes okey-take-pulse{50%{opacity:.45;transform:scale(1.08)}}
+@media(orientation:landscape) and (max-height:560px){.okey-smart-tools{bottom:16%}}
+
+/* Reference-table composition: large opening grids, narrow middle well and low rack. */
+.okey-felt{background-color:#075078;background-image:radial-gradient(circle at 50% 40%,#11678f55,transparent 58%),repeating-radial-gradient(circle at 0 0,#ffffff08 0 1px,transparent 1px 11px)}
+.okey-open-melds{top:6%;left:7.2%;right:22.4%;bottom:20.5%;padding:24px 5px 5px;grid-template-columns:70.5% 2.5% 27%;background:transparent}
+.okey-open-melds::before{width:70.5%;border:3px solid #bed0d6;border-radius:5px;background-color:#063246;background-image:repeating-linear-gradient(90deg,#b9d0d52c 0 1px,transparent 1px 5%),repeating-linear-gradient(#b9d0d52c 0 1px,transparent 1px 7.15%);box-shadow:inset 0 0 20px #001722aa,0 1px 2px #001722}
+.okey-open-melds::after{width:27%;border:3px solid #bed0d6;border-radius:5px;background-color:#063246;background-image:repeating-linear-gradient(90deg,#b9d0d548 0 1px,transparent 1px 25%);box-shadow:inset 0 0 18px #001722aa,0 1px 2px #001722}
+.okey-open-melds .series-title,.okey-open-melds .pairs-title{top:6px;font-size:clamp(7px,.67vw,10px);opacity:.85}.okey-open-melds .series-title{left:35.25%}.okey-open-melds .pairs-title{left:86.5%}
+.series-zone-content{top:25px;left:5px;width:calc(70.5% - 10px);bottom:5px}.pair-zone-content{top:25px;right:4px;width:calc(27% - 8px);bottom:5px}
+.okey-center{left:68.45%;top:38%;width:clamp(54px,5.2vw,67px);gap:12px}
+.okey-center .okey-indicator,.okey-center .okey-stock{width:clamp(45px,4.8vw,62px);height:clamp(64px,9.2vh,79px)}
+.okey-center .okey-stock{box-shadow:0 5px #e7dcc2,0 10px #cdbf9f,0 15px #f0e6ce,0 19px 8px #00172588}
+.okey-center .okey-stock span{width:clamp(25px,2.5vw,34px);height:clamp(25px,2.5vw,34px);font-size:clamp(12px,1.45vw,19px)}
+.okey-101-counter{left:68.45%;top:auto;bottom:22%;min-width:0;width:clamp(58px,5.2vw,72px);box-sizing:border-box;padding:3px;display:grid;grid-template-columns:1fr;border-color:#e2e5e7;background:#132c39;color:white}
+.okey-101-counter small{grid-column:1;font-size:clamp(5px,.46vw,7px)}.okey-101-counter b{font:900 clamp(15px,1.7vw,22px) Arial,sans-serif}.okey-101-counter span{font-size:clamp(6px,.55vw,8px)}
+.okey-rack{left:7.2%;right:14.8%;bottom:0;height:20%;min-height:105px;max-height:150px;background-size:100% 100%}
+.okey-rack-row{left:2.1%;right:2.1%;height:44%}.okey-rack-row:nth-child(1){bottom:49%}.okey-rack-row:nth-child(2){bottom:4%}
+.okey-rack .tile{width:clamp(47px,4.65vw,60px);font-size:clamp(21px,2.45vw,31px)}
+.okey-smart-tools{inset:0;display:block;width:auto;pointer-events:none}.okey-smart-tools button{position:absolute;box-sizing:border-box;pointer-events:auto;border:2px solid #d8e1e4;border-radius:11px;background:linear-gradient(#fbfbf8,#ccd7da);color:#21333b;text-shadow:0 1px white;box-shadow:0 3px 5px #00172299;font-size:clamp(8px,.95vw,13px)}
+.okey-smart-tools button[data-action="auto-open-melds"]{right:.8%;top:21%;width:13%;height:10%}.okey-smart-tools button[data-action="auto-open-pairs"]{right:.8%;top:32%;width:13%;height:10%}.okey-smart-tools button[data-action="auto-layoff"]{right:.8%;top:43%;width:13%;height:10%}
+.okey-smart-tools button[data-action="sort-pairs"],.okey-smart-tools button[data-action="sort-runs"]{top:auto;bottom:1%;width:5.7%;height:19%;padding:5px;writing-mode:vertical-rl;font-size:clamp(9px,1vw,14px);background:linear-gradient(#27343b,#10181d);color:white;text-shadow:none}
+.okey-smart-tools button[data-action="sort-pairs"]{left:.6%;right:auto}.okey-smart-tools button[data-action="sort-runs"]{right:.6%;left:auto}
+.okey-smart-tools button.active{border-color:#fff;background:linear-gradient(#364750,#10181d);box-shadow:0 0 10px #ffffff55}
+.okey-smart-tools button:disabled{background:linear-gradient(#d6e0e2,#91a5ab);color:#536b73;opacity:.85}
+.okey-discard-tray{right:.9%;bottom:20.5%;width:clamp(47px,5vw,64px);height:clamp(64px,9.5vh,80px);border:2px solid #d8e1e4;border-radius:7px;background:linear-gradient(#fbfbf8,#d4dddf);color:#29404a;opacity:.9}
+.okey-discard-tray span{font-size:clamp(16px,1.8vw,24px)}.okey-discard-tray small{display:none}.okey-discard-tray.enabled{border-color:#ffe37a;color:#8a300f;background:linear-gradient(#fffdf4,#e6d9b8)}
+.okey-player{grid-template-columns:1fr;grid-template-rows:1fr;padding:0;border:0;background:transparent;box-shadow:none;overflow:visible}.okey-player>span{grid-row:1;width:clamp(43px,5vw,64px);border:2px solid #d7e0e3;border-radius:7px;background:linear-gradient(#fbfbf6,#d4dcde);color:#1885ae;text-shadow:0 1px white}.okey-player b,.okey-player small{display:none}.okey-player.turn{border:0;box-shadow:none}.okey-player.turn>span{box-shadow:0 0 14px #ffe36e}
+.okey-player.top{top:6%;left:1.1%;transform:none}.okey-player.left{left:1.1%;top:auto;bottom:20.5%}.okey-player.right{right:1.1%;top:6%}
+.okey-discard-lane.left{left:1.1%;top:21%}.okey-discard-lane.right{right:1.1%;top:auto;bottom:20.5%}.okey-discard-lane.top{left:auto;right:1.1%;top:6%}.okey-discard-lane.mine{right:.9%;bottom:20.5%}
+.okey-turn-clock{right:14.7%;top:1%;width:clamp(42px,4.6vw,58px)}
+@media(orientation:landscape) and (max-height:560px){.okey-open-melds{top:5.5%;bottom:20%}.okey-rack{height:20%}.okey-smart-tools button[data-action="sort-pairs"],.okey-smart-tools button[data-action="sort-runs"]{height:18.5%}.okey-discard-tray{bottom:20%}.okey-101-counter{bottom:21.5%}}
+
+/* Final proportional pass against the supplied 1080x540 reference. */
+.okey-open-melds{left:7.8%;right:16.2%;grid-template-columns:71% 12% 17%}
+.okey-open-melds::before{width:71%}.okey-open-melds::after{width:17%}
+.okey-open-melds .series-title{left:35.5%}.okey-open-melds .pairs-title{left:91.5%}
+.series-zone-content{width:calc(71% - 10px)}.pair-zone-content{width:calc(17% - 8px)}
+.okey-center{left:66.35%}
+.okey-101-counter{left:66.35%}
+.okey-rack{left:7.8%;right:8.2%}
+.okey-smart-tools button[data-action="auto-open-melds"],.okey-smart-tools button[data-action="auto-open-pairs"],.okey-smart-tools button[data-action="auto-layoff"]{right:.8%;width:12.3%}
+.okey-menu{display:none}
+.okey-me{display:none}
+.okey-turn-clock{left:66.35%;right:auto;top:1%;transform:translateX(-50%)}
+
+/* Rack refinement: preserve the wooden shelf proportions and keep every tile inside. */
+.okey-rack{--rack-tile-height:clamp(50px,9.8vh,66px);left:7.8%;right:8.2%;bottom:0;height:26%;min-height:138px;max-height:190px;background-size:100% 100%;overflow:hidden}
+.okey-rack-row{left:2.2%;right:2.2%;height:var(--rack-tile-height);overflow:visible}
+.okey-rack-row:nth-child(1){bottom:4%}.okey-rack-row:nth-child(2){bottom:43%}
+.okey-rack .tile{box-sizing:border-box;width:clamp(43px,4.25vw,56px);height:100%;max-width:none;border-radius:4px;background-size:100% 100%;font-size:clamp(19px,2.15vw,28px)}
+.okey-rack .tile-number{top:17%}.okey-rack .tile-pip{top:65%}
+.okey-rack .tile.layoff-ready .tile-pip{color:#22e875;opacity:1;background:#20e56b42;box-shadow:0 0 5px #35ff7fa8;text-shadow:0 0 3px #effff5,0 0 8px #27f276,0 0 13px #00b94f}
+@media(orientation:landscape) and (max-height:560px){.okey-rack{height:26%;min-height:132px}.okey-rack-row:nth-child(1){bottom:4%}.okey-rack-row:nth-child(2){bottom:43%}}
+.okey-open-melds{bottom:26%}
+.okey-101-counter{bottom:27%}
+.okey-discard-tray,.okey-player.left,.okey-discard-lane.right,.okey-discard-lane.mine{bottom:26%}
+@media(orientation:landscape) and (max-height:560px){.okey-open-melds{bottom:26%}.okey-101-counter{bottom:27%}.okey-discard-tray,.okey-player.left,.okey-discard-lane.right,.okey-discard-lane.mine{bottom:26%}}
+
+/* Make the visible ivory bodies fill the shelf without touching the side posts. */
+.okey-rack{--rack-tile-height:clamp(56px,10.8vh,72px)}
+.okey-rack-row{left:3.2%;right:3.2%}
+.okey-rack-row:nth-child(1){bottom:3%}.okey-rack-row:nth-child(2){bottom:46%}
+.okey-rack .tile{width:clamp(46px,4.55vw,58px);background-size:110% 108%;background-position:center 48%;font-size:clamp(20px,2.25vw,29px)}
+@media(orientation:landscape) and (max-height:560px){.okey-rack{--rack-tile-height:clamp(56px,10.8vh,62px)}.okey-rack-row{left:3.2%;right:3.2%}.okey-rack-row:nth-child(1){bottom:3%}.okey-rack-row:nth-child(2){bottom:46%}}
+
+/* Phone reference uses a 16-column rack: 16 tiles on the main shelf, overflow below. */
+.okey-rack{--rack-tile-height:clamp(60px,11.6vh,86px);height:27%}
+.okey-rack-row{left:2.5%;right:2.5%}
+.okey-rack-row:nth-child(1){bottom:46%}.okey-rack-row:nth-child(2){bottom:3%}
+.okey-rack .tile{width:clamp(50px,5.05vw,66px);font-size:clamp(22px,2.5vw,32px)}
+.okey-open-melds{bottom:27%}.okey-101-counter{bottom:28%}.okey-discard-tray,.okey-player.left,.okey-discard-lane.right,.okey-discard-lane.mine{bottom:27%}
+@media(orientation:landscape) and (max-height:560px){.okey-rack{--rack-tile-height:clamp(60px,11.6vh,66px);height:27%;min-height:138px}.okey-rack-row{left:2.5%;right:2.5%}.okey-rack-row:nth-child(1){bottom:46%}.okey-rack-row:nth-child(2){bottom:3%}.okey-open-melds{bottom:27%}.okey-101-counter{bottom:28%}.okey-discard-tray,.okey-player.left,.okey-discard-lane.right,.okey-discard-lane.mine{bottom:27%}}
+
+/* Hard fit: both rows are sized from the rack itself, never from the viewport. */
+.okey-rack-row{height:42%}
+.okey-rack-row:nth-child(1){bottom:50%}.okey-rack-row:nth-child(2){bottom:4%}
+.okey-rack .tile{height:100%}
+@media(orientation:landscape) and (max-height:560px){.okey-rack-row{height:42%}.okey-rack-row:nth-child(1){bottom:50%}.okey-rack-row:nth-child(2){bottom:4%}}
+
+/* Fit against the visible wood, excluding the transparent padding in the rack PNG. */
+.okey-rack{height:30%}
+.okey-rack-row{height:38%}
+.okey-rack-row:nth-child(1){bottom:52%}.okey-rack-row:nth-child(2){bottom:8%}
+.okey-open-melds{bottom:30%}.okey-101-counter{bottom:31%}.okey-discard-tray,.okey-player.left,.okey-discard-lane.right,.okey-discard-lane.mine{bottom:30%}
+@media(orientation:landscape) and (max-height:560px){.okey-rack{height:30%;min-height:150px}.okey-rack-row{height:38%}.okey-rack-row:nth-child(1){bottom:52%}.okey-rack-row:nth-child(2){bottom:8%}.okey-open-melds{bottom:30%}.okey-101-counter{bottom:31%}.okey-discard-tray,.okey-player.left,.okey-discard-lane.right,.okey-discard-lane.mine{bottom:30%}}
+
+/* Extend only the wooden artwork downward; tile sizing and coordinates stay unchanged. */
+.okey-rack{background-size:100% 114%;background-position:center top}
+@media(orientation:landscape) and (max-height:560px){.okey-rack{background-size:100% 114%;background-position:center top}}
+
+/* Slightly slimmer rack tiles; height and shelf alignment remain unchanged. */
+.okey-rack .tile{width:clamp(47px,4.7vw,61px)}
+.okey-rack .tile{width:clamp(44px,4.38vw,57px)}
+.okey-rack-row{left:4.5%;right:4.5%}
+@media(orientation:landscape) and (max-height:560px){.okey-rack-row{left:4.5%;right:4.5%}}
+
+/* Lift both opening grids clear of the rack artwork. */
+.okey-open-melds{top:4%;bottom:32%}
+@media(orientation:landscape) and (max-height:560px){.okey-open-melds{top:4%;bottom:32%}}
+
+/* Four matching dark-blue discard wells, one for each player. */
+.okey-discard-lane,.okey-discard-tray{box-sizing:border-box;width:clamp(34px,4vw,52px);height:clamp(58px,9vh,76px);border:1px solid #4773ad;border-radius:2px;background:#12345d;box-shadow:inset 0 0 10px #071a35aa,0 1px 2px #00152e80}
+.okey-discard-lane{overflow:visible}
+.okey-discard-tray{display:grid;place-items:center;padding:0;color:#77a2ce;opacity:1}
+.okey-discard-tray .discard-arrow{font-size:clamp(15px,1.5vw,20px);line-height:1}
+.okey-discard-tray.enabled{border-color:#ffe06b;background:#163e69;color:#ffe06b;box-shadow:inset 0 0 10px #071a35aa,0 0 10px #ffe06b66}
+.mine-discard-tiles{position:absolute;inset:0;pointer-events:none}.mine-discard-tiles>span{position:absolute;inset:0;transform:translate(calc(var(--i)*2px),calc(var(--i)*-2px));filter:drop-shadow(0 2px 2px #00172599)}
+.okey-discard-tray:has(.mine-discard-tiles:not(:empty)) .discard-arrow{display:none}
+
+/* Every player discards to their own right: four distinct outer corners. */
+.okey-discard-lane.top{left:1.4%;right:auto;top:19%;bottom:auto}
+.okey-discard-lane.right{left:auto;right:1.4%;top:19%;bottom:auto}
+.okey-discard-lane.left{left:1.4%;right:auto;top:auto;bottom:32%}
+.okey-discard-tray{left:auto;right:1.4%;bottom:32%}
+
+/* Final opponent position: exactly midway between the upper and lower wells. */
+.okey-player.left,.okey-player.right{top:35%!important;bottom:auto!important;transform:translateY(-50%)!important}
+
+/* Compact horizontal action stacks in the lower corners. */
+.okey-smart-tools button[data-action="sort-runs"],
+.okey-smart-tools button[data-action="sort-pairs"],
+.okey-smart-tools button[data-action="auto-open-melds"],
+.okey-smart-tools button[data-action="auto-open-pairs"],
+.okey-smart-tools button[data-action="auto-layoff"]{width:7%;height:7%;min-height:0;padding:3px;writing-mode:horizontal-tb;font-size:clamp(7px,.72vw,10px);border-radius:7px}
+.okey-smart-tools button[data-action="sort-runs"]{left:.6%;right:auto;top:auto;bottom:9%}
+.okey-smart-tools button[data-action="sort-pairs"]{left:.6%;right:auto;top:auto;bottom:1%}
+.okey-smart-tools button[data-action="auto-open-melds"]{left:auto;right:.6%;top:auto;bottom:17%}
+.okey-smart-tools button[data-action="auto-open-pairs"]{left:auto;right:.6%;top:auto;bottom:9%}
+.okey-smart-tools button[data-action="auto-layoff"]{left:auto;right:.6%;top:auto;bottom:1%}
+
+.okey-player.left,.okey-player.right{top:35%;bottom:auto;transform:translateY(-50%)}
+.okey-player.left{bottom:43%}
+
+/* Center the three opponent indicators on their respective table edges. */
+.okey-player.top{top:1.2%;left:50%;right:auto;bottom:auto;transform:translateX(-50%)}
+.okey-player.left{left:.6%;right:auto;top:50%;bottom:auto;transform:translateY(-50%)}
+.okey-player.right{right:.6%;left:auto;top:50%;bottom:auto;transform:translateY(-50%)}
+
+/* Keep all four discard wells clear of player badges, action buttons and rack. */
+.okey-discard-lane,.okey-discard-tray{height:clamp(52px,8vh,60px)}
+.okey-discard-lane.top{left:1.4%;right:auto;top:2%;bottom:auto}
+.okey-discard-lane.right{left:auto;right:1.4%;top:2%;bottom:auto}
+.okey-discard-lane.left{left:1.4%;right:auto;top:auto;bottom:32%}
+.okey-discard-tray{left:auto;right:1.4%;bottom:32%}
+
+/* Gerçek okeyin baskısız yüzü: yalnız düz fildişi taş gövdesi görünür. */
+.tile.is-okey{color:transparent;text-shadow:none;box-shadow:none}
+
+/* Dört atma haznesindeki bütün taşlar aynı iç ölçüyü kullanır. */
+.okey-discard-lane>span,.mine-discard-tiles>span{inset:2px}
+.okey-discard-lane .tile,.okey-discard-tray .tile{box-sizing:border-box;width:100%;height:100%;font-size:clamp(13px,1.55vw,19px)}
+
+/* Atma geçmişi saklanır; haznede yalnız son atılan taş görünür. */
+.okey-discard-lane>span,.mine-discard-tiles>span{display:none;transform:none}
+.okey-discard-lane>span:last-child,.mine-discard-tiles>span:last-child{display:block;transform:none}
+
+/* Orta yığın tek taş yüzü ve kalan taş sayısından oluşur. */
+.okey-center .okey-stock{box-shadow:0 3px 5px #00172577}
+.okey-stock[role="button"]:not(.disabled):hover{box-shadow:0 0 15px #ffe377}
+
+/* Yirmi ıstaka yuvası: taşlar küçülerek sığar, birbirinin üstüne binmez. */
+.okey-rack .tile{width:5%}
+
+/* Açma alanı kompleksini ıstakanın taş dizilen iç kenarlarıyla hizala. */
+.okey-open-melds{left:11.6%;right:12%}
+.okey-center,.okey-101-counter,.okey-turn-clock{left:70.4%}
+
+/* Dört oyuncunun açılımlarını taşıyan daha yoğun, referans tipi orta alan. */
+.okey-open-melds::before{background-image:repeating-linear-gradient(90deg,#b9d0d52c 0 1px,transparent 1px 4%),repeating-linear-gradient(#b9d0d52c 0 1px,transparent 1px 5%)}
+.okey-open-melds::after{background-image:repeating-linear-gradient(90deg,#b9d0d548 0 1px,transparent 1px 16.6667%),repeating-linear-gradient(#b9d0d52c 0 1px,transparent 1px 5%)}
+.okey-open-melds .tile{width:clamp(16px,1.8vw,22px);height:clamp(22px,2.55vw,31px);font-size:clamp(8px,1vw,12px)}
+.series-zone-content,.pair-zone-content{top:22px;bottom:4px}
+.series-zone-content{gap:4px 5px}
+.pair-zone-content{gap:4px 0}
+.pair-zone-content .meld{width:16.6667%}
+
+/* Profil kartları için üstte bağımsız bant bırak; açılan taş kapasitesini koru. */
+.okey-open-melds{top:12%}
+.okey-open-melds .tile{width:clamp(15px,1.65vw,20px);height:clamp(20px,2.25vw,27px);font-size:clamp(7px,.9vw,11px)}
+
+/* Sıra sayacı aktif oyuncunun avatarının üzerinde dolaşır. */
+.okey-me{box-sizing:border-box;left:.6%;bottom:18%;width:clamp(43px,5vw,64px);padding:0;display:grid;background:transparent;overflow:visible}
+.okey-me span{box-sizing:border-box;width:100%}.okey-me b{display:none}
+.okey-player,.okey-player>span{overflow:visible}
+.okey-player .okey-turn-clock,.okey-me .okey-turn-clock{left:50%;right:auto;top:50%;bottom:auto;z-index:20;width:100%;height:100%;box-sizing:border-box;transform:translate(-50%,-50%);display:grid;grid-template-columns:1fr;place-items:center;border-radius:7px;background:#082838f5;color:#fff;box-shadow:0 0 0 2px #65ed91,0 0 15px #38e978b8;opacity:1;visibility:visible;pointer-events:none}
+.okey-player .okey-turn-clock b,.okey-me .okey-turn-clock b{display:block;color:#fff;font:900 clamp(18px,2.1vw,27px) Georgia,serif;line-height:1;text-shadow:0 1px 2px #001822,0 0 7px #71ff9c}
+.okey-player .okey-turn-clock small,.okey-player .okey-turn-clock i,.okey-me .okey-turn-clock small,.okey-me .okey-turn-clock i{display:none}
+
+/* Geri bırak denetimi, taşın alındığı haznenin tamamını kaplar. */
+.okey-discard-lane.returnable{z-index:24;pointer-events:auto}
+.okey-return-discard{position:absolute;z-index:2;inset:-1px;box-sizing:border-box;width:calc(100% + 2px);height:calc(100% + 2px);min-height:0;padding:3px 1px;border:2px solid #bceaff;border-radius:3px;background:linear-gradient(#54b9ed,#1472bd);color:#fff;box-shadow:0 2px 0 #07457f,0 0 11px #56c7ff77;text-align:center;font:900 clamp(7px,.68vw,10px)/1.05 Arial,sans-serif;text-shadow:0 1px 2px #064372;cursor:pointer}
+.okey-return-discard:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.okey-return-discard:active{transform:translateY(2px);box-shadow:0 1px 0 #07457f}
+.okey-return-discard span,.okey-return-discard b{display:block}.okey-return-discard b{margin-top:2px;font-size:clamp(16px,1.8vw,24px);line-height:.8}
+.okey-rack .tile.taken-discard{box-shadow:inset 0 -4px 0 #2da8ef,0 0 0 2px #69d4ff,0 0 12px #46c5ffb8}
+
+/* Başlıksız açma ızgaraları ve masadaki katlamalı açılış değeri. */
+.okey-open-melds .meld-zone-title{display:none}
+.series-zone-content,.pair-zone-content{top:4px}
+.okey-table-opened{position:absolute;z-index:12;left:65.8%;top:12%;width:clamp(30px,3.4vw,44px);height:clamp(20px,3.5vh,28px);box-sizing:border-box;display:grid;place-items:center;transform:translate(-50%,-100%);border:1px solid #8ca6b4;border-radius:2px;background:#07141ff5;color:white;box-shadow:0 2px 4px #001725aa;text-align:center}
+.okey-table-opened::after{content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid #07141f}
+.okey-table-opened b{font:900 clamp(13px,1.5vw,20px)/1 Georgia,serif}
+
+/* El sonu: referanstaki gibi masayı karartan sıralamalı sonuç tabelası. */
+.okey-table-screen{position:relative}
+.okey-result-overlay{position:absolute;z-index:200;inset:0;display:grid;place-items:center;padding:3vh 4vw;background:#020b12c7;backdrop-filter:blur(2px)}
+.okey-result-panel{box-sizing:border-box;width:min(78vw,900px);max-height:94vh;overflow:auto;border:2px solid #ffc45b;border-radius:16px;background:linear-gradient(145deg,#713018f5,#b5531cf2 42%,#442014f5);color:#fff1cc;box-shadow:0 0 0 5px #7d3518aa,0 20px 70px #000b;animation:okey-result-in .28s ease-out}
+@keyframes okey-result-in{from{opacity:0;transform:translateY(18px) scale(.96)}}
+.okey-result-panel>header{padding:clamp(12px,2.2vh,22px);text-align:center;background:radial-gradient(circle at 50% 100%,#ffcf5a55,transparent 55%),linear-gradient(#b84716,#7d2512);border-bottom:1px solid #ffc35d66}
+.okey-result-panel>header small{font-weight:900;letter-spacing:.13em;text-transform:uppercase}.okey-result-panel>header h2{margin:2px 0;color:#fff3b1;font:italic 1000 clamp(34px,5vw,64px)/1 Arial,sans-serif;text-shadow:0 3px #c43e0d,0 0 22px #ffd653}.okey-result-panel>header p{margin:5px 0 0;font-size:clamp(10px,1.2vw,14px)}
+.okey-result-head,.okey-result-row{display:grid;align-items:center;gap:8px}.okey-result-head{grid-template-columns:9% 1fr 25% 18%;padding:8px 16px;background:#572417cc;color:#f5ba70;font-size:clamp(8px,.9vw,11px);font-weight:950;letter-spacing:.08em}.okey-result-row{grid-template-columns:9% clamp(34px,4vw,48px) 1fr 25% 18%}.okey-result-head span:first-child{text-align:center}.okey-result-head span:last-child{text-align:right}
+.okey-result-row{min-height:clamp(48px,8vh,66px);padding:5px 16px;border-top:1px solid #ffd0722e;background:#58231599}.okey-result-row:nth-child(even){background:#7c321a99}.okey-result-row.winner{background:linear-gradient(90deg,#d98b22dd,#b75018dd);box-shadow:inset 5px 0 #ffe16e}.okey-result-row.mine{outline:1px solid #ffe296;outline-offset:-2px}
+.result-rank{width:clamp(25px,3vw,38px);aspect-ratio:1;display:grid;place-items:center;justify-self:center;border-radius:50%;background:#a34622;color:#ffd377;font-size:clamp(15px,1.8vw,23px)}.okey-result-row.winner .result-rank{background:#ffe075;color:#9b4215;box-shadow:0 0 13px #ffd05f}
+.okey-result-row .result-avatar{width:clamp(34px,4vw,48px);aspect-ratio:1;display:grid;place-items:center;border:2px solid #ffe2a1;border-radius:7px;background:#153d50;color:#fff;font:900 clamp(16px,2vw,25px) Georgia,serif}.okey-result-row>strong{display:block;font-size:clamp(12px,1.45vw,18px)}.okey-result-row>strong small{display:block;margin-top:3px;color:#ffd694;font-size:clamp(7px,.75vw,10px)}
+.okey-result-row>em{font-size:clamp(8px,.9vw,12px);font-style:normal;font-weight:900;color:#ffd289}.okey-result-row>output{text-align:right;font:900 clamp(20px,2.8vw,34px) Georgia,serif;color:#fff4c6}.okey-result-row.winner>output{color:#fff09b}
+.okey-result-panel>footer{display:flex;justify-content:center;gap:12px;padding:14px;background:#32150ff2}.okey-result-panel>footer button{min-width:clamp(130px,18vw,220px);padding:11px 18px;border:2px solid #ffd779;border-radius:11px;font-weight:950;cursor:pointer}.result-replay{background:linear-gradient(#ffd45a,#ee8f20);color:#78300e;box-shadow:0 4px 0 #a94f12}.result-home{background:linear-gradient(#45c8eb,#1588bd);color:white;border-color:#a8edff!important;box-shadow:0 4px 0 #075985}
+@media(max-width:700px){.okey-result-panel{width:94vw}.okey-result-head{grid-template-columns:10% 1fr 22% 18%}.okey-result-row{grid-template-columns:10% 34px 1fr 22% 18%}.okey-result-head,.okey-result-row{padding-left:8px;padding-right:8px}.okey-result-panel>footer{padding:9px}.okey-result-panel>footer button{min-width:0;flex:1}}
+
+/* Onaylanan v1 gerçekçi asset paketi. */
+.okey-table-screen{background:#041d16}
+.okey-felt{
+  background-color:#06422f;
+  background-image:linear-gradient(#02171030,#02171030),url('../assets/games/okey101/felt-emerald-v1.png');
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  box-shadow:inset 0 0 70px #00150dcc
+}
+.okey-open-melds::before,.okey-open-melds::after{
+  border-color:#718c7e;
+  background-color:#07382d;
+  box-shadow:inset 0 0 20px #001c15aa,0 1px 2px #00170f
+}
+.okey-open-melds::before{
+  background-image:repeating-linear-gradient(90deg,#a6baa72f 0 1px,transparent 1px 4%),repeating-linear-gradient(#a6baa72f 0 1px,transparent 1px 5%)
+}
+.okey-open-melds::after{
+  background-image:repeating-linear-gradient(90deg,#a6baa742 0 1px,transparent 1px 16.6667%),repeating-linear-gradient(#a6baa72f 0 1px,transparent 1px 5%)
+}
+.okey-stock,.okey-felt .tile{
+  background-image:url('../assets/games/okey101/tile-ivory-real-v1.png');
+  background-position:center;
+  background-size:134% 126%;
+  background-repeat:no-repeat
+}
+.okey-tile-dragging{
+  background-image:url('../assets/games/okey101/tile-ivory-real-v1.png')!important;
+  background-position:center!important;
+  background-size:134% 126%!important
+}
+.okey-rack{
+  background-image:url('../assets/games/okey101/rack-walnut-v3.png');
+  background-position:center 48%;
+  background-size:100% 135%;
+  background-repeat:no-repeat;
+  filter:drop-shadow(0 8px 10px #00120bbb)
+}
+.okey-smart-tools button[data-action="sort-runs"],
+.okey-smart-tools button[data-action="sort-pairs"],
+.okey-smart-tools button[data-action="auto-open-melds"],
+.okey-smart-tools button[data-action="auto-open-pairs"],
+.okey-smart-tools button[data-action="auto-layoff"]{
+  border:0;
+  border-radius:0;
+  background-color:transparent;
+  background-position:center;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  color:#fff;
+  text-shadow:0 1px 2px #001c18,0 0 4px #001c1888;
+  box-shadow:none
+}
+.okey-smart-tools button[data-action="sort-runs"],
+.okey-smart-tools button[data-action="sort-pairs"]{background-image:url('../assets/games/okey101/button-blue-v1.png')}
+.okey-smart-tools button[data-action="auto-open-melds"],
+.okey-smart-tools button[data-action="auto-open-pairs"]{background-image:url('../assets/games/okey101/button-gold-v1.png');color:#fff9df}
+.okey-smart-tools button[data-action="auto-layoff"]{background-image:url('../assets/games/okey101/button-green-v1.png');color:#effff6}
+.okey-smart-tools button.active{
+  border:0;
+  background-color:transparent;
+  box-shadow:none;
+  filter:brightness(1.16) drop-shadow(0 0 6px #c5ffe18c)
+}
+.okey-smart-tools button:disabled{
+  background-color:transparent;
+  color:#e4e8e5;
+  filter:grayscale(.7) brightness(.72);
+  opacity:.5
+}
+.okey-table-opened{
+  width:clamp(42px,4.2vw,58px);
+  height:clamp(25px,4.2vh,34px);
+  padding:0 3px 3px;
+  border:0;
+  border-radius:0;
+  background:url('../assets/games/okey101/score-plaque-v1.png') center/100% 100% no-repeat;
+  box-shadow:none
+}
+.okey-table-opened::after{display:none}
+.okey-table-opened b{color:#fff8dd;text-shadow:0 1px 2px #120b08,0 0 4px #000}
+.okey-discard-lane,.okey-discard-tray{
+  border-color:#547667;
+  background-color:#07352b;
+  box-shadow:inset 0 0 11px #001710bb,0 1px 2px #00150e99
+}
+.okey-discard-tray.enabled{border-color:#e8c56b;background-color:#0b4638;color:#ffe28b}
+.okey-center .okey-stock{box-shadow:0 3px 5px #00150e99}
+
+/* v1 yerleşim düzeltmeleri: büyük eylemler ve ahşap rafın gerçek iç sınırları. */
+.okey-smart-tools button[data-action="sort-runs"],
+.okey-smart-tools button[data-action="sort-pairs"],
+.okey-smart-tools button[data-action="auto-open-melds"],
+.okey-smart-tools button[data-action="auto-open-pairs"],
+.okey-smart-tools button[data-action="auto-layoff"]{
+  width:8.8%;
+  height:8.4%;
+  padding:5px 8px;
+  font-size:clamp(9px,.9vw,13px)
+}
+.okey-smart-tools button[data-action="sort-runs"]{left:.4%;bottom:9.6%}
+.okey-smart-tools button[data-action="sort-pairs"]{left:.4%;bottom:.7%}
+.okey-smart-tools button[data-action="auto-open-melds"]{right:.4%;bottom:18.5%}
+.okey-smart-tools button[data-action="auto-open-pairs"]{right:.4%;bottom:9.6%}
+.okey-smart-tools button[data-action="auto-layoff"]{right:.4%;bottom:.7%}
+
+.okey-rack-row{left:6.2%;right:6.2%;height:38%}
+.okey-rack-row:nth-child(1){bottom:52%}
+.okey-rack-row:nth-child(2){bottom:14%}
+@media(orientation:landscape) and (max-height:560px){
+  .okey-rack-row{left:6.2%;right:6.2%;height:38%}
+  .okey-rack-row:nth-child(1){bottom:52%}
+  .okey-rack-row:nth-child(2){bottom:14%}
+}
+
+/* Seri/el toplamı: yalnız rakam gösteren altın çerçeveli plaka. */
+.okey-101-counter{
+  min-width:0;
+  width:clamp(48px,5vw,66px);
+  height:clamp(30px,5vh,40px);
+  padding:0 5px 4px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:0;
+  background:url('../assets/games/okey101/score-plaque-v1.png') center/100% 100% no-repeat;
+  color:#fff8dd;
+  box-shadow:none
+}
+.okey-101-counter small,.okey-101-counter span{display:none}
+.okey-101-counter b{font:900 clamp(15px,1.7vw,22px)/1 Georgia,serif;text-shadow:0 1px 2px #160b05,0 0 4px #000}
+.okey-101-counter.ready{border:0;box-shadow:none;color:#e9ffd4;filter:brightness(1.12) drop-shadow(0 0 5px #71dc7588)}
+
+/* Minimal altın profil kartları: avatar baş harfi ve oyuncu adı. */
+.okey-player,.okey-me{
+  box-sizing:border-box;
+  width:clamp(76px,8.3vw,104px);
+  height:clamp(34px,5.7vh,44px);
+  max-width:none;
+  padding:5px 8px;
+  display:grid;
+  grid-template-columns:clamp(24px,2.6vw,31px) minmax(0,1fr);
+  grid-template-rows:1fr;
+  align-items:center;
+  gap:5px;
+  overflow:visible;
+  border:0;
+  border-radius:0;
+  background:url('../assets/games/okey101/score-plaque-v1.png') center/100% 100% no-repeat;
+  box-shadow:none;
+  color:#f4da8c;
+  text-align:left
+}
+.okey-player>span,.okey-me>span{
+  grid-row:1;
+  box-sizing:border-box;
+  width:clamp(24px,2.6vw,31px);
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:1px solid #dcbf70;
+  border-radius:4px;
+  background:#0a3b2e;
+  color:#fff3c1;
+  font:900 clamp(11px,1.2vw,15px)/1 Georgia,serif;
+  text-shadow:0 1px 2px #001b14
+}
+.okey-player b,.okey-me b{
+  display:block;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+  color:#f4d98b;
+  font-size:clamp(7px,.72vw,10px);
+  line-height:1;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.okey-player small{display:none}
+.okey-player.turn,.okey-me:has(.okey-turn-clock){filter:brightness(1.12) drop-shadow(0 0 6px #d8bd6e88)}
+.okey-player .okey-turn-clock,.okey-me .okey-turn-clock{
+  left:calc(5px + clamp(12px,1.3vw,15.5px));
+  top:50%;
+  width:clamp(24px,2.6vw,31px);
+  height:clamp(24px,2.6vw,31px);
+  transform:translate(-50%,-50%);
+  border-radius:4px
+}
+.okey-player .okey-turn-clock b,.okey-me .okey-turn-clock b{font-size:clamp(12px,1.35vw,17px)}
+
+/* v2 profil kartı, daha yüksek eylem tuşları ve dokulu geri-bırak kontrolü. */
+.okey-player,.okey-me{
+  width:clamp(94px,10vw,126px);
+  height:clamp(36px,5.9vh,46px);
+  padding:5px 8px 5px 5px;
+  grid-template-columns:29% minmax(0,1fr);
+  gap:5px;
+  background-image:url('../assets/games/okey101/profile-card-emerald-gold-v1.png');
+  background-position:center;
+  background-size:100% 100%;
+  background-repeat:no-repeat
+}
+.okey-player>span,.okey-me>span{
+  width:clamp(25px,2.8vw,34px);
+  max-width:100%;
+  border:0;
+  border-radius:5px;
+  background:#052a20aa;
+  color:#fff1b8
+}
+.okey-player b,.okey-me b{padding-right:2px;color:#f6da86;font-size:clamp(8px,.8vw,11px)}
+.okey-player .okey-turn-clock,.okey-me .okey-turn-clock{
+  left:calc(5px + clamp(12.5px,1.4vw,17px));
+  width:clamp(25px,2.8vw,34px);
+  height:clamp(25px,2.8vw,34px);
+  border-radius:5px
+}
+
+.okey-smart-tools button[data-action="sort-runs"],
+.okey-smart-tools button[data-action="sort-pairs"],
+.okey-smart-tools button[data-action="auto-open-melds"],
+.okey-smart-tools button[data-action="auto-open-pairs"],
+.okey-smart-tools button[data-action="auto-layoff"]{
+  width:10%;
+  height:10.5%;
+  padding:7px 10px;
+  font-size:clamp(10px,1vw,14px);
+  cursor:pointer;
+  transition:transform .09s ease,filter .09s ease;
+  filter:drop-shadow(0 3px 3px #00150e88)
+}
+.okey-smart-tools button[data-action="sort-runs"]{left:.2%;bottom:11.2%}
+.okey-smart-tools button[data-action="sort-pairs"]{left:.2%;bottom:.5%}
+.okey-smart-tools button[data-action="auto-open-melds"]{right:.2%;bottom:21.9%}
+.okey-smart-tools button[data-action="auto-open-pairs"]{right:.2%;bottom:11.2%}
+.okey-smart-tools button[data-action="auto-layoff"]{right:.2%;bottom:.5%}
+.okey-smart-tools button.active{filter:brightness(1.15) drop-shadow(0 0 7px #d8fbd388)}
+.okey-smart-tools button:not(:disabled):hover{filter:brightness(1.12) drop-shadow(0 4px 5px #00150eaa)}
+.okey-smart-tools button:not(:disabled):active{
+  transform:translateY(4px) scale(.96);
+  filter:brightness(.82) drop-shadow(0 1px 1px #00150e88)
+}
+.okey-smart-tools button:disabled{cursor:not-allowed;filter:grayscale(.7) brightness(.72);opacity:.5}
+
+.okey-return-discard{
+  border:2px solid #d2ad55;
+  border-radius:6px;
+  background-color:#073a2d;
+  background-image:linear-gradient(#14745bbf,#052d23e8),url('../assets/games/okey101/felt-emerald-v1.png');
+  background-position:center;
+  background-size:cover;
+  color:#fff1bd;
+  box-shadow:inset 0 0 0 1px #f6df8a55,inset 0 -5px 9px #001b14aa,0 2px 0 #6b4b16,0 0 9px #d7b85c55;
+  text-shadow:0 1px 2px #001b14;
+  transition:transform .09s ease,filter .09s ease,box-shadow .09s ease
+}
+.okey-return-discard:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.okey-return-discard:active{
+  transform:translateY(3px) scale(.96);
+  filter:brightness(.82);
+  box-shadow:inset 0 3px 8px #001b14cc,0 1px 0 #6b4b16
+}
+.okey-return-discard b{color:#f3cf72;text-shadow:0 1px 2px #001b14}
+
+/* v3: controls stay completely outside the wooden rack; profile copy sits in its own well. */
+.okey-smart-tools button[data-action="sort-runs"],
+.okey-smart-tools button[data-action="sort-pairs"],
+.okey-smart-tools button[data-action="auto-open-melds"],
+.okey-smart-tools button[data-action="auto-open-pairs"],
+.okey-smart-tools button[data-action="auto-layoff"]{
+  width:7.15%;
+  height:9.4%;
+  padding:7px 5px
+}
+.okey-smart-tools button[data-action="sort-runs"]{left:.25%;bottom:10.2%}
+.okey-smart-tools button[data-action="sort-pairs"]{left:.25%;bottom:.45%}
+.okey-smart-tools button[data-action="auto-open-melds"]{right:.25%;bottom:19.95%}
+.okey-smart-tools button[data-action="auto-open-pairs"]{right:.25%;bottom:10.2%}
+.okey-smart-tools button[data-action="auto-layoff"]{right:.25%;bottom:.45%}
+
+.okey-player b,.okey-me b{
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  padding:0 7%;
+  display:grid;
+  place-items:center;
+  align-self:stretch;
+  text-align:center;
+  line-height:1.05
+}
+
+/* Emerald-and-gold result board: live copy remains HTML over the generated asset. */
+.okey-result-overlay{padding:1.5vh 3vw;background:#010b08d9}
+.okey-result-panel{
+  width:min(86vw,960px);
+  aspect-ratio:1.775;
+  max-height:96vh;
+  overflow:hidden;
+  display:grid;
+  grid-template-rows:27% 5% 51% 17%;
+  border:0;
+  border-radius:0;
+  background:transparent url('../assets/games/okey101/result-board-emerald-gold-v2.png') center/100% 100% no-repeat;
+  color:#fff3cf;
+  box-shadow:none;
+  filter:drop-shadow(0 22px 32px #000b)
+}
+.okey-result-panel>header{
+  box-sizing:border-box;
+  padding:8.5% 8% 0;
+  border:0;
+  background:transparent;
+  text-shadow:0 2px 3px #00170e,0 0 10px #000
+}
+.okey-result-panel>header small{color:#e7c86f;font-size:clamp(8px,.9vw,12px)}
+.okey-result-panel>header h2{margin:0;color:#fff2a6;font-size:clamp(28px,4.2vw,54px);text-shadow:0 2px #684713,0 0 18px #ffc93f}
+.okey-result-panel>header p{margin:1px 0 0;color:#e9dfc5}
+.okey-result-head{padding:0 7%;background:transparent;color:#cfae5a}
+.okey-result-rows{display:grid;grid-template-rows:repeat(4,1fr);padding:0 6.5% 1.2%;min-height:0}
+.okey-result-row,.okey-result-row:nth-child(even){min-height:0;padding:1px 2%;border:0;background:transparent}
+.okey-result-row.winner{background:linear-gradient(90deg,transparent,#d2a33125,transparent);box-shadow:inset 4px 0 #ffe17b}
+.okey-result-row:not(.winner){filter:saturate(.66) brightness(.82)}
+.okey-result-row.mine:not(.winner){outline:1px solid #8c7e6288}
+.okey-result-panel>footer{padding:2.5% 15% 4%;align-items:center;background:transparent}
+.okey-result-panel>footer button{
+  min-width:0;
+  width:43%;
+  height:100%;
+  padding:0 12px;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:#fff0b4;
+  box-shadow:none;
+  text-shadow:0 1px 2px #00180f;
+  transition:transform .09s ease,filter .09s ease
+}
+.okey-result-panel>footer button:hover{filter:brightness(1.18)}
+.okey-result-panel>footer button:active{transform:translateY(3px) scale(.97);filter:brightness(.8)}
+.result-replay,.result-home{background:transparent!important;color:#fff0b4!important;border:0!important;box-shadow:none!important}
+
+/* The crown remains artwork; compact live result copy sits in its lower shield. */
+.okey-result-panel>header{position:relative;padding:0}
+.okey-result-panel>header small{
+  position:absolute;
+  left:50%;
+  top:66%;
+  transform:translateX(-50%);
+  max-width:42%;
+  overflow:hidden;
+  font-size:clamp(7px,.72vw,10px);
+  line-height:1;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.okey-result-panel>header h2{
+  position:absolute;
+  left:50%;
+  top:76%;
+  margin:0;
+  transform:translateX(-50%);
+  font-size:clamp(18px,2.55vw,34px);
+  line-height:.9;
+  white-space:nowrap
+}
+.okey-result-panel>header p{display:none}
+.okey-result-panel.victory>header h2{color:#fff29b;text-shadow:0 2px #795314,0 0 18px #ffcc36,0 0 34px #ffdb55}
+.okey-result-panel.defeat>header h2{color:#d5c7ae;text-shadow:0 2px #17120d,0 0 12px #6f4935}
+.okey-result-panel.neutral>header h2{color:#e9dab2;text-shadow:0 2px #1d170d,0 0 10px #9d7c3e}
+
+/* v4 result typography: every heading follows the same five-column row grid. */
+.okey-result-head{
+  box-sizing:border-box;
+  grid-template-columns:9% clamp(34px,4vw,48px) minmax(0,1fr) 25% 18%;
+  gap:8px;
+  padding:0 8.5%
+}
+.okey-result-head span:nth-child(1){grid-column:1;text-align:center}
+.okey-result-head span:nth-child(2){grid-column:2/4;text-align:left;padding-left:2px}
+.okey-result-head span:nth-child(3){grid-column:4;text-align:center}
+.okey-result-head span:nth-child(4){grid-column:5;text-align:right}
+.okey-result-row{box-sizing:border-box;grid-template-columns:9% clamp(34px,4vw,48px) minmax(0,1fr) 25% 18%;gap:8px}
+.okey-result-row>strong{align-self:center;line-height:1.05}
+.okey-result-row>em{justify-self:center;text-align:center}
+.okey-result-row>output{align-self:center}
+
+.okey-result-panel>footer{
+  box-sizing:border-box;
+  gap:9%;
+  padding:1.8% 15.2% 3.3%
+}
+.okey-result-panel>footer button{
+  box-sizing:border-box;
+  width:42%;
+  height:72%;
+  align-self:center;
+  display:grid;
+  place-items:center;
+  padding:0 10px;
+  font-size:clamp(11px,1.35vw,17px);
+  line-height:1;
+  cursor:pointer
+}
+.okey-result-panel>footer button:hover{transform:translateY(-2px);filter:brightness(1.2) drop-shadow(0 3px 4px #0008)}
+.okey-result-panel>footer button:active{transform:translateY(4px) scale(.96);filter:brightness(.76);text-shadow:0 0 transparent}
+
+/* Opening grids clear the rack cap instead of disappearing beneath the wood. */
+.okey-open-melds{bottom:33%}
+@media(orientation:landscape) and (max-height:560px){.okey-open-melds{bottom:33%}}
+
+/* Pixel-fit the live scoreboard DOM to the v2 artwork wells. */
+.okey-result-panel{width:min(86vw,166.85dvh,960px);grid-template-rows:29% 3% 49% 19%}
+.okey-result-head{
+  align-items:center;
+  padding:0 8.2%;
+  font-size:clamp(7px,.78vw,10px);
+  line-height:1
+}
+.okey-result-rows{
+  box-sizing:border-box;
+  padding:0 6.5% 1.5%;
+  align-items:stretch
+}
+.okey-result-row{
+  height:100%;
+  padding:0 2%;
+  align-items:center
+}
+.okey-result-row .result-rank,
+.okey-result-row .result-avatar,
+.okey-result-row>strong,
+.okey-result-row>em,
+.okey-result-row>output{align-self:center;margin:0}
+.okey-result-row>strong small{margin-top:1px;line-height:1}
+
+.okey-result-panel>footer{
+  box-sizing:border-box;
+  align-items:center;
+  padding:0 15.2% 1.8%
+}
+.okey-result-panel>footer button{
+  height:64%;
+  align-self:center;
+  margin:0;
+  transform:none
+}
+.okey-result-panel>footer button:hover{transform:translateY(-2px)}
+.okey-result-panel>footer button:active{transform:translateY(4px) scale(.96)}
+
+/* Remove duplicated copy and center each remaining label in its artwork well. */
+.okey-result-panel>header h2{top:88%;display:grid;place-items:center;transform:translate(-50%,-50%)}
+.okey-result-panel>header small{display:none}
+.okey-result-row>strong{
+  height:100%;
+  display:flex;
+  align-items:center;
+  padding:0;
+  line-height:1;
+  text-align:left
+}
+.okey-result-row>em{height:100%;display:grid;place-items:center;line-height:1}
+.okey-result-row>output{height:100%;display:grid;align-items:center;justify-items:end;line-height:1}
+.okey-result-panel>footer button{transform:none}
+.okey-result-panel>footer button:hover{transform:translateY(-2px)}
+.okey-result-panel>footer button:active{transform:translateY(3px) scale(.96)}
+
+/* Sonuç assetinin kendi çerçeveleri kullanılır; HTML ikinci bir kutu çizmez. */
+.okey-result-row.winner{background:transparent;box-shadow:none}
+.okey-result-row.mine,.okey-result-row.mine:not(.winner){outline:0;outline-offset:0}
+
+/* Şeffaf buton alanı sabit kalır, yalnız yazı assetteki ovalin merkezine çıkar. */
+.okey-result-panel>footer button{padding:0 10px clamp(8px,2.2vh,14px)}

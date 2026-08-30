@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <radialGradient id="rim" cx="31%" cy="22%" r="79%">
+      <stop offset="0" stop-color="#fffef8"/>
+      <stop offset=".42" stop-color="#eee6d5"/>
+      <stop offset=".76" stop-color="#c9bda7"/>
+      <stop offset="1" stop-color="#81735e"/>
+    </radialGradient>
+    <radialGradient id="face" cx="36%" cy="28%" r="72%">
+      <stop offset="0" stop-color="#fffdf5"/>
+      <stop offset=".58" stop-color="#e8dfcd"/>
+      <stop offset="1" stop-color="#b3a58d"/>
+    </radialGradient>
+    <linearGradient id="shine" x1=".12" y1=".05" x2=".84" y2=".92">
+      <stop stop-color="#fff" stop-opacity=".82"/>
+      <stop offset=".35" stop-color="#fff" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#574b3b" stop-opacity=".22"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-20%" width="150%" height="165%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#110d09" flood-opacity=".62"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <circle cx="48" cy="47" r="42" fill="url(#rim)" stroke="#544939" stroke-width="2"/>
+    <circle cx="48" cy="45" r="35.5" fill="url(#face)" stroke="#8e806a" stroke-width="2"/>
+    <circle cx="48" cy="45" r="29.5" fill="none" stroke="#776a58" stroke-opacity=".55" stroke-width="1.5"/>
+    <circle cx="48" cy="45" r="25.5" fill="none" stroke="#fff" stroke-opacity=".25"/>
+    <ellipse cx="43" cy="38" rx="24" ry="21" fill="url(#shine)" opacity=".42"/>
+    <path d="M23 49c9 9 41 13 51-5" fill="none" stroke="#695b49" stroke-opacity=".16" stroke-width="1.4"/>
+  </g>
+</svg>

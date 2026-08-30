@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#120d09">
+  <title>KANTİN — Türk Masa Oyunları</title>
+  <link rel="icon" href="./assets/brand/kantin-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/styles.css">
+  <link rel="stylesheet" href="./src/match.css">
+  <link rel="stylesheet" href="./src/social.css">
+  <link rel="stylesheet" href="./src/home.css">
+  <link rel="stylesheet" href="./src/tavla.css">
+  <link rel="stylesheet" href="./src/okey.css">
+  <link rel="stylesheet" href="./src/pisti.css">
+  <link rel="stylesheet" href="./src/sozcuk.css?v=20260830-6">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <button class="brand" data-action="home" aria-label="Ana menü"><img src="./assets/brand/kantin-logo.svg" alt="KANTİN"></button>
+      <button class="profile profile-trigger" data-player-profile="self" aria-label="Profilimi aç"><div class="avatar" id="headerAvatar">E</div><div><strong id="headerUsername">Ersin</strong><small>Seviye 12 · <b id="userPublicId">Bağlanıyor…</b></small></div><b class="level">12</b></button>
+      <div class="social-actions">
+        <button class="social-btn" data-action="friends">👥 <span>Arkadaşlar</span><i id="friendBadge"></i></button>
+        <button class="social-btn" data-action="chat">💬 <span>Sohbet</span><i id="chatBadge"></i></button>
+      </div>
+      <div class="wallet"><strong>🪙 2.450</strong><small><span id="clock"></span></small></div>
+    </header>
+    <main id="screen"></main>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+  <aside class="social-panel" id="friendsPanel">
+    <header><div><small>SOSYAL</small><h2>Arkadaşlar</h2></div><button data-action="close-social">×</button></header>
+    <form id="friendForm"><input id="friendIdInput" placeholder="KNT-123456" maxlength="10" autocomplete="off"><button class="btn primary">Ekle</button></form>
+    <div id="friendContent"></div>
+  </aside>
+  <aside class="social-panel chat-panel" id="chatPanel">
+    <header><div><small id="chatRoomLabel">GENEL LOBİ</small><h2>Kantin Sohbeti</h2></div><button data-action="close-social">×</button></header>
+    <div class="room-tabs"><button class="active" data-room="lobby">Lobi</button><button data-room="match">Maç</button></div>
+    <div class="social-messages" id="socialMessages"></div>
+    <form id="chatForm"><input id="socialChatInput" placeholder="Mesaj yaz…" maxlength="300" autocomplete="off"><button class="btn primary">Gönder</button></form>
+  </aside>
+  <div class="panel-backdrop" data-action="close-social"></div>
+  <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><div class="profile-card"><button class="profile-close" data-action="close-profile" aria-label="Kapat">×</button><div id="profileContent"></div></div></div>
+  <div class="rotate-notice"><img src="./assets/brand/kantin-mark.svg" alt=""><b>Telefonunu yatay çevir</b><span>KANTİN yatay ekran için tasarlandı.</span></div>
+  <script src="./src/spvp.js"></script>
+  <script src="./src/upvp.js"></script>
+  <script src="./src/pisti.js"></script>
+  <script src="./src/okey101.js"></script>
+  <script src="./src/turkish-words.js?v=20260830-1"></script>
+  <script src="./src/sozcuk.js?v=20260830-5"></script>
+  <script src="./src/game-manager.js"></script>
+  <script src="./src/match-client.js"></script>
+  <script src="./src/app.js?v=20260830-4"></script>
+</body>
+</html>
