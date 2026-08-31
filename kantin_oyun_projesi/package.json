@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node server/server.js",
-    "test": "node tests/engine.test.js && node tests/sozcuk.test.js && node tests/matchmaker.test.js && node tests/user-registry.test.js && node tests/game-room.test.js"
+    "test": "node tests/engine.test.js && node tests/sozcuk.test.js && node tests/matchmaker.test.js && node tests/user-registry.test.js && node tests/game-room.test.js && node tests/health.test.js"
   },
   "dependencies": {
     "ws": "^8.21.3"

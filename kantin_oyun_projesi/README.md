@@ -38,6 +38,17 @@ Her oyun aksiyonu şu kimlikleri taşır:
 
 Aktif maç state'leri her kabul edilen aksiyondan sonra SQLite'a yazılır ve sunucu yeniden başladığında geri yüklenir.
 
+## Bulut bağlantıları
+
+- GitHub `main` dalı Vercel'deki `kantingame` projesini otomatik dağıtır.
+- Vercel proje kökü `kantin_oyun_projesi` klasörüdür.
+- Supabase şeması `supabase/migrations` altında sürümlenir.
+- `GET /api/health`, Vercel sunucu fonksiyonundan Supabase'e yetkili bir sağlık sorgusu gönderir.
+
+Gerekli ortam değişkenleri `.env.example` içinde yalnızca adlarıyla listelenir. `SUPABASE_SECRET_KEY` tarayıcı koduna eklenmemeli ve Git'e kaydedilmemelidir.
+
+Mevcut authoritative WebSocket oyun sunucusu hâlâ SQLite ve process belleğini kullanır. Gerçek eşleşme aşamasında kuyruk ve oda state'i Supabase tabanlı kalıcı yapıya taşınmadan bu sunucu yatay ölçeklenmemelidir.
+
 ## Güvenlik
 
 - Oturum anahtarları SHA-256 özetiyle saklanır.
