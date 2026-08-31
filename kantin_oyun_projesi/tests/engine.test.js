@@ -4,6 +4,7 @@ require('../src/spvp.js');
 require('../src/upvp.js');
 require('../src/pisti.js');
 require('../src/okey101.js');
+require('../src/sozcuk.js');
 
 function test(name, fn) {
   try { fn(); process.stdout.write(`✓ ${name}\n`); }
@@ -741,4 +742,16 @@ test('Dört oyuncu da çift açarsa el puansız iptal edilir', () => {
   assert.equal(game.state.status, 'finished');
   assert.equal(game.state.finishType, 'all-players-opened-pairs');
   assert.ok(Object.values(game.state.scores.individual).every(score => score.total === 0));
+});
+
+test('Sözcük Kapışması dört bireysel oyuncuyla başlar ve sırayı saat yönünde ilerletir', () => {
+  const game = new SOZCUK.WordClashGame({ dictionary: ['EL'] });
+  assert.deepEqual(game.players.map(player => player.id), ['P1', 'P2', 'P3', 'P4']);
+  assert.ok(game.players.every(player => game.state.racks[player.id].length === 7));
+  assert.deepEqual(game.state.scores, { P1: 0, P2: 0, P3: 0, P4: 0 });
+  game.pass('P1');
+  game.pass('P2');
+  game.pass('P3');
+  assert.equal(game.current().id, 'P4');
+  assert.equal(game.state.status, 'playing');
 });

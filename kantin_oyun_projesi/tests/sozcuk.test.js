@@ -7,8 +7,11 @@ require('../src/sozcuk.js');
 test('Sözcük Kapışması 15x15 tahta ve yedişer taşla başlar',()=>{
   const g=new SOZCUK.WordClashGame();
   assert.equal(g.state.board.length,15);
+  assert.deepEqual(g.players.map(player=>player.id),['P1','P2','P3','P4']);
   assert.equal(g.state.racks.P1.length,7);
   assert.equal(g.state.racks.P2.length,7);
+  assert.equal(g.state.racks.P3.length,7);
+  assert.equal(g.state.racks.P4.length,7);
   assert.ok(g.state.bag.length>70);
   assert.equal(Object.values(SOZCUK.LETTERS).reduce((n,[count])=>n+count,0)+2,100);
 });
@@ -29,9 +32,9 @@ test('harf değiştirmek puan getirmez ve sırayı geçirir',()=>{
   assert.equal(g.state.racks.P1.length,7);
 });
 
-test('dört ardışık pas oyunu bitirip elde kalan puanları düşürür',()=>{
+test('sekiz ardışık pas dört kişilik oyunu bitirip elde kalan puanları düşürür',()=>{
   const g=new SOZCUK.WordClashGame(),before=g.state.racks.P1.reduce((n,t)=>n+t.value,0);
-  g.pass('P1');g.pass('P2');g.pass('P1');g.pass('P2');
+  ['P1','P2','P3','P4','P1','P2','P3','P4'].forEach(id=>g.pass(id));
   assert.equal(g.state.status,'finished');
   assert.equal(g.state.scores.P1,-before);
 });
@@ -50,7 +53,23 @@ test('ana veya çapraz sözcük sözlükte yoksa hamle reddedilir',()=>{
   const g=new SOZCUK.WordClashGame(),rack=g.state.racks.P1;
   Object.assign(rack[0],{letter:'J',value:10,blank:false});Object.assign(rack[1],{letter:'J',value:10,blank:false});
   g.stage('P1',rack[0].id,7,7);g.stage('P1',rack[1].id,7,8);
-  assert.throws(()=>g.submit('P1'),/Sözlükte bulunmayan sözcük/);
+  assert.throws(()=>g.submit('P1'),/geçerli sözcük oluşturmalı/);
+});
+
+test('aynı hamlede çapraz konuma taş bırakılamaz',()=>{
+  const g=new SOZCUK.WordClashGame(),rack=g.state.racks.P1;
+  g.stage('P1',rack[0].id,7,7,rack[0].blank?'A':null);
+  assert.throws(()=>g.stage('P1',rack[1].id,8,8,rack[1].blank?'A':null),/Çapraz oynanmaz/);
+  assert.equal(g.state.pending.length,1);
+});
+
+test('ana kelimeden boşlukla ayrılan taş hamleye sızamaz',()=>{
+  const g=new SOZCUK.WordClashGame(),rack=g.state.racks.P1;
+  Object.assign(rack[0],{letter:'E',value:1,blank:false});
+  Object.assign(rack[1],{letter:'L',value:1,blank:false});
+  Object.assign(rack[2],{letter:'A',value:1,blank:false});
+  g.stage('P1',rack[0].id,7,7);g.stage('P1',rack[1].id,7,8);g.stage('P1',rack[2].id,7,10);
+  assert.throws(()=>g.submit('P1'),/boşluk bırakılamaz/);
 });
 
 test('günlük kullanım sözlüğündeki TİREN kabul edilir',()=>{
@@ -78,6 +97,9 @@ test('tahtaya geçici konan harf ıstakada ikinci kez görünmez',()=>{
   g.stage('P1',tile.id,7,7,tile.blank?'A':null);
   assert.equal(g.getStateForPlayer('P1').yourRack.some(item=>item.id===tile.id),false);
   assert.equal(g.getStateForPlayer('P1').yourRack.length,6);
+  assert.equal(g.getStateForPlayer('P1').yourRackSlots.length,7);
+  assert.equal(g.getStateForPlayer('P1').yourRackSlots[6],null);
   g.unstage('P1',7,7);
   assert.equal(g.getStateForPlayer('P1').yourRack.some(item=>item.id===tile.id),true);
+  assert.equal(g.getStateForPlayer('P1').yourRackSlots[0].id,tile.id);
 });

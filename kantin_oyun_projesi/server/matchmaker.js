@@ -1,6 +1,6 @@
 'use strict';
 const { randomUUID } = require('node:crypto');
-const MODE_SEATS = Object.freeze({spvp:['white','black'],upvp:['A1','B1','A2','B2'],pistiSolo:['P1','P2'],pistiTeam:['A1','B1','A2','B2'],okeySolo:['P1','P2','P3','P4'],okeyTeam:['A1','B1','A2','B2'],sozcukDuel:['P1','P2']});
+const MODE_SEATS = Object.freeze({spvp:['white','black'],upvp:['A1','B1','A2','B2'],pistiSolo:['P1','P2'],pistiTeam:['A1','B1','A2','B2'],okeySolo:['P1','P2','P3','P4'],okeyTeam:['A1','B1','A2','B2'],sozcukDuel:['P1','P2','P3','P4']});
 class Matchmaker{
   constructor(options={}){this.id=options.id||randomUUID;this.queues=new Map(Object.keys(MODE_SEATS).map(m=>[m,[]]));this.byPlayer=new Map()}
   join(player,mode){if(!MODE_SEATS[mode])throw new Error('Geçersiz oyun modu.');if(!player?.id||typeof player.send!=='function')throw new Error('Geçersiz oyuncu.');this.leave(player.id);const ticket={ticketId:this.id(),player,mode,joinedAt:Date.now()};this.queues.get(mode).push(ticket);this.byPlayer.set(player.id,ticket);this.notifyQueue(mode);return this.formMatches(mode)}

@@ -16,16 +16,27 @@
   .word-rack-area{min-height:0}
   .word-actions{grid-template-columns:repeat(4,1fr)}
 }
+
+/* Bordo, gerçekçi dokuma masa örtüsü */
+.word-screen{background-color:#651016;background-image:linear-gradient(#25000638,#25000638),url('../assets/games/sozcuk/burgundy-tablecloth-v1.png');background-position:center;background-repeat:no-repeat;background-size:cover}
 .word-tile.dragging{opacity:.45;transform:scale(.92)}
+.word-tile-dragging{position:fixed!important;z-index:1000!important;margin:0!important;pointer-events:none!important;opacity:.96!important;transform:scale(1.08)!important;background:transparent url('../assets/games/sozcuk/wood-letter-tile-v1.png') center/108% 108% no-repeat!important;color:#24170d!important;box-shadow:0 10px 14px #0009!important;font-family:Arial,sans-serif!important}
+.word-tile-dragging>span{display:grid;place-items:center;width:100%;height:100%;font-size:clamp(19px,1.9vw,26px);font-weight:900;line-height:1}
+.word-tile-dragging small{position:absolute;right:8%;bottom:7%;font-size:clamp(7px,.7vw,10px);font-weight:900}
 .word-cell.drag-over{outline:3px solid #ffe06a;filter:brightness(1.18)}
 .word-screen .word-tile{border:0;background-color:transparent;background-image:url('../assets/games/sozcuk/wood-letter-tile-v1.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;color:#24170d;text-shadow:0 1px #fff8;box-shadow:0 3px 4px #0008;font-family:Georgia,serif;font-weight:900}
 .word-screen .word-tile>span{transform:translateY(-1%)}
 .word-screen .word-tile small{right:12%;bottom:10%;color:#2b1b0e;text-shadow:0 1px #fff9}
 .word-screen .word-board{border:0;padding:9.4%;gap:2px;background-color:transparent;background-image:url('../assets/games/sozcuk/realistic-board-base-v1.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:0 14px 32px #000b}
+.word-screen .word-cell{font-size:clamp(6px,.62vw,9px);font-weight:1000;text-shadow:0 1px 1px #fff8}
+.word-screen .word-cell .word-tile>span{font-size:clamp(12px,1.45vw,19px);line-height:1;letter-spacing:-.04em;text-shadow:0 1px 0 #fff,0 0 1px #fff,0 1px 2px #0005}
+.word-screen .word-cell .word-tile small{right:10%;bottom:8%;font-size:clamp(5px,.55vw,8px);line-height:1;font-weight:1000}
+.word-screen .word-rack .word-tile>span{font-size:clamp(21px,2.15vw,29px);line-height:1;text-shadow:0 1px 0 #fff,0 1px 2px #0006}
+.word-screen .word-rack .word-tile small{font-size:clamp(7px,.7vw,10px);font-weight:1000}
 
 /* Dört kenarlı fiziksel kelime masası düzeni */
 @media (orientation:landscape){
-  .word-screen{position:relative;background:radial-gradient(circle at 50% 48%,#126f79 0,#083b43 48%,#061f25 100%)}
+  .word-screen{position:relative;background-color:#651016;background-image:linear-gradient(#25000638,#25000638),url('../assets/games/sozcuk/burgundy-tablecloth-v1.png');background-position:center;background-repeat:no-repeat;background-size:cover}
   .word-layout{position:relative;grid-template-columns:minmax(0,1fr) 258px;gap:8px}
   .word-table-stage{position:relative;height:100%;display:grid;grid-template-rows:42px minmax(0,1fr) 58px;place-items:center;padding:0 55px;overflow:visible}
   .word-board{grid-row:2;width:auto;height:min(calc(100dvh - 108px),calc(100vw - 390px));border-radius:3px;transform:perspective(1000px) rotateX(1.2deg)}
@@ -42,3 +53,158 @@
   .word-side-rack.left{left:8px}.word-side-rack.right{right:8px}
   .word-bag-asset{position:absolute;z-index:4;top:0;right:218px;width:132px;height:96px;object-fit:contain;filter:drop-shadow(0 8px 9px #0009);pointer-events:none}
 }
+
+/* Tahta taşları hücreyi tam doldurur; yazı taşın ahşap yüzünde temiz ve ortalı kalır. */
+.word-screen .word-cell{overflow:hidden}
+.word-screen .word-cell .word-tile{inset:0;width:100%;height:100%;box-sizing:border-box;overflow:hidden;border-radius:1px;background-size:112% 112%;box-shadow:0 1px 2px #0007;font-family:Arial,sans-serif}
+.word-screen .word-cell .word-tile.pending{outline:0;transform:none;box-shadow:inset 0 0 0 2px #e8b82d,0 1px 2px #0007}
+.word-screen .word-cell .word-tile>span{display:grid;place-items:center;width:100%;height:100%;font-size:clamp(10px,1.16vw,16px);line-height:1;letter-spacing:0;transform:none;text-shadow:0 1px 0 #fff9}
+.word-screen .word-cell .word-tile small{right:8%;bottom:7%;font-size:clamp(5px,.48vw,7px);line-height:1;font-weight:900;text-shadow:none}
+.word-screen .word-rack .word-tile{background-size:108% 108%;font-family:Arial,sans-serif}
+.word-screen .word-rack .word-tile>span{display:grid;place-items:center;width:100%;height:100%;font-size:clamp(19px,1.9vw,26px);line-height:1;letter-spacing:0;transform:none;text-shadow:0 1px 0 #fff9}
+.word-rack-slot{flex:0 0 40px;width:40px;height:46px;pointer-events:none}
+
+/* Gerçekçi yedi gözlü ahşap ıstaka asseti */
+@media (orientation:landscape){
+  .word-table-stage{grid-template-rows:82px minmax(0,1fr) 124px}
+  .word-opponent-rack,.word-table-stage>.word-rack{box-sizing:border-box;border:0;border-radius:0;background:transparent url('../assets/games/sozcuk/realistic-letter-rack-v1.png') center/100% 100% no-repeat;box-shadow:none}
+  .word-opponent-rack{width:320px;height:82px;padding:0;gap:0}
+  .word-opponent-rack i{width:28px;height:31px;border-radius:3px}
+  .word-table-stage>.word-rack{position:relative;display:block;width:370px;height:124px;padding:0;overflow:visible;background-size:100% 100%}
+  .word-table-stage>.word-rack .word-tile,.word-table-stage>.word-rack .word-rack-slot{position:absolute;z-index:2;top:38px;width:36px;height:31px;margin:0;border-radius:5px;transform:none}
+  .word-table-stage>.word-rack [data-word-rack-slot]{cursor:grab;touch-action:none}
+  .word-table-stage>.word-rack .word-rack-slot{pointer-events:auto}
+  .word-table-stage>.word-rack [data-word-rack-slot].rack-drag-over{outline:2px solid #ffe06a;filter:brightness(1.18);box-shadow:0 0 10px #ffe06aaa}
+  .word-table-stage>.word-rack>:nth-child(1){left:31px}
+  .word-table-stage>.word-rack>:nth-child(2){left:78px}
+  .word-table-stage>.word-rack>:nth-child(3){left:124px}
+  .word-table-stage>.word-rack>:nth-child(4){left:169px}
+  .word-table-stage>.word-rack>:nth-child(5){left:215px}
+  .word-table-stage>.word-rack>:nth-child(6){left:262px}
+  .word-table-stage>.word-rack>:nth-child(7){left:308px}
+  .word-table-stage>.word-rack .word-tile.selected{transform:none}
+  .word-table-stage>.word-rack::after{content:none}
+  .word-opponent-rack{position:relative;padding:0;background-image:url('../assets/games/sozcuk/opponent-rack-back-v2.png');background-size:100% 100%}
+  .word-opponent-rack i{display:none}
+  .word-side-rack{width:260px;height:67px;border:0;border-radius:0;background-color:transparent;background-image:url('../assets/games/sozcuk/opponent-rack-back-v2.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:none}
+  .word-side-rack.left{left:-89px;transform:translateY(-50%) rotate(-90deg)}
+  .word-side-rack.right{right:-89px;transform:translateY(-50%) rotate(90deg)}
+  .word-opponent-rack::after,.word-side-rack::after{content:'';position:absolute;z-index:3;left:50%;top:57%;width:30px;height:30px;background:#315b5a;opacity:.68;transform:translate(-50%,-50%);filter:drop-shadow(1px 1px 0 #b68f7155) drop-shadow(-1px -1px 0 #061a1bbb);mix-blend-mode:multiply;-webkit-mask:url('../assets/brand/kantin-emboss-mark.svg') center/contain no-repeat;mask:url('../assets/brand/kantin-emboss-mark.svg') center/contain no-repeat;pointer-events:none}
+  .word-side-rack::after{width:26px;height:26px}
+}
+
+/* Dört bireysel oyuncunun sözcük ve toplamlarını taşıyan kâğıt skor kartı. */
+@media (orientation:landscape){
+  .word-layout{grid-template-columns:minmax(0,1fr) 190px;gap:0}
+  .word-side{position:relative;width:190px;height:100%;min-height:0;padding:0;display:block;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none}
+  .word-score{position:absolute;z-index:3;top:8px;left:50%;width:160px;height:252px;padding:29px 17px 24px 15px;box-sizing:border-box;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:0;background:transparent url('../assets/games/pisti/final/score-paper-blank-v2.png') center/100% 100% no-repeat;filter:drop-shadow(0 8px 8px #0009);transform:translateX(-50%) rotate(-.8deg)}
+  .word-score article{--word-score-ink:#8e3d35;min-width:0;min-height:0;padding:0 3px;display:grid;grid-template-columns:1fr;grid-template-rows:11px minmax(0,1fr) 11px;align-items:stretch;gap:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--word-score-ink)}
+  .word-score article:nth-child(2){--word-score-ink:#35547a}
+  .word-score article:nth-child(3){--word-score-ink:#39714c}
+  .word-score article:nth-child(4){--word-score-ink:#77538b}
+  .word-score article.turn{border:0;box-shadow:none;text-shadow:0 0 5px #8e5d2433}
+  .word-score small,.word-score b,.word-score span{font-family:"Comic Sans MS","Segoe Print",cursive;font-style:italic;font-weight:700;text-shadow:0 1px #fff7}
+  .word-score-player{min-width:0;border-bottom:1px solid currentColor}
+  .word-score-player small{display:block;overflow:hidden;color:var(--word-score-ink);font-size:8px;line-height:10px;text-overflow:ellipsis;white-space:nowrap}
+  .word-score-lines{min-height:0;display:grid;align-content:start;gap:1px;overflow:hidden}
+  .word-score-line{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px;border-bottom:1px dotted #6d563e55;color:var(--word-score-ink);font-size:7px;line-height:9px}
+  .word-score-line span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .word-score-line b{color:var(--word-score-ink);font-size:8px;line-height:9px}
+  .word-score-empty{padding-top:2px;color:#6d5b4c99;font:italic 6px/1.1 "Comic Sans MS","Segoe Print",cursive;text-align:center}
+  .word-score-total{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:5px;border-top:1px solid currentColor;color:var(--word-score-ink)}
+  .word-score-total span{font-size:6px;line-height:10px;letter-spacing:.08em}
+  .word-score-total b{color:var(--word-score-ink);font-size:11px;line-height:10px}
+  .word-info,.word-history,.word-status{display:none}
+  .word-rack-area{position:static;display:block}
+  .word-rack-area>.word-actions{position:absolute;z-index:4;left:2px;right:2px;bottom:8px;grid-template-columns:repeat(2,1fr);gap:5px}
+  .word-actions button{padding:7px 3px;font-size:9px}
+}
+
+/* Geniş oyun tahtası, daha kompakt rakip ıstakaları ve avatar üstü tur saati. */
+@media (orientation:landscape){
+  .word-layout{grid-template-columns:minmax(0,1fr) 210px}
+  .word-table-stage{position:relative;display:block;padding:0 42px;overflow:visible}
+  .word-screen .word-board{
+    --word-board-size:min(calc(100dvh - 126px),calc(100vw - 500px),420px);
+    position:absolute;z-index:1;left:50%;top:49%;grid-row:auto;
+    width:var(--word-board-size);height:var(--word-board-size);
+    padding:calc(var(--word-board-size) * .098);gap:1px;
+    box-sizing:border-box;transform:translate(-50%,-50%) perspective(1000px) rotateX(1.2deg)
+  }
+  .word-opponent-rack{position:absolute;z-index:3;top:-4px;left:50%;width:244px;height:63px;transform:translateX(-50%)}
+  .word-side-rack{z-index:3;top:50%;width:210px;height:54px}
+  .word-side-rack.left{left:-68px;transform:translateY(-50%) rotate(-90deg)}
+  .word-side-rack.right{right:-68px;transform:translateY(-50%) rotate(90deg)}
+  .word-opponent-rack::after{width:23px;height:23px}
+  .word-side-rack::after{width:21px;height:21px}
+  .word-table-stage>.word-rack{position:absolute;z-index:4;left:50%;bottom:-24px;grid-row:auto;transform:translateX(-50%)}
+  .word-bag-asset{right:226px;width:116px;height:84px}
+
+  .word-side{width:210px}
+  .word-rack-profile{position:absolute;z-index:6;width:118px;height:42px;padding:4px 9px;display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:7px;border:0;border-radius:0;background:transparent url('../assets/games/sozcuk/profile-card-teal-brass-v2.png') center/100% 100% no-repeat;color:#f8edd2;filter:drop-shadow(0 5px 5px #0008);box-shadow:none;text-align:left;cursor:pointer;overflow:visible}
+  .word-rack-profile.top{top:7px;right:calc(50% + 132px);left:auto}
+  .word-rack-profile.left{top:calc(50% - 138px);left:-13px}
+  .word-rack-profile.right{top:calc(50% - 138px);right:-13px}
+  .word-rack-profile.mine{left:calc(50% + 190px);bottom:0}
+  .word-rack-profile.active{filter:drop-shadow(0 0 3px #f2cc6d99) drop-shadow(0 5px 5px #0009)}
+  .word-mini-avatar{position:relative;width:29px;height:29px;display:grid;place-items:center;border:1px solid #b9904c;border-radius:50%;background:radial-gradient(circle at 34% 28%,#5c9891,#173e3c 68%,#09201e);color:#fff6d8;font:900 15px/1 Georgia,serif;text-shadow:0 1px 2px #0009;isolation:isolate}
+  .word-mini-avatar img{width:100%;height:100%;border-radius:inherit;object-fit:cover}
+  .word-rack-profile.active .word-mini-avatar::after{content:'';position:absolute;z-index:2;inset:-4px;border-radius:50%;background:conic-gradient(var(--word-timer-color,#36c47b) calc(var(--word-timer-progress,1) * 1turn),#1c2b28 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 0);mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 0);pointer-events:none}
+  .word-profile-timer{position:absolute;z-index:4;left:50%;top:-11px;min-width:39px;height:19px;padding:0 5px;display:flex;align-items:center;justify-content:center;gap:2px;border:1px solid #f0d793;border-radius:10px;background:#102924;color:#fff9dd;box-shadow:0 3px 6px #0009;transform:translateX(-50%);font-style:normal;white-space:nowrap}
+  .word-profile-timer em{font:900 12px/1 Arial,sans-serif}
+  .word-profile-timer small{color:#d9cba9;font:800 7px/1 Arial,sans-serif;text-transform:uppercase}
+  .word-rack-profile.urgent .word-profile-timer{animation:word-clock-pulse .65s ease-in-out infinite alternate}
+  .word-rack-profile-copy{min-width:0;display:grid;gap:2px}
+  .word-rack-profile-copy small{color:#9fc4b9;font:800 7px/1 Arial,sans-serif;letter-spacing:.12em}
+  .word-rack-profile-copy b{overflow:hidden;color:#f8edd2;font:800 10px/1.1 Arial,sans-serif;text-overflow:ellipsis;white-space:nowrap}
+  .word-rack-area>.word-actions{
+    left:5px;right:5px;height:80px;padding:8px 2.7%;box-sizing:border-box;
+    column-gap:.6%;row-gap:1px;
+    background:transparent url('../assets/games/sozcuk/word-action-panel-v1.png') center/100% 100% no-repeat;
+    filter:drop-shadow(0 4px 4px #0008)
+  }
+  .word-rack-area>.word-actions button,
+  .word-rack-area>.word-actions button.primary{
+    min-width:0;min-height:0;padding:0;border:0;border-radius:0;background:transparent;
+    box-shadow:none;color:#fff0c9;font:900 9px/1 Arial,sans-serif;letter-spacing:.02em;
+    text-align:center;text-shadow:0 2px 2px #000;cursor:pointer
+  }
+  .word-rack-area>.word-actions button.primary{color:#2b190b;text-shadow:0 1px #ffe7a8}
+  .word-rack-area>.word-actions button:hover,
+  .word-rack-area>.word-actions button:focus-visible{outline:0;filter:brightness(1.2);transform:translateY(-1px)}
+  .word-rack-area>.word-actions button:active{filter:brightness(.9);transform:translateY(1px)}
+}
+
+@keyframes word-clock-pulse{to{filter:drop-shadow(0 0 5px #e5483d)}}
+
+/* Oyun tamamlandığında çizilmiş ahşap/parşömen final tabelası. */
+.word-result-overlay{position:absolute;z-index:50;inset:0;display:grid;place-items:center;padding:4px;background:radial-gradient(circle at 50% 45%,#18040540,#090001c7 72%);backdrop-filter:blur(2px);animation:word-result-fade .3s ease-out both}
+.word-result-board{position:relative;width:min(520px,calc(100vw - 24px),106dvh);max-height:calc(100dvh - 8px);aspect-ratio:1310/1200;background:transparent url('../assets/games/sozcuk/final-results-board-v2.png') center/contain no-repeat;filter:drop-shadow(0 18px 22px #000b);font-family:Arial,sans-serif;animation:word-result-rise .48s cubic-bezier(.2,.82,.2,1.06) both}
+.word-result-board header{position:absolute;top:22.5%;left:18%;right:18%;height:14.5%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#432616;text-align:center;text-shadow:0 1px #fff8}
+.word-result-board header small{color:#795835;font-size:clamp(7px,1.4vw,10px);font-weight:900;letter-spacing:.16em}
+.word-result-board header h2{margin:4px 0 3px;color:#153f3d;font:900 clamp(22px,4vw,32px)/.95 Georgia,serif;letter-spacing:0;white-space:nowrap;text-shadow:0 2px #fff8,0 3px 6px #4b270f33}
+.word-result-board header p{max-width:290px;margin:0;color:#67472c;font:700 clamp(8px,1.5vw,11px)/1.25 Arial,sans-serif}
+.word-result-players{position:absolute;top:38%;left:16.7%;right:16.2%;height:39.6%;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:1.4%}
+.word-result-player{position:relative;min-width:0;min-height:0;display:grid;grid-template-columns:25% minmax(0,1fr) auto;align-items:center;color:#4a2b18}
+.word-result-avatar{width:62%;aspect-ratio:1;justify-self:center;display:grid;place-items:center;overflow:hidden;border-radius:50%;color:#fff4d6;font:900 clamp(13px,3.4vw,24px)/1 Georgia,serif;text-shadow:0 2px 3px #0009}
+.word-result-avatar img{width:100%;height:100%;border-radius:inherit;object-fit:cover}
+.word-result-player-copy{min-width:0;min-height:0;display:grid;grid-template-rows:auto auto;align-content:center;gap:1px;padding:0 8px 0 2px;overflow:hidden}
+.word-result-player-meta{min-width:0;display:flex;align-items:center;justify-content:space-between;gap:6px;overflow:hidden}
+.word-result-player-copy small{overflow:hidden;color:#7b5a38;font-size:clamp(6px,1vw,8px);line-height:1;font-weight:900;letter-spacing:.1em;text-overflow:ellipsis;white-space:nowrap}
+.word-result-player-copy b{overflow:hidden;color:#3e2818;font:900 clamp(11px,2vw,15px)/1 Georgia,serif;text-overflow:ellipsis;white-space:nowrap}
+.word-result-player-copy em{flex:0 0 auto;color:#7a5c40;font-size:clamp(5px,.9vw,7px);line-height:1;font-style:normal;font-weight:800;letter-spacing:.02em;white-space:nowrap}
+.word-result-player output{min-width:40px;padding-right:34px;color:#173e3c;font:900 clamp(19px,3.4vw,28px)/1 Georgia,serif;text-align:right;text-shadow:0 1px #fff9}
+.word-result-player:nth-child(2) output{color:#7b1f27}
+.word-result-player:nth-child(3) output{color:#28733d}
+.word-result-player:nth-child(4) output{color:#6a3b85}
+.word-result-player.winner output{filter:drop-shadow(0 0 5px #d6a83288)}
+.word-result-board footer{position:absolute;left:14.5%;right:14.5%;bottom:7.5%;height:8.2%;display:grid;grid-template-columns:1fr 1fr;gap:17.2%}
+.word-result-board footer button{display:grid;width:100%;height:100%;place-items:center;box-sizing:border-box;padding:0;border:0;background:transparent;color:#fff4cf;font:900 clamp(8px,1.6vw,11px)/1 Arial,sans-serif;letter-spacing:.05em;text-align:center;text-shadow:0 2px 3px #000;cursor:pointer;transition:transform .16s ease,filter .16s ease}
+.word-result-board footer button>span{display:block;transform:translateY(-5px)}
+.word-result-board footer button:last-child{color:#ffe5cf}
+.word-result-board footer button:hover,.word-result-board footer button:focus-visible{outline:0;filter:brightness(1.2);transform:translateY(-2px)}
+.word-result-board footer button:active{transform:translateY(1px)}
+@keyframes word-result-fade{from{opacity:0}}
+@keyframes word-result-rise{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+@media(max-width:620px) and (orientation:portrait){.word-result-overlay{position:fixed}.word-result-board{width:min(520px,94vw,106dvh)}}
+@media(prefers-reduced-motion:reduce){.word-result-overlay,.word-result-board{animation:none}}
