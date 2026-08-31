@@ -3,6 +3,7 @@
 
   const SESSION_KEY = 'kantin:supabase-session:v1';
   const INSTALLATION_KEY = 'kantin:installation-id:v1';
+  const LOCAL_GUEST_KEY = 'kantin:device-guest:v1';
   const i18n = window.KANTIN_I18N;
   const events = new EventTarget();
   const state = {
@@ -13,7 +14,8 @@
     profile: null,
     error: null,
     providers: {},
-    anonymousEnabled: false
+    anonymousEnabled: false,
+    localGuest: false
   };
   let refreshTimer = null;
 
@@ -26,7 +28,8 @@
       status: state.status,
       user: state.user,
       profile: state.profile,
-      error: state.error
+      error: state.error,
+      localGuest: state.localGuest
     };
   }
 
@@ -161,6 +164,7 @@
 
   async function establishSession(payload) {
     persistSession(normalizedSession(payload));
+    state.localGuest = false;
     state.user = payload.user || await fetchUser();
     state.profile = await fetchProfile(state.user.id);
     state.status = 'authenticated';
@@ -171,6 +175,7 @@
 
   function clearSession(error = null) {
     persistSession(null);
+    state.localGuest = false;
     state.user = null;
     state.profile = null;
     state.status = 'anonymous';
@@ -198,6 +203,8 @@
       if (callbackSession) return establishSession(callbackSession);
       state.session = readStoredSession();
       if (!state.session) {
+        const localGuest = readLocalGuest();
+        if (localGuest) return establishLocalGuest(localGuest);
         clearSession();
         return snapshot();
       }
@@ -209,6 +216,10 @@
       scheduleRefresh();
       emit();
     } catch (error) {
+      if (!readStoredSession()) {
+        const localGuest = readLocalGuest();
+        if (localGuest) return establishLocalGuest(localGuest);
+      }
       clearSession(error.message);
     }
     return snapshot();
@@ -272,21 +283,98 @@
     return value;
   }
 
+  function guestCode(deviceId) {
+    let hash = 2166136261;
+    for (const character of deviceId) {
+      hash ^= character.charCodeAt(0);
+      hash = Math.imul(hash, 16777619);
+    }
+    return `KNT-${String(hash >>> 0).padStart(10, '0').slice(-6)}`;
+  }
+
+  function readLocalGuest() {
+    try {
+      const guest = JSON.parse(localStorage.getItem(LOCAL_GUEST_KEY) || 'null');
+      if (!guest?.installationId || guest.installationId !== installationId()) return null;
+      return guest;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeLocalGuest(guest) {
+    localStorage.setItem(LOCAL_GUEST_KEY, JSON.stringify(guest));
+    return guest;
+  }
+
+  function localGuestRecord() {
+    const existing = readLocalGuest();
+    if (existing) return existing;
+    const deviceId = installationId();
+    return writeLocalGuest({
+      installationId: deviceId,
+      username: `Misafir ${deviceId.replace(/[^a-z0-9]/gi, '').slice(0, 6).toUpperCase()}`,
+      playerCode: guestCode(deviceId),
+      preferredLocale: i18n?.locale || 'tr',
+      createdAt: new Date().toISOString()
+    });
+  }
+
+  function establishLocalGuest(record = localGuestRecord()) {
+    const guest = writeLocalGuest({
+      ...record,
+      preferredLocale: i18n?.normalize(record.preferredLocale) || i18n?.locale || 'tr'
+    });
+    persistSession(null);
+    state.localGuest = true;
+    state.user = {
+      id: `local-guest-${guest.installationId}`,
+      email: null,
+      is_anonymous: true,
+      user_metadata: {
+        username: guest.username,
+        installation_id: guest.installationId,
+        is_guest: true,
+        preferred_locale: guest.preferredLocale
+      }
+    };
+    state.profile = {
+      id: state.user.id,
+      username: guest.username,
+      player_code: guest.playerCode,
+      avatar_url: null,
+      level: 1,
+      coins: 2500,
+      is_guest: true,
+      preferred_locale: guest.preferredLocale,
+      created_at: guest.createdAt,
+      updated_at: guest.updatedAt || guest.createdAt
+    };
+    state.status = 'authenticated';
+    state.error = null;
+    emit();
+    return snapshot();
+  }
+
   async function signInAsGuest() {
     if (state.status === 'authenticated') return snapshot();
-    const deviceId = installationId();
-    const guestName = `Misafir ${deviceId.replace(/[^a-z0-9]/gi, '').slice(0, 6).toUpperCase()}`;
-    const payload = await request('/auth/v1/signup', {
-      method: 'POST',
-      body: {
-        data: {
-          username: guestName,
-          installation_id: deviceId,
-          is_guest: true
+    const guest = localGuestRecord();
+    try {
+      const payload = await request('/auth/v1/signup', {
+        method: 'POST',
+        body: {
+          data: {
+            username: guest.username,
+            installation_id: guest.installationId,
+            is_guest: true,
+            preferred_locale: guest.preferredLocale
+          }
         }
-      }
-    });
-    return establishSession(payload);
+      });
+      return await establishSession(payload);
+    } catch {
+      return establishLocalGuest(guest);
+    }
   }
 
   async function signInWithOAuth(provider) {
@@ -311,6 +399,27 @@
 
   async function updateProfile(changes) {
     if (!state.user) throw authError('Profilini düzenlemek için giriş yapmalısın.');
+    if (state.localGuest) {
+      const guest = localGuestRecord();
+      if (changes.username !== undefined) guest.username = validateUsername(changes.username);
+      if (changes.preferred_locale !== undefined) {
+        const locale = i18n?.normalize(changes.preferred_locale);
+        if (!locale) throw authError('Desteklenmeyen dil seçimi.');
+        guest.preferredLocale = locale;
+      }
+      guest.updatedAt = new Date().toISOString();
+      writeLocalGuest(guest);
+      state.user.user_metadata.username = guest.username;
+      state.user.user_metadata.preferred_locale = guest.preferredLocale;
+      state.profile = {
+        ...state.profile,
+        username: guest.username,
+        preferred_locale: guest.preferredLocale,
+        updated_at: guest.updatedAt
+      };
+      emit();
+      return state.profile;
+    }
     const body = {};
     if (changes.username !== undefined) {
       const username = validateUsername(changes.username);
@@ -343,6 +452,7 @@
     get profile() { return state.profile; },
     get providers() { return { ...state.providers }; },
     get anonymousEnabled() { return state.anonymousEnabled; },
+    get localGuest() { return state.localGuest; },
     getAccessToken() { return state.session?.access_token || null; },
     isAuthenticated() { return state.status === 'authenticated' && Boolean(state.user); },
     addEventListener(...args) { return events.addEventListener(...args); },
@@ -354,6 +464,7 @@
     signOut,
     updateProfile,
     refreshProfile: async () => {
+      if (state.localGuest) return state.profile;
       state.profile = await fetchProfile();
       emit();
       return state.profile;
