@@ -19,12 +19,12 @@
   <div id="app">
     <header class="topbar">
       <button class="brand" data-action="home" aria-label="Ana menü"><img src="./assets/brand/kantin-logo.svg" alt="KANTİN"></button>
-      <button class="profile profile-trigger" data-player-profile="self" aria-label="Profilimi aç"><div class="avatar" id="headerAvatar">E</div><div><strong id="headerUsername">Ersin</strong><small>Seviye 12 · <b id="userPublicId">Bağlanıyor…</b></small></div><b class="level">12</b></button>
+      <button class="profile profile-trigger" data-player-profile="self" aria-label="Profil veya giriş ekranını aç"><div class="avatar" id="headerAvatar">K</div><div><strong id="headerUsername">Bağlanıyor…</strong><small><span id="headerMetaText">Hesap durumu kontrol ediliyor</span><b id="userPublicId"></b></small></div><b class="level" id="headerLevel">·</b></button>
       <div class="social-actions">
         <button class="social-btn" data-action="friends">👥 <span>Arkadaşlar</span><i id="friendBadge"></i></button>
         <button class="social-btn" data-action="chat">💬 <span>Sohbet</span><i id="chatBadge"></i></button>
       </div>
-      <div class="wallet"><strong>🪙 2.450</strong><small><span id="clock"></span></small></div>
+      <div class="wallet"><strong id="headerCoins">🪙 2.500</strong><small><span id="clock"></span></small></div>
     </header>
     <main id="screen"></main>
     <div id="toast" role="status" aria-live="polite"></div>
@@ -42,6 +42,31 @@
   </aside>
   <div class="panel-backdrop" data-action="close-social"></div>
   <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><div class="profile-card"><button class="profile-close" data-action="close-profile" aria-label="Kapat">×</button><div id="profileContent"></div></div></div>
+  <div class="auth-modal open" id="authModal" role="dialog" aria-modal="true" aria-hidden="false" aria-labelledby="authTitle">
+    <section class="auth-gateway">
+      <header class="auth-gateway-head">
+        <img src="./assets/brand/kantin-logo.svg" alt="KANTİN">
+        <div><button data-action="auth-help">?</button><span>YARDIM</span></div>
+      </header>
+      <div class="auth-gateway-copy">
+        <small>MASAN HAZIR</small>
+        <h1 id="authTitle">Kantine<br>hoş geldin.</h1>
+        <p>Tavla, Pişti, 101 Okey ve Sözcük Kapışması.<br>Hesabını seç, masaya otur.</p>
+      </div>
+      <div class="auth-provider-area">
+        <p>DEVAM ETME YÖNTEMİNİ SEÇ</p>
+        <div class="auth-providers">
+          <button class="auth-provider google" data-auth-provider="google"><i>G</i><span><small>GOOGLE PLAY / GMAIL</small><b>Google ile devam et</b></span></button>
+          <button class="auth-provider apple" data-auth-provider="apple"><i>●</i><span><small>APP STORE HESABI</small><b>Apple ile devam et</b></span></button>
+          <button class="auth-provider facebook" data-auth-provider="facebook"><i>f</i><span><small>FACEBOOK HESABI</small><b>Facebook ile devam et</b></span></button>
+          <button class="auth-provider guest" data-auth-provider="guest"><i>♟</i><span><small>BU CİHAZDA SAKLANIR</small><b>Misafir olarak oyna</b></span></button>
+        </div>
+        <div class="auth-feedback" id="authFeedback" role="status" aria-live="polite"></div>
+        <label class="auth-consent"><input id="authConsent" type="checkbox" checked><span><a href="#" data-action="privacy">Gizlilik Politikası</a> ve <a href="#" data-action="terms">Kullanıcı Sözleşmesi</a>'ni okudum ve kabul ediyorum.</span></label>
+      </div>
+      <footer><span id="authInstallHint">Güvenli oturum · Supabase Auth</span><b>v0.2</b></footer>
+    </section>
+  </div>
   <div class="rotate-notice"><img src="./assets/brand/kantin-mark.svg" alt=""><b>Telefonunu yatay çevir</b><span>KANTİN yatay ekran için tasarlandı.</span></div>
   <script src="./src/spvp.js"></script>
   <script src="./src/upvp.js"></script>
@@ -50,7 +75,8 @@
   <script src="./src/turkish-words.js?v=20260830-1"></script>
   <script src="./src/sozcuk.js?v=20260830-7"></script>
   <script src="./src/game-manager.js?v=20260830-1"></script>
+  <script src="./src/auth-client.js?v=20260831-1"></script>
   <script src="./src/match-client.js"></script>
-  <script src="./src/app.js?v=20260831-3"></script>
+  <script src="./src/app.js?v=20260831-4"></script>
 </body>
 </html>
