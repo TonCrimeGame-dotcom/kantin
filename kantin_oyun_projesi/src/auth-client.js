@@ -3,6 +3,7 @@
 
   const SESSION_KEY = 'kantin:supabase-session:v1';
   const INSTALLATION_KEY = 'kantin:installation-id:v1';
+  const i18n = window.KANTIN_I18N;
   const events = new EventTarget();
   const state = {
     status: 'loading',
@@ -154,7 +155,7 @@
 
   async function fetchProfile(userId = state.user?.id) {
     if (!userId) return null;
-    const rows = await request(`/rest/v1/profiles?select=id,username,player_code,avatar_url,level,coins,is_guest,created_at,updated_at&id=eq.${encodeURIComponent(userId)}&limit=1`, { auth: true });
+    const rows = await request(`/rest/v1/profiles?select=id,username,player_code,avatar_url,level,coins,is_guest,preferred_locale,created_at,updated_at&id=eq.${encodeURIComponent(userId)}&limit=1`, { auth: true });
     return Array.isArray(rows) ? rows[0] || null : null;
   }
 
@@ -318,7 +319,13 @@
       }
       body.username = username;
     }
-    const rows = await request(`/rest/v1/profiles?id=eq.${encodeURIComponent(state.user.id)}&select=id,username,player_code,avatar_url,level,coins,is_guest,created_at,updated_at`, {
+    if (changes.preferred_locale !== undefined) {
+      const locale = i18n?.normalize(changes.preferred_locale);
+      if (!locale) throw authError('Desteklenmeyen dil seçimi.');
+      body.preferred_locale = locale;
+    }
+    if (!Object.keys(body).length) return state.profile;
+    const rows = await request(`/rest/v1/profiles?id=eq.${encodeURIComponent(state.user.id)}&select=id,username,player_code,avatar_url,level,coins,is_guest,preferred_locale,created_at,updated_at`, {
       method: 'PATCH',
       auth: true,
       headers: { prefer: 'return=representation' },

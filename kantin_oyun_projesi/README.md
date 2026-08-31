@@ -72,6 +72,15 @@ Mevcut authoritative WebSocket oyun sunucusu hâlâ SQLite ve process belleğini
 
 Gerçek para ürünleri henüz aktif değildir. Google Play Billing, Apple In-App Purchase, Telegram Stars ve Meta ödeme makbuzları yayın aşamasında ayrı adaptörlerle doğrulanıp aynı işlem defterine yazılacaktır.
 
+## Dil altyapısı
+
+- İlk istemci paketi Türkçe, İngilizce, Almanca, Rusça, İspanyolca, Hintçe ve Arapça destekler.
+- İlk açılışta URL `lang` parametresi, cihazda saklanan tercih, Telegram `language_code` değeri ve tarayıcı dili sırasıyla değerlendirilir; eşleşme yoksa İngilizce kullanılır.
+- Oyuncunun seçtiği dil `profiles.preferred_locale` alanında saklanır ve native uygulama, Telegram Mini App ile Facebook istemcileri arasında paylaşılır.
+- Arapça arayüz RTL çalışır; tavla, Pişti, 101 Okey ve Sözcük oyun alanlarının fiziksel yönü değişmez.
+- Sezon ve etkinlik metinleri `localized_content` tablosundan yönetilebilir. Böylece Ramazan, Paskalya ve benzeri canlı içerik metinleri yeni uygulama sürümü beklemeden değiştirilebilir.
+- Sözcük Kapışması sözlüğü arayüz dilinden ayrı bir oyun içeriğidir. Şu anki motor Türkçe sözlük kullanır; diğer diller için doğrulanmış sözlük/harf-değeri paketleri ve dil bazlı eşleşme havuzları ayrıca eklenmelidir.
+
 ## Test
 
 ```powershell

@@ -1,15 +1,17 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#120d09">
   <title>KANTİN — Türk Masa Oyunları</title>
   <link rel="icon" href="./assets/brand/kantin-mark.svg" type="image/svg+xml">
+  <script src="./src/locales.js?v=20260831-2"></script>
+  <script src="./src/i18n.js?v=20260831-2"></script>
   <link rel="stylesheet" href="./src/styles.css">
   <link rel="stylesheet" href="./src/match.css">
   <link rel="stylesheet" href="./src/social.css">
-  <link rel="stylesheet" href="./src/home.css?v=20260831-3">
+  <link rel="stylesheet" href="./src/home.css?v=20260831-4">
   <link rel="stylesheet" href="./src/tavla.css">
   <link rel="stylesheet" href="./src/okey.css">
   <link rel="stylesheet" href="./src/pisti.css?v=20260831-1">
@@ -18,12 +20,13 @@
 <body>
   <div id="app">
     <header class="topbar">
-      <button class="brand" data-action="home" aria-label="Ana menü"><img src="./assets/brand/kantin-logo.svg" alt="KANTİN"></button>
+      <button class="brand" data-action="home" aria-label="Main menu"><img src="./assets/brand/kantin-logo.svg" alt="KANTİN"></button>
       <button class="profile profile-trigger" data-player-profile="self" aria-label="Profil veya giriş ekranını aç"><div class="avatar" id="headerAvatar">K</div><div><strong id="headerUsername">Bağlanıyor…</strong><small><span id="headerMetaText">Hesap durumu kontrol ediliyor</span><b id="userPublicId"></b></small></div><b class="level" id="headerLevel">·</b></button>
       <div class="social-actions">
         <button class="social-btn" data-action="friends">👥 <span>Arkadaşlar</span><i id="friendBadge"></i></button>
         <button class="social-btn" data-action="chat">💬 <span>Sohbet</span><i id="chatBadge"></i></button>
       </div>
+      <label class="language-switch topbar-language"><span data-i18n="language.label">Language</span><select data-language-selector></select></label>
       <div class="wallet"><strong id="headerCoins">🪙 2.500</strong><small><span id="clock"></span></small></div>
     </header>
     <main id="screen"></main>
@@ -46,28 +49,28 @@
     <section class="auth-gateway">
       <header class="auth-gateway-head">
         <img src="./assets/brand/kantin-logo.svg" alt="KANTİN">
-        <div><button data-action="auth-help">?</button><span>YARDIM</span></div>
+        <div class="auth-head-actions"><label class="language-switch auth-language"><span data-i18n="language.label">Language</span><select data-language-selector></select></label><div class="auth-help"><button data-action="auth-help">?</button><span data-i18n="auth.help">HELP</span></div></div>
       </header>
       <div class="auth-gateway-copy">
-        <small>MASAN HAZIR</small>
-        <h1 id="authTitle">Kantine<br>hoş geldin.</h1>
-        <p>Tavla, Pişti, 101 Okey ve Sözcük Kapışması.<br>Hesabını seç, masaya otur.</p>
+        <small data-i18n="auth.eyebrow">YOUR TABLE IS READY</small>
+        <h1 id="authTitle" data-i18n="auth.title">Welcome to Kantin.</h1>
+        <p data-i18n="auth.subtitle">Backgammon, Pişti, 101 Okey and Word Clash. Choose your account and take a seat.</p>
       </div>
       <div class="auth-provider-area">
-        <p>DEVAM ETME YÖNTEMİNİ SEÇ</p>
+        <p data-i18n="auth.chooseMethod">CHOOSE HOW TO CONTINUE</p>
         <div class="auth-providers">
-          <button class="auth-provider google" data-auth-provider="google"><i>G</i><span><small>GOOGLE PLAY / GMAIL</small><b>Google ile devam et</b></span></button>
-          <button class="auth-provider apple" data-auth-provider="apple"><i>●</i><span><small>APP STORE HESABI</small><b>Apple ile devam et</b></span></button>
-          <button class="auth-provider facebook" data-auth-provider="facebook"><i>f</i><span><small>FACEBOOK HESABI</small><b>Facebook ile devam et</b></span></button>
-          <button class="auth-provider guest" data-auth-provider="guest"><i>♟</i><span><small>BU CİHAZDA SAKLANIR</small><b>Misafir olarak oyna</b></span></button>
+          <button class="auth-provider google" data-auth-provider="google"><i>G</i><span><small data-i18n="auth.googleHint">GOOGLE PLAY / GMAIL</small><b data-i18n="auth.google">Continue with Google</b></span></button>
+          <button class="auth-provider apple" data-auth-provider="apple"><i>●</i><span><small data-i18n="auth.appleHint">APP STORE ACCOUNT</small><b data-i18n="auth.apple">Continue with Apple</b></span></button>
+          <button class="auth-provider facebook" data-auth-provider="facebook"><i>f</i><span><small data-i18n="auth.facebookHint">FACEBOOK ACCOUNT</small><b data-i18n="auth.facebook">Continue with Facebook</b></span></button>
+          <button class="auth-provider guest" data-auth-provider="guest"><i>♟</i><span><small data-i18n="auth.guestHint">SAVED ON THIS DEVICE</small><b data-i18n="auth.guest">Play as guest</b></span></button>
         </div>
         <div class="auth-feedback" id="authFeedback" role="status" aria-live="polite"></div>
-        <label class="auth-consent"><input id="authConsent" type="checkbox" checked><span><a href="#" data-action="privacy">Gizlilik Politikası</a> ve <a href="#" data-action="terms">Kullanıcı Sözleşmesi</a>'ni okudum ve kabul ediyorum.</span></label>
+        <label class="auth-consent"><input id="authConsent" type="checkbox" checked><span><a href="#" data-action="privacy" data-i18n="auth.privacy">Privacy Policy</a> <span data-i18n="auth.and">and</span> <a href="#" data-action="terms" data-i18n="auth.terms">Terms of Use</a> <span data-i18n="auth.consent">I have read and accept.</span></span></label>
       </div>
-      <footer><span id="authInstallHint">Güvenli oturum · Supabase Auth</span><b>v0.2</b></footer>
+      <footer><span id="authInstallHint" data-i18n="auth.secureSession">Secure session · Supabase Auth</span><b>v0.4</b></footer>
     </section>
   </div>
-  <div class="rotate-notice"><img src="./assets/brand/kantin-mark.svg" alt=""><b>Telefonunu yatay çevir</b><span>KANTİN yatay ekran için tasarlandı.</span></div>
+  <div class="rotate-notice"><img src="./assets/brand/kantin-mark.svg" alt=""><b data-i18n="rotate.title">Rotate your phone</b><span data-i18n="rotate.copy">KANTİN is designed for landscape mode.</span></div>
   <script src="./src/spvp.js"></script>
   <script src="./src/upvp.js"></script>
   <script src="./src/pisti.js"></script>
@@ -75,9 +78,9 @@
   <script src="./src/turkish-words.js?v=20260830-1"></script>
   <script src="./src/sozcuk.js?v=20260830-7"></script>
   <script src="./src/game-manager.js?v=20260830-1"></script>
-  <script src="./src/auth-client.js?v=20260831-1"></script>
+  <script src="./src/auth-client.js?v=20260831-2"></script>
   <script src="./src/economy-client.js?v=20260831-1"></script>
   <script src="./src/match-client.js"></script>
-  <script src="./src/app.js?v=20260831-5"></script>
+  <script src="./src/app.js?v=20260831-6"></script>
 </body>
 </html>

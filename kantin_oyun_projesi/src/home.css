@@ -203,9 +203,23 @@
 .auth-feedback { min-height:18px; margin:6px 0 0; color:#ff8d84; font-size:10px; font-weight:800; text-align:center; }.auth-feedback.success { color:#77d89a; }
 .auth-consent { width:max-content; max-width:100%; margin:0 auto; display:flex; align-items:center; justify-content:center; gap:7px; color:#9e8f80; font-size:9px; }.auth-consent input { accent-color:#dba742; }.auth-consent a { color:#d9b763; text-decoration:underline; }
 .auth-gateway>footer { padding:5px clamp(16px,3vw,38px) 12px; display:flex; justify-content:space-between; color:#6f655c; font-size:8px; }
+.language-switch { display:flex; align-items:center; gap:7px; color:#e7d3aa; font-size:9px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+.language-switch select { min-width:92px; height:34px; padding:0 27px 0 10px; border:1px solid #e2b45455; border-radius:10px; color:#fff7e5; background:#20150f; font:800 11px Inter,system-ui,sans-serif; cursor:pointer; color-scheme:dark; }
+.topbar-language { margin-inline-start:auto; margin-inline-end:14px; }
+.topbar-language select { height:32px; min-width:86px; }
+.auth-head-actions { display:flex!important; grid-auto-flow:column; align-items:flex-start; gap:14px!important; }
+.auth-help { display:grid; justify-items:center; gap:4px; }
+.auth-gateway-copy h1,.auth-gateway-copy p { white-space:pre-line; }
+[dir="rtl"] .auth-gateway-copy,[dir="rtl"] .auth-provider-area,[dir="rtl"] .room-select,[dir="rtl"] .utility-screen,[dir="rtl"] .match-screen { text-align:right; }
+[dir="rtl"] .auth-provider { text-align:right; }
+[dir="rtl"] .auth-provider i { order:2; }
+[dir="rtl"] .auth-provider span { order:1; }
+[dir="rtl"] .room-head>button { transform:scaleX(-1); }
+[dir="rtl"] .tavla-board,[dir="rtl"] .pisti-table,[dir="rtl"] .okey-table,[dir="rtl"] .word-layout,[dir="rtl"] .menu-game-scene { direction:ltr; }
 
 @media(max-width:760px) {
   .auth-gateway-copy { margin-left:24px; }.auth-providers { grid-template-columns:1fr 1fr; }
+  .topbar-language>span { display:none; }.topbar-language { margin-inline-end:7px; }.topbar-language select { min-width:76px; }
 }
 
 /* Three-game arcade index */

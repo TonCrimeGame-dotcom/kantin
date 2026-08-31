@@ -9,7 +9,7 @@
   let wordDragTileId = null, wordDragSourceSlot = null, wordPointerDrag = null, wordRackSlots = [], suppressWordClickUntil = 0;
   let selected = null, wordTileId = null, wordBotTimer = null, overlay = true, seat = 'A1', chosen = new Set(), pistiBluffMode = false, okeyRackOrder = [], okeyRackBreaks = new Set(), okeyRackSlots = [], okeyRackMode = 'runs', okeyRackGrouped = false, okeyDraftGroups = [], okeyDraftType = null, okeyLayoffCandidates = new Set(), okeyDrag = null, suppressOkeyClickUntil = 0, matchmakingMode = null, selectedFamily = 'tavla', selectedStake = 1500, queueState = null, currentRoom = 'lobby', unread = 0, onlineGame = false, localTavlaReaction = '', emojiPickerOpen = false, chatComposerOpen = false, lastDiceKey = '', lastDiceFaces = [5,2], lastAnnouncedTurn = null, pendingCheckerMove = null, tavlaBotTimer = null, universityAutoTimer = null, universityAutoRoll = false, universityAutoCollect = false, universityUndoSnapshot = null, standardAutoTimer = null, standardAutoRoll = false, standardAutoCollect = false, standardUndoSnapshot = null, okeyBotTimer = null, openingRollTimer = null, diceAnimationTimer = null, turnClockTimer = null, turnClockInterval = null, localClockKey = null, universityClockKey = null, universityClockDeadlineAt = null, universityClockInterval = null, localOkeyClockKey = null, localOkeyDeadlineAt = null, localOkeyTimeoutHandledKey = null, checkerDrag = null, suppressBoardClickUntil = 0;
   const icons = {spvp:'<img src="./assets/menu/tavla.svg" alt="">',upvp:'<img src="./assets/menu/tavla.svg" alt="">',pistiSolo:'<img src="./assets/menu/pisti.svg" alt="">',pistiTeam:'<img src="./assets/menu/pisti.svg" alt="">',okeySolo:'<img src="./assets/menu/okey.svg" alt="">',okeyTeam:'<img src="./assets/menu/okey.svg" alt="">',sozcukDuel:'<img src="./assets/menu/sozcuk.svg" alt="">'};
-  const descriptions = {spvp:'Klasik 15 pullu tavla',upvp:'Aynı zar, iki bağımsız tahta',pistiSolo:'Hızlı ve rekabetçi',pistiTeam:'Eşinle puanları birleştir',okeySolo:'101 aç, elini bitir',okeyTeam:'Karşılıklı eşlerle takım oyunu',sozcukDuel:'Dört oyuncu, herkes kendi puanına oynar'};
+  const descriptions = {spvp:'desc.backgammon',upvp:'desc.university',pistiSolo:'desc.pistiSolo',pistiTeam:'desc.pistiTeam',okeySolo:'desc.okeySolo',okeyTeam:'desc.okeyTeam',sozcukDuel:'desc.word'};
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function toast(message){toastEl.textContent=message;toastEl.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>toastEl.classList.remove('show'),2400)}
   function safe(fn){try{fn()}catch(error){toast(error.message)}}
@@ -17,20 +17,26 @@
   const PROFILE_NAME_KEY='kantin:profile-name:v1',PROFILE_AVATAR_KEY='kantin:profile-avatar:v1';
   const auth=window.KANTIN_AUTH;
   const economy=window.KANTIN_ECONOMY;
+  const i18n=window.KANTIN_I18N;
+  const t=(key,variables)=>i18n?.t(key,variables)||key;
   function coinBalance(){
     if(economy?.balance!==null&&Number.isSafeInteger(Number(economy.balance)))return Number(economy.balance);
     const profileCoins=Number(auth?.profile?.coins);
     return Number.isSafeInteger(profileCoins)&&profileCoins>=0?profileCoins:Number(economy?.core?.startingBalance)||2500;
   }
-  const formatCoins=value=>Number(value||0).toLocaleString('tr-TR');
-  const playerName=()=>auth?.profile?.username||auth?.user?.user_metadata?.username||localStorage.getItem(PROFILE_NAME_KEY)||'Misafir';
+  const formatCoins=value=>i18n?.number(value)||Number(value||0).toLocaleString();
+  const playerName=()=>auth?.profile?.username||auth?.user?.user_metadata?.username||localStorage.getItem(PROFILE_NAME_KEY)||t('auth.guest');
   const playerAvatar=()=>auth?.profile?.avatar_url||localStorage.getItem(PROFILE_AVATAR_KEY)||'';
   function loadStats(){const empty={played:0,wins:0,losses:0,byMode:{},history:[]};try{const saved=JSON.parse(localStorage.getItem(STATS_KEY)||'null');return saved&&typeof saved==='object'?{...empty,...saved,byMode:saved.byMode||{},history:Array.isArray(saved.history)?saved.history:[]}:empty}catch{return empty}}
   function saveStats(stats){try{localStorage.setItem(STATS_KEY,JSON.stringify(stats))}catch{toast('İstatistikler bu cihazda kaydedilemedi.')}}
   function recordFinishedMatch(result){const stats=loadStats(),mode=manager.mode||KANTIN_MATCH.match?.mode||'spvp',assignment=KANTIN_MATCH.match?.assignment||{},winner=result?.winnerPlayerId??result?.winnerTeam??result?.winner??null,mine=assignment.team||assignment.seat||seat;let outcome='Tamamlandı';if(winner!==null){outcome=winner===mine?'Galibiyet':'Mağlubiyet';outcome==='Galibiyet'?stats.wins++:stats.losses++}stats.played++;stats.byMode[mode]=(stats.byMode[mode]||0)+1;stats.history.unshift({id:KANTIN_MATCH.match?.matchId||`${Date.now()}`,mode,outcome,playedAt:new Date().toISOString()});stats.history=stats.history.slice(0,30);saveStats(stats)}
-  function clock(){document.querySelector('#clock').textContent=new Intl.DateTimeFormat('tr-TR',{dateStyle:'short',timeStyle:'short'}).format(new Date())} clock();setInterval(clock,1000);
+  function clock(){const node=document.querySelector('#clock');if(node)node.textContent=i18n?.date(new Date(),{dateStyle:'short',timeStyle:'short'})||new Date().toLocaleString()} clock();setInterval(clock,1000);
   function clearTavlaClock(){clearTimeout(turnClockTimer);clearInterval(turnClockInterval);turnClockTimer=null;turnClockInterval=null;localClockKey=null;clearUniversityClock()}
-  const gameFamilies=[{key:'tavla',title:'Tavla',subtitle:'Zarını at, masayı kap',image:'./assets/menu/tavla.svg',modes:[['spvp','Klasik Tavla','1v1'],['upvp','Üniversite Tavlası','2v2']]},{key:'pisti',title:'Pişti',subtitle:'Kartını oyna, desteyi topla',image:'./assets/menu/pisti.svg',modes:[['pistiSolo','Klasik Pişti','1v1'],['pistiTeam','Eşli Pişti','2v2']]},{key:'okey',title:'101 Okey',subtitle:'Perini aç, elini bitir',image:'./assets/menu/okey.svg',modes:[['okeySolo','Bireysel 101','4 kişi'],['okeyTeam','Eşli 101','2v2']]},{key:'sozcuk',title:'Sözcük Kapışması',subtitle:'Harfini koy, sözcüğünü kur',image:'./assets/menu/sozcuk.svg',modes:[['sozcukDuel','Sözcük Kapışması','4 kişi · herkes tek']]}];
+  const gameFamilies=[{key:'tavla',titleKey:'game.backgammon',subtitleKey:'game.backgammonSubtitle',image:'./assets/menu/tavla.svg',modes:[['spvp','mode.backgammon','1v1'],['upvp','mode.university','2v2']]},{key:'pisti',titleKey:'game.pisti',subtitleKey:'game.pistiSubtitle',image:'./assets/menu/pisti.svg',modes:[['pistiSolo','mode.pistiSolo','1v1'],['pistiTeam','mode.pistiTeam','2v2']]},{key:'okey',titleKey:'game.okey',subtitleKey:'game.okeySubtitle',image:'./assets/menu/okey.svg',modes:[['okeySolo','mode.okeySolo','mode.fourPlayers'],['okeyTeam','mode.okeyTeam','2v2']]},{key:'sozcuk',titleKey:'game.word',subtitleKey:'game.wordSubtitle',image:'./assets/menu/sozcuk.svg',modes:[['sozcukDuel','mode.word','mode.fourSolo']]}];
+  const familyTitle=family=>t(family.titleKey);
+  const familySubtitle=family=>t(family.subtitleKey);
+  const modeName=mode=>t(mode[1]);
+  const modePlayers=mode=>mode[2].startsWith('mode.')?t(mode[2]):mode[2];
   function menuGameArt(key){
     if(key==='tavla')return `<div class="menu-game-scene menu-tavla-scene" aria-hidden="true"><img class="menu-tavla-board" src="./assets/games/tavla/board-playfield-24pt-v3.png" alt=""><img class="menu-tavla-checker c1" src="./assets/games/tavla/checker-ivory-matte-v3-size-matched.png" alt=""><img class="menu-tavla-checker c2" src="./assets/games/tavla/checker-ivory-matte-v3-size-matched.png" alt=""><img class="menu-tavla-checker c3" src="./assets/games/tavla/checker-ebony-matte-v3.png" alt=""><img class="menu-tavla-checker c4" src="./assets/games/tavla/checker-ebony-matte-v3.png" alt=""><img class="menu-tavla-die d1" src="./assets/games/tavla/die-face-3.svg" alt=""><img class="menu-tavla-die d2" src="./assets/games/tavla/die-face-5.svg" alt=""></div>`;
     if(key==='pisti')return `<div class="menu-game-scene menu-pisti-scene" aria-hidden="true"><img class="menu-pisti-cloth" src="./assets/games/pisti/final/tablecloth-green.png" alt=""><img class="menu-pisti-card p1" src="./assets/games/pisti/cards/a_hearts.png" alt=""><img class="menu-pisti-card p2" src="./assets/games/pisti/cards/j_clubs.png" alt=""><img class="menu-pisti-card p3" src="./assets/games/pisti/cards/2_clubs.png" alt=""><img class="menu-pisti-card p4" src="./assets/games/pisti/cards/10_diamonds.png" alt=""><img class="menu-pisti-card back1" src="./assets/games/pisti/final/card-back.png" alt=""><img class="menu-pisti-card back2" src="./assets/games/pisti/final/card-back.png" alt=""></div>`;
@@ -39,8 +45,10 @@
   }
   function home(){
     clearPistiDealAnimation(true);clearTimeout(pistiBotTimer);clearTimeout(tavlaBotTimer);clearTimeout(okeyBotTimer);clearTimeout(openingRollTimer);clearTavlaClock();clearWordTurnClock();pistiBotTimer=null;tavlaBotTimer=null;okeyBotTimer=null;openingRollTimer=null;localOkeyClockKey=null;localOkeyDeadlineAt=null;localOkeyTimeoutHandledKey=null;pendingCheckerMove=null;selected=null;chosen.clear();lastDiceKey='';
-    const resume=KANTIN_MATCH.match&&KANTIN_MATCH.gameState?.status==='playing'?`<button class="resume-pill" data-action="resume-match">▶ Maça dön</button>`:'';
-    screen.innerHTML=`<section class="mobile-lobby arcade-home"><header class="lobby-heading"><div><small><i></i> CANLI KAMPÜS MASALARI</small><h1>Oyununu seç</h1></div><div class="lobby-heading-actions"><span>3 OYUN · 6 MOD</span>${resume}</div></header><section class="arcade-games" aria-label="Oyunlar">${gameFamilies.map((f,i)=>`<button class="arcade-card family-${f.key} ${i===0?'featured':''}" data-family="${f.key}"><div class="arcade-art">${menuGameArt(f.key)}<span>${f.modes.length} MOD</span></div><div class="arcade-label"><small>${f.subtitle}</small><strong>${f.title}</strong><i>OYNA ›</i></div></button>`).join('')}</section><nav class="arcade-dock"><button data-action="daily">🎁<span>Ödül</span></button><button data-action="missions">✓<span>Görevler</span></button><button data-action="tournaments">🏆<span>Turnuvalar</span></button><button data-action="inventory">🎒<span>Çantam</span></button><button data-action="stats">📊<span>İstatistik</span></button><button data-action="store">🛒<span>Mağaza</span></button></nav></section>`
+    const resume=KANTIN_MATCH.match&&KANTIN_MATCH.gameState?.status==='playing'?`<button class="resume-pill" data-action="resume-match">${t('home.resume')}</button>`:'';
+    const modeTotal=gameFamilies.reduce((sum,family)=>sum+family.modes.length,0);
+    screen.dataset.view='home';
+    screen.innerHTML=`<section class="mobile-lobby arcade-home"><header class="lobby-heading"><div><small><i></i> ${t('home.liveTables')}</small><h1>${t('home.chooseGame')}</h1></div><div class="lobby-heading-actions"><span>${t('home.summary',{games:gameFamilies.length,modes:modeTotal})}</span>${resume}</div></header><section class="arcade-games" aria-label="${t('home.gamesLabel')}">${gameFamilies.map((f,i)=>`<button class="arcade-card family-${f.key} ${i===0?'featured':''}" data-family="${f.key}"><div class="arcade-art">${menuGameArt(f.key)}<span>${t('home.modeCount',{count:f.modes.length})}</span></div><div class="arcade-label"><small>${familySubtitle(f)}</small><strong>${familyTitle(f)}</strong><i>${t('home.play')}</i></div></button>`).join('')}</section><nav class="arcade-dock"><button data-action="daily">🎁<span>${t('nav.reward')}</span></button><button data-action="missions">✓<span>${t('nav.missions')}</span></button><button data-action="tournaments">🏆<span>${t('nav.tournaments')}</span></button><button data-action="inventory">🎒<span>${t('nav.inventory')}</span></button><button data-action="stats">📊<span>${t('nav.stats')}</span></button><button data-action="store">🛒<span>${t('nav.store')}</span></button></nav></section>`
   }
   function roomPage(familyKey,mode){
     const family=gameFamilies.find(f=>f.key===familyKey)||gameFamilies[0];
@@ -55,70 +63,72 @@
     ]).map(stake=>({
       value:Number(stake.entryFee),
       minimumBalance:Number(stake.minimumBalance||stake.entryFee),
-      label:stake.label,
+      label:t(`stake.${stake.id}`)===`stake.${stake.id}`?stake.label:t(`stake.${stake.id}`),
       tone:stake.tone
     }));
     if(!stakes.some(stake=>stake.value===selectedStake))selectedStake=stakes[Math.min(1,stakes.length-1)]?.value||500;
     const balance=coinBalance(),selectedRoom=stakes.find(stake=>stake.value===selectedStake)||stakes[0],canEnter=balance>=selectedRoom.minimumBalance;
-    screen.innerHTML=`<section class="room-select"><header class="room-head"><button data-action="home" aria-label="Geri">←</button><div><small>ODA SEÇİMİ</small><h1>${family.title}</h1></div><div class="room-balance">🪙 <b>${formatCoins(balance)}</b></div></header><div class="room-body"><aside class="mode-rail"><small>OYUN MODU</small>${family.modes.map(([id,name,players])=>`<button class="${id===matchmakingMode?'active':''}" data-mode="${id}"><img src="${family.image}" alt=""><span><b>${name}</b><small>${players}</small></span><i>›</i></button>`).join('')}</aside><main class="stake-area"><div class="stake-title"><small>${active[2]} · ${active[1]}</small><h2>Bahis lobini seç</h2><p>Bahis miktarı oynayacağın lobiyi ve rakip havuzunu belirler.</p></div><div class="stake-cards">${stakes.map(stake=>`<button class="stake-card ${stake.tone} ${selectedStake===stake.value?'selected':''}" data-stake="${stake.value}"><small>${esc(stake.label)}</small><strong>${formatCoins(stake.value)}</strong><span>🪙 bahis</span><footer>Giriş: ${formatCoins(stake.minimumBalance)}+<i>${selectedStake===stake.value?'SEÇİLDİ':'SEÇ'}</i></footer></button>`).join('')}</div><div class="play-actions"><button class="btn" data-practice="${matchmakingMode}">Tek başına oyna</button><button class="quick-play" data-action="find-match" ${canEnter?'':'disabled'}><span><small>${canEnter?`SEÇİLİ LOBİ · ${formatCoins(selectedStake)} 🪙`:'YETERSİZ KANTİN COIN'} </small><b>${canEnter?'RAKİP BUL':'BAKİYE GEREKLİ'}</b></span><i>⚔</i></button></div></main></div></section>`;
+    screen.dataset.view='room';screen.dataset.family=family.key;screen.dataset.mode=matchmakingMode;
+    screen.innerHTML=`<section class="room-select"><header class="room-head"><button data-action="home" aria-label="${t('utility.backMenu')}">←</button><div><small>${t('room.title')}</small><h1>${familyTitle(family)}</h1></div><div class="room-balance">🪙 <b>${formatCoins(balance)}</b></div></header><div class="room-body"><aside class="mode-rail"><small>${t('room.gameMode')}</small>${family.modes.map(mode=>`<button class="${mode[0]===matchmakingMode?'active':''}" data-mode="${mode[0]}"><img src="${family.image}" alt=""><span><b>${modeName(mode)}</b><small>${modePlayers(mode)}</small></span><i>›</i></button>`).join('')}</aside><main class="stake-area"><div class="stake-title"><small>${modePlayers(active)} · ${modeName(active)}</small><h2>${t('room.chooseStake')}</h2><p>${t('room.stakeInfo')}</p></div><div class="stake-cards">${stakes.map(stake=>`<button class="stake-card ${stake.tone} ${selectedStake===stake.value?'selected':''}" data-stake="${stake.value}"><small>${esc(stake.label)}</small><strong>${formatCoins(stake.value)}</strong><span>🪙</span><footer>${t('room.entry',{amount:formatCoins(stake.minimumBalance)})}<i>${selectedStake===stake.value?t('room.selected'):t('room.choose')}</i></footer></button>`).join('')}</div><div class="play-actions"><button class="btn" data-practice="${matchmakingMode}">${t('room.practice')}</button><button class="quick-play" data-action="find-match" ${canEnter?'':'disabled'}><span><small>${canEnter?t('room.selectedLobby',{amount:formatCoins(selectedStake)}):t('room.insufficient')} </small><b>${canEnter?t('room.findOpponent'):t('room.balanceRequired')}</b></span><i>⚔</i></button></div></main></div></section>`;
   }
   function utilityPage(type){
     const stats=loadStats();
+    screen.dataset.view='utility';screen.dataset.utility=type;
     if(type==='tournaments'){
-      screen.innerHTML=`<section class="utility-screen"><header><button class="btn" data-action="home">← Menü</button><div><small>REKABET SAHNESİ</small><h1>Turnuvalar</h1><p>Yaklaşan kampüs turnuvalarına katıl ve sıralamada yüksel.</p></div></header><div class="tournament-grid"><article class="featured"><small>KAYITLAR AÇIK</small><b>🏆</b><h2>Hafta Sonu Tavla Kupası</h2><p>32 oyuncu · Eleme usulü · 5.000 🪙 ödül</p><button class="btn primary" data-action="join-tournament">Turnuvaya katıl</button></article><article><small>YARIN 20:00</small><b>🃏</b><h2>Pişti Kampüs Ligi</h2><p>16 takım · Eşli Pişti</p><button class="btn">Detaylar</button></article><article><small>CUMA 21:00</small><b>🀄</b><h2>101 Ustaları</h2><p>64 oyuncu · Tekli 101</p><button class="btn">Detaylar</button></article></div></section>`;
+      screen.innerHTML=`<section class="utility-screen"><header><button class="btn" data-action="home">${t('utility.backMenu')}</button><div><small>${t('tournament.eyebrow')}</small><h1>${t('tournament.title')}</h1><p>${t('tournament.copy')}</p></div></header><div class="tournament-grid"><article class="featured"><small>KAYITLAR AÇIK</small><b>🏆</b><h2>Hafta Sonu Tavla Kupası</h2><p>32 oyuncu · Eleme usulü · 5.000 🪙 ödül</p><button class="btn primary" data-action="join-tournament">Turnuvaya katıl</button></article><article><small>YARIN 20:00</small><b>🃏</b><h2>Pişti Kampüs Ligi</h2><p>16 takım · Eşli Pişti</p><button class="btn">Detaylar</button></article><article><small>CUMA 21:00</small><b>🀄</b><h2>101 Ustaları</h2><p>64 oyuncu · Tekli 101</p><button class="btn">Detaylar</button></article></div></section>`;
       return;
     }
     if(type==='stats'){
       const winRate=stats.played?Math.round(stats.wins/stats.played*100):0;
-      const history=stats.history.length?stats.history.map(item=>`<article><span class="history-game">${esc(KANTIN.MODES[item.mode]?.title||item.mode)}</span><b class="${item.outcome==='Galibiyet'?'win':item.outcome==='Mağlubiyet'?'loss':''}">${esc(item.outcome)}</b><time>${new Date(item.playedAt).toLocaleDateString('tr-TR')}</time></article>`).join(''):'<div class="empty-history">Henüz tamamlanmış maç kaydı yok. İlk maçından sonra geçmişin burada görünecek.</div>';
-      screen.innerHTML=`<section class="utility-screen"><header><button class="btn" data-action="home">← Menü</button><div><small>OYUNCU PROFİLİ</small><h1>İstatistikler</h1><p>Tamamlanan çevrimiçi maçların bu cihazda otomatik kaydedilir.</p></div></header><div class="stats-summary"><article><small>TOPLAM MAÇ</small><b>${stats.played}</b></article><article><small>GALİBİYET</small><b>${stats.wins}</b></article><article><small>MAĞLUBİYET</small><b>${stats.losses}</b></article><article><small>KAZANMA ORANI</small><b>%${winRate}</b></article></div><div class="match-history"><h2>Geçmiş oyunlar</h2>${history}</div></section>`;
+      const history=stats.history.length?stats.history.map(item=>`<article><span class="history-game">${esc(KANTIN.MODES[item.mode]?.title||item.mode)}</span><b class="${item.outcome==='Galibiyet'?'win':item.outcome==='Mağlubiyet'?'loss':''}">${esc(item.outcome)}</b><time>${i18n?.date(item.playedAt)||new Date(item.playedAt).toLocaleDateString()}</time></article>`).join(''):`<div class="empty-history">${t('stats.empty')}</div>`;
+      screen.innerHTML=`<section class="utility-screen"><header><button class="btn" data-action="home">${t('utility.backMenu')}</button><div><small>${t('stats.eyebrow')}</small><h1>${t('stats.title')}</h1><p>${t('stats.copy')}</p></div></header><div class="stats-summary"><article><small>${t('stats.totalMatches')}</small><b>${stats.played}</b></article><article><small>${t('stats.wins')}</small><b>${stats.wins}</b></article><article><small>${t('stats.losses')}</small><b>${stats.losses}</b></article><article><small>${t('stats.winRate')}</small><b>%${winRate}</b></article></div><div class="match-history"><h2>${t('stats.history')}</h2>${history}</div></section>`;
       return;
     }
     const dailyRewards=economy?.dailyRewards?.length?economy.dailyRewards:[100,150,200,250,350,500,1000].map((coins,index)=>({day:index+1,coins}));
     const dailyClaim=economy?.dailyClaim||{claimedToday:false,streakDay:0};
     const todayDay=dailyClaim.claimedToday?dailyClaim.streakDay:(dailyClaim.streakDay%7)+1;
     const todayReward=dailyRewards.find(reward=>reward.day===todayDay)||dailyRewards[0];
-    const dailyBody=`<div class="reward-grid">${dailyRewards.map(reward=>{const claimed=dailyClaim.claimedToday?reward.day<=todayDay:reward.day<todayDay;return `<article class="reward-day ${reward.day===todayDay?'today':''} ${claimed?'claimed':''}"><small>${reward.day}. GÜN</small><b>${claimed?'✓':'🪙'}</b><strong>${formatCoins(reward.coins)}</strong></article>`}).join('')}</div><button class="btn primary utility-cta" data-action="claim-daily" ${dailyClaim.claimedToday||economy?.status==='loading'?'disabled':''}>${dailyClaim.claimedToday?'Bugünkü ödül alındı':`Bugünkü ödülü al · ${formatCoins(todayReward.coins)} 🪙`}</button>`;
+    const dailyBody=`<div class="reward-grid">${dailyRewards.map(reward=>{const claimed=dailyClaim.claimedToday?reward.day<=todayDay:reward.day<todayDay;return `<article class="reward-day ${reward.day===todayDay?'today':''} ${claimed?'claimed':''}"><small>${t('daily.day',{day:reward.day})}</small><b>${claimed?'✓':'🪙'}</b><strong>${formatCoins(reward.coins)}</strong></article>`}).join('')}</div><button class="btn primary utility-cta" data-action="claim-daily" ${dailyClaim.claimedToday||economy?.status==='loading'?'disabled':''}>${dailyClaim.claimedToday?t('daily.claimed'):t('daily.claim',{amount:formatCoins(todayReward.coins)})}</button>`;
     const pages={
-      daily:{eyebrow:'HER GÜN KANTİNDE',title:'Günlük Giriş Ödülü',copy:'Seriyi bozma, yedinci gün büyük ödülü kap.',body:dailyBody},
-      missions:{eyebrow:'KAMPÜS GÖREVLERİ',title:'Görevler',copy:'Oyna, arkadaşlarınla kazan ve ödülleri topla.',body:`<div class="mission-list"><article><b>İlk masanı tamamla</b><small>1 / 1</small><progress value="1" max="1"></progress><strong>100 🪙</strong></article><article><b>3 Tavla maçı oyna</b><small>1 / 3</small><progress value="1" max="3"></progress><strong>150 🪙</strong></article><article><b>Bir arkadaşınla oyna</b><small>0 / 1</small><progress value="0" max="1"></progress><strong>250 🪙</strong></article></div>`},
-      store:{eyebrow:'KANTİN MAĞAZASI',title:'Mağaza',copy:'Jeton paketleri ve masanı kişiselleştiren özel parçalar.',body:`<div class="store-grid"><article><b>🪙</b><h3>Başlangıç Paketi</h3><p>2.500 jeton</p><button class="btn primary" data-buy="Başlangıç Paketi">₺49,90</button></article><article><b>🎲</b><h3>Altın Zar</h3><p>Özel zar görünümü</p><button class="btn" data-buy="Altın Zar">1.200 🪙</button></article><article><b>🎨</b><h3>Ceviz Masa</h3><p>Tavla masa kaplaması</p><button class="btn" data-buy="Ceviz Masa">2.000 🪙</button></article></div>`},
-      inventory:{eyebrow:'KOLEKSİYON',title:'Çantam',copy:'Kazandığın ve satın aldığın eşyaları buradan kuşan.',body:`<div class="inventory-grid">${[['🎲','Klasik Zar'],['✨','Altın Zar'],['⚪','Fildişi Pul'],['🟤','Ceviz Pul'],['🪵','Kantin Masası'],['🔒','Yeni yuva']].map(([icon,name],i)=>`<button class="inventory-slot ${i===0?'equipped':''}"><b>${icon}</b><span>${name}</span><small>${i===0?'KUŞANILDI':i===5?'KİLİTLİ':'KULLAN'}</small></button>`).join('')}</div>`}
+      daily:{eyebrow:t('daily.eyebrow'),title:t('daily.title'),copy:t('daily.copy'),body:dailyBody},
+      missions:{eyebrow:t('missions.eyebrow'),title:t('missions.title'),copy:t('missions.copy'),body:`<div class="mission-list"><article><b>İlk masanı tamamla</b><small>1 / 1</small><progress value="1" max="1"></progress><strong>100 🪙</strong></article><article><b>3 Tavla maçı oyna</b><small>1 / 3</small><progress value="1" max="3"></progress><strong>150 🪙</strong></article><article><b>Bir arkadaşınla oyna</b><small>0 / 1</small><progress value="0" max="1"></progress><strong>250 🪙</strong></article></div>`},
+      store:{eyebrow:t('store.eyebrow'),title:t('store.title'),copy:t('store.copy'),body:`<div class="store-grid"><article><b>🪙</b><h3>Başlangıç Paketi</h3><p>2.500 jeton</p><button class="btn primary" data-buy="Başlangıç Paketi">₺49,90</button></article><article><b>🎲</b><h3>Altın Zar</h3><p>Özel zar görünümü</p><button class="btn" data-buy="Altın Zar">1.200 🪙</button></article><article><b>🎨</b><h3>Ceviz Masa</h3><p>Tavla masa kaplaması</p><button class="btn" data-buy="Ceviz Masa">2.000 🪙</button></article></div>`},
+      inventory:{eyebrow:t('inventory.eyebrow'),title:t('inventory.title'),copy:t('inventory.copy'),body:`<div class="inventory-grid">${[['🎲','Klasik Zar'],['✨','Altın Zar'],['⚪','Fildişi Pul'],['🟤','Ceviz Pul'],['🪵','Kantin Masası'],['🔒','Yeni yuva']].map(([icon,name],i)=>`<button class="inventory-slot ${i===0?'equipped':''}"><b>${icon}</b><span>${name}</span><small>${i===0?'KUŞANILDI':i===5?'KİLİTLİ':'KULLAN'}</small></button>`).join('')}</div>`}
     };
     const page=pages[type];
     if(!page)return home();
-    screen.innerHTML=`<section class="utility-screen"><header><button class="btn" data-action="home">← Menü</button><div><small>${page.eyebrow}</small><h1>${page.title}</h1><p>${page.copy}</p></div></header>${page.body}</section>`;
+    screen.innerHTML=`<section class="utility-screen"><header><button class="btn" data-action="home">${t('utility.backMenu')}</button><div><small>${page.eyebrow}</small><h1>${page.title}</h1><p>${page.copy}</p></div></header>${page.body}</section>`;
   }
   function boostLocalOkeyDeal(){const g=manager.game,id=manager.viewerId;if(!g||manager.config()?.family!=='okey')return;let best=JSON.parse(JSON.stringify(g.state)),bestTotal=g.getStateForPlayer(id).openingPotential||0;for(let attempt=0;attempt<11&&bestTotal<101;attempt++){g.startRound();const total=g.getStateForPlayer(id).openingPotential||0;if(total>bestTotal){bestTotal=total;best=JSON.parse(JSON.stringify(g.state))}}g.state=best}
-  function open(mode,viewerId=null,online=false){clearPistiDealAnimation(true);clearTimeout(pistiBotTimer);clearTimeout(tavlaBotTimer);clearTimeout(okeyBotTimer);clearTimeout(openingRollTimer);clearTimeout(diceAnimationTimer);clearTavlaClock();pistiBotTimer=null;tavlaBotTimer=null;okeyBotTimer=null;openingRollTimer=null;diceAnimationTimer=null;localOkeyClockKey=null;localOkeyDeadlineAt=null;localOkeyTimeoutHandledKey=null;pendingCheckerMove=null;manager.start(mode);onlineGame=online;localTavlaReaction='';emojiPickerOpen=false;chatComposerOpen=false;lastDiceKey='';lastDiceFaces=[5,2];lastAnnouncedTurn=null;if(viewerId)manager.viewerId=viewerId;if(!online)boostLocalOkeyDeal();selected=null;chosen.clear();pistiBluffMode=false;wordTileId=null;wordExchangeIds.clear();wordRackSlots=[];wordDragTileId=null;wordDragSourceSlot=null;wordPointerDrag=null;okeyRackOrder=[];okeyRackBreaks.clear();okeyRackSlots=[];okeyRackMode='runs';okeyRackGrouped=false;okeyDraftGroups=[];okeyDraftType=null;seat=viewerId||'A1';if(!online&&manager.config().family==='pisti')pistiBots();if(!online&&manager.config().family==='okey')okeyBots();render()}
-  function matchPage(mode,searching=false){matchmakingMode=mode;const m=KANTIN.MODES[mode],waiting=queueState?.waiting||1,required=queueState?.required||(m.players==='1v1'?2:4);screen.innerHTML=`<section class="match-screen"><button class="btn" data-action="home">← Lobi</button><div class="match-panel"><span class="match-icon">${icons[mode]}</span><small>${m.players}</small><h1>${m.title}</h1>${searching?`<div class="radar"><i></i><b>${waiting}/${required}</b></div><h2>Rakipler aranıyor…</h2><p>Kuyruktaki yerin: ${queueState?.position||1}</p><button class="btn" data-action="cancel-match">Aramayı İptal Et</button>`:`<p>${descriptions[mode]}</p><button class="btn primary big" data-action="find-match">Eşleşme Bul</button><button class="btn" data-practice="${mode}">Yerel Antrenman</button><small class="server-note">Canlı eşleşme · Sunucu doğrulamalı oda ve koltuk ataması</small>`}</div></section>`}
+  function open(mode,viewerId=null,online=false){clearPistiDealAnimation(true);clearTimeout(pistiBotTimer);clearTimeout(tavlaBotTimer);clearTimeout(okeyBotTimer);clearTimeout(openingRollTimer);clearTimeout(diceAnimationTimer);clearTavlaClock();pistiBotTimer=null;tavlaBotTimer=null;okeyBotTimer=null;openingRollTimer=null;diceAnimationTimer=null;localOkeyClockKey=null;localOkeyDeadlineAt=null;localOkeyTimeoutHandledKey=null;pendingCheckerMove=null;screen.dataset.view='game';screen.dataset.mode=mode;manager.start(mode);onlineGame=online;localTavlaReaction='';emojiPickerOpen=false;chatComposerOpen=false;lastDiceKey='';lastDiceFaces=[5,2];lastAnnouncedTurn=null;if(viewerId)manager.viewerId=viewerId;if(!online)boostLocalOkeyDeal();selected=null;chosen.clear();pistiBluffMode=false;wordTileId=null;wordExchangeIds.clear();wordRackSlots=[];wordDragTileId=null;wordDragSourceSlot=null;wordPointerDrag=null;okeyRackOrder=[];okeyRackBreaks.clear();okeyRackSlots=[];okeyRackMode='runs';okeyRackGrouped=false;okeyDraftGroups=[];okeyDraftType=null;seat=viewerId||'A1';if(!online&&manager.config().family==='pisti')pistiBots();if(!online&&manager.config().family==='okey')okeyBots();render()}
+  function matchPage(mode,searching=false){matchmakingMode=mode;const m=KANTIN.MODES[mode],family=gameFamilies.find(item=>item.modes.some(candidate=>candidate[0]===mode)),translatedMode=family?.modes.find(candidate=>candidate[0]===mode),waiting=queueState?.waiting||1,required=queueState?.required||(m.players==='1v1'?2:4);screen.dataset.view='match';screen.dataset.mode=mode;screen.dataset.searching=String(searching);screen.innerHTML=`<section class="match-screen"><button class="btn" data-action="home">${t('match.backLobby')}</button><div class="match-panel"><span class="match-icon">${icons[mode]}</span><small>${translatedMode?modePlayers(translatedMode):m.players}</small><h1>${translatedMode?modeName(translatedMode):m.title}</h1>${searching?`<div class="radar"><i></i><b>${waiting}/${required}</b></div><h2>${t('match.searching')}</h2><p>${t('match.queuePosition',{position:queueState?.position||1})}</p><button class="btn" data-action="cancel-match">${t('match.cancel')}</button>`:`<p>${t(descriptions[mode])}</p><button class="btn primary big" data-action="find-match">${t('match.find')}</button><button class="btn" data-practice="${mode}">${t('match.practice')}</button><small class="server-note">${t('match.serverNote')}</small>`}</div></section>`}
   async function findMatch(){if(!requireAuth('Gerçek eşleşmeye katılmak için giriş yapmalısın.'))return;try{await KANTIN_MATCH.connect(playerName());queueState=null;KANTIN_MATCH.join(matchmakingMode);matchPage(matchmakingMode,true)}catch(error){toast(error.message)}}
   const friendsPanel=document.querySelector('#friendsPanel'),chatPanel=document.querySelector('#chatPanel'),backdrop=document.querySelector('.panel-backdrop'),authModal=document.querySelector('#authModal'),authFeedback=document.querySelector('#authFeedback');
   function closeSocial(){friendsPanel.classList.remove('open');chatPanel.classList.remove('open');backdrop.classList.remove('open')}
   function openSocial(panel){closeSocial();panel.classList.add('open');backdrop.classList.add('open');if(panel===friendsPanel)renderFriends();else{unread=0;updateBadges();renderChat()}}
   function setAuthFeedback(message,tone='error'){authFeedback.textContent=message||'';authFeedback.className=`auth-feedback ${tone==='success'?'success':''}`}
   function setAuthBusy(busy){document.querySelectorAll('[data-auth-provider]').forEach(button=>button.disabled=busy);authModal.setAttribute('aria-busy',String(busy))}
-  function syncAuthGateway(){const ua=navigator.userAgent||'',platform=/iPad|iPhone|iPod/.test(ua)?'ios':/Android/i.test(ua)?'android':'web',hint=document.querySelector('#authInstallHint');authModal.dataset.platform=platform;hint.textContent=platform==='ios'?'Apple hesabınla veya dilediğin yöntemle devam et':platform==='android'?'Google Play hesabınla veya dilediğin yöntemle devam et':'Güvenli oturum · Supabase Auth';document.querySelectorAll('[data-auth-provider]').forEach(button=>{const provider=button.dataset.authProvider,available=provider==='guest'?auth?.anonymousEnabled:Boolean(auth?.providers?.[provider]);button.classList.toggle('unavailable',!available);button.title=available?'':provider==='guest'?'Misafir girişi Supabase ayarlarından etkinleştirilmeli.':'Bu sağlayıcının Supabase OAuth bilgileri henüz girilmedi.'})}
+  function syncAuthGateway(){const ua=navigator.userAgent||'',platform=/iPad|iPhone|iPod/.test(ua)?'ios':/Android/i.test(ua)?'android':'web',hint=document.querySelector('#authInstallHint');authModal.dataset.platform=platform;hint.textContent=t('auth.secureSession');document.querySelectorAll('[data-auth-provider]').forEach(button=>{const provider=button.dataset.authProvider,available=provider==='guest'?auth?.anonymousEnabled:Boolean(auth?.providers?.[provider]);button.classList.toggle('unavailable',!available);button.title=available?'':provider==='guest'?'Misafir girişi Supabase ayarlarından etkinleştirilmeli.':'Bu sağlayıcının Supabase OAuth bilgileri henüz girilmedi.'})}
   function openAuth(){closeSocial();closeProfile();syncAuthGateway();setAuthFeedback('');authModal.classList.add('open');authModal.setAttribute('aria-hidden','false')}
   function closeAuth(){if(!auth?.isAuthenticated())return;authModal.classList.remove('open');authModal.setAttribute('aria-hidden','true');setAuthFeedback('')}
-  function requireAuth(message='Bu bölüm için giriş yapmalısın.'){if(auth?.isAuthenticated())return true;openAuth();if(message)toast(message);return false}
+  function requireAuth(message=t('error.loginRequired')){if(auth?.isAuthenticated())return true;openAuth();if(message)toast(message);return false}
   function updateIdentity(){
     const avatarNode=document.querySelector('#headerAvatar'),nameNode=document.querySelector('#headerUsername'),metaNode=document.querySelector('#headerMetaText'),idNode=document.querySelector('#userPublicId'),levelNode=document.querySelector('#headerLevel'),coinsNode=document.querySelector('#headerCoins');
     if(auth?.status==='loading'){
-      nameNode.textContent='Bağlanıyor…';metaNode.textContent='Hesap durumu kontrol ediliyor';idNode.textContent='';levelNode.textContent='·';return;
+      nameNode.textContent=t('header.connecting');metaNode.textContent=t('header.checking');idNode.textContent='';levelNode.textContent='·';return;
     }
     if(!auth?.isAuthenticated()){
-      nameNode.textContent='Giriş yap';metaNode.textContent='Ücretsiz hesap oluştur';idNode.textContent='';levelNode.textContent='→';avatarNode.textContent='K';coinsNode.textContent=`🪙 ${formatCoins(economy?.core?.startingBalance||2500)}`;updateBadges();return;
+      nameNode.textContent=t('header.login');metaNode.textContent=t('header.createAccount');idNode.textContent='';levelNode.textContent='→';avatarNode.textContent='K';coinsNode.textContent=`🪙 ${formatCoins(economy?.core?.startingBalance||2500)}`;updateBadges();return;
     }
     const profile=auth.profile||{},name=playerName(),avatar=playerAvatar(),level=Number(profile.level)||1;
     nameNode.textContent=name;
     avatarNode.innerHTML=avatar?`<img src="${avatar}" alt="">`:esc(name.charAt(0).toUpperCase());
-    metaNode.textContent=`Seviye ${level}`;
-    idNode.textContent=profile.player_code||'Profil hazırlanıyor…';
-    idNode.title='Arkadaşların bu ID ile seni ekleyebilir';
+    metaNode.textContent=t('header.level',{level});
+    idNode.textContent=profile.player_code||t('header.profilePreparing');
+    idNode.title=t('header.friendIdHint');
     levelNode.textContent=level;
     coinsNode.textContent=`🪙 ${formatCoins(coinBalance())}`;
-    coinsNode.title=economy?.status==='error'?'Coin sunucusuna ulaşılamadı; son bilinen bakiye gösteriliyor.':'Sunucu doğrulamalı Kantin Coin bakiyesi';
+    coinsNode.title=economy?.status==='error'?t('header.balanceCached'):t('header.balanceVerified');
     KANTIN_MATCH.username=name;
     updateBadges();
   }
@@ -512,24 +522,24 @@
     e.preventDefault();
     e.stopImmediatePropagation();
     if(button.disabled)return;
-    if(!requireAuth('Günlük ödül için giriş yapmalısın.'))return;
-    if(!economy)return toast('Coin servisi henüz hazır değil.');
+    if(!requireAuth())return;
+    if(!economy)return toast(t('error.coinUnavailable'));
     button.disabled=true;
-    button.textContent='Ödül hesabına ekleniyor…';
+    button.textContent=t('daily.adding');
     try{
       const result=await economy.claimDailyReward();
       updateIdentity();
       utilityPage('daily');
-      toast(result.alreadyClaimed?'Bugünkü ödülünü daha önce aldın.':`${formatCoins(result.amount)} Kantin Coin hesabına eklendi.`);
+      toast(result.alreadyClaimed?t('daily.already'):t('daily.added',{amount:formatCoins(result.amount)}));
     }catch(error){
       button.disabled=false;
-      button.textContent='Tekrar dene';
+      button.textContent=t('error.retry');
       toast(error.message);
     }
   });
   document.addEventListener('click',async e=>{
     if(Date.now()<suppressBoardClickUntil&&e.target.closest('.tavla-board,[data-to="off"]'))return;
-    const authProvider=e.target.closest('[data-auth-provider]')?.dataset.authProvider;if(authProvider){if(!document.querySelector('#authConsent').checked)return setAuthFeedback('Devam etmek için Gizlilik Politikası ve Kullanıcı Sözleşmesi’ni kabul etmelisin.');setAuthBusy(true);setAuthFeedback(authProvider==='guest'?'Misafir hesabın hazırlanıyor…':'Güvenli giriş sayfasına yönlendiriliyorsun…','success');try{if(authProvider==='guest'){await auth.signInAsGuest();setAuthBusy(false);closeAuth();updateIdentity();toast(`Hoş geldin, ${playerName()}.`)}else await auth.signInWithOAuth(authProvider)}catch(error){setAuthFeedback(error.message);setAuthBusy(false)}return}
+    const authProvider=e.target.closest('[data-auth-provider]')?.dataset.authProvider;if(authProvider){if(!document.querySelector('#authConsent').checked)return setAuthFeedback(t('auth.consentRequired'));setAuthBusy(true);setAuthFeedback(authProvider==='guest'?t('auth.preparingGuest'):t('auth.redirecting'),'success');try{if(authProvider==='guest'){await auth.signInAsGuest();setAuthBusy(false);closeAuth();updateIdentity();toast(t('auth.welcome',{name:playerName()}))}else await auth.signInWithOAuth(authProvider)}catch(error){setAuthFeedback(error.message);setAuthBusy(false)}return}
     const profileNode=e.target.closest('[data-player-profile]');if(profileNode){if(profileNode.dataset.playerProfile==='self'&&!auth?.isAuthenticated())return openAuth('login');return openPlayerProfile(profileNode.dataset.playerProfile,profileNode.dataset.playerName||'Oyuncu')}
     const family=e.target.closest('[data-family]')?.dataset.family;if(family)return roomPage(family);
     const mode=e.target.closest('[data-mode]')?.dataset.mode;if(mode)return roomPage(gameFamilies.find(f=>f.modes.some(x=>x[0]===mode))?.key,mode);
@@ -578,7 +588,28 @@
   document.querySelector('#profileModal').addEventListener('click',e=>{if(e.target.id==='profileModal')closeProfile()});
   authModal.addEventListener('click',e=>{if(e.target===authModal)closeAuth()});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(auth?.isAuthenticated())closeAuth();closeProfile();closeSocial()}});
-  auth?.addEventListener('change',()=>{updateIdentity();syncAuthGateway();if(auth.isAuthenticated())closeAuth();else openAuth()});
-  economy?.addEventListener('change',()=>{updateIdentity();if(document.querySelector('.utility-screen h1')?.textContent==='Günlük Giriş Ödülü')utilityPage('daily')});
-  home();updateIdentity();auth?.ready.then(()=>{updateIdentity();syncAuthGateway();if(auth.isAuthenticated())closeAuth();else openAuth()});
+  let syncingProfileLocale=false;
+  function rerenderLocalizedView(){
+    const view=screen.dataset.view;
+    if(view==='home')home();
+    else if(view==='room')roomPage(screen.dataset.family||selectedFamily,screen.dataset.mode||matchmakingMode);
+    else if(view==='match')matchPage(screen.dataset.mode||matchmakingMode,screen.dataset.searching==='true');
+    else if(view==='utility')utilityPage(screen.dataset.utility);
+    else if(view==='game'&&manager.game)render();
+  }
+  async function syncLocaleFromProfile(){
+    if(!auth?.isAuthenticated())return;
+    const preferred=i18n?.normalize(auth.profile?.preferred_locale);
+    if(preferred&&preferred!==i18n.locale){syncingProfileLocale=true;i18n.setLocale(preferred);syncingProfileLocale=false;return}
+    if(!preferred&&i18n?.locale){try{await auth.updateProfile({preferred_locale:i18n.locale})}catch(error){console.warn('Locale preference could not be saved.',error)}}
+  }
+  i18n?.addEventListener('change',async()=>{
+    updateIdentity();syncAuthGateway();clock();rerenderLocalizedView();
+    if(!syncingProfileLocale&&auth?.isAuthenticated()&&auth.profile?.preferred_locale!==i18n.locale){
+      try{await auth.updateProfile({preferred_locale:i18n.locale})}catch(error){toast(error.message)}
+    }
+  });
+  auth?.addEventListener('change',()=>{updateIdentity();syncAuthGateway();syncLocaleFromProfile();if(auth.isAuthenticated())closeAuth();else openAuth()});
+  economy?.addEventListener('change',()=>{updateIdentity();if(screen.dataset.view==='utility'&&screen.dataset.utility==='daily')utilityPage('daily')});
+  home();updateIdentity();auth?.ready.then(()=>{updateIdentity();syncAuthGateway();syncLocaleFromProfile();if(auth.isAuthenticated())closeAuth();else openAuth()});
 })();
