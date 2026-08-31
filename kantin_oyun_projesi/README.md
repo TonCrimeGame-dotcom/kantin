@@ -60,6 +60,18 @@ Mevcut authoritative WebSocket oyun sunucusu hâlâ SQLite ve process belleğini
 - Tamamlanan odalar 5 dakika, terk edilmiş aktif odalar 24 saat sonra temizlenir.
 - Production'da `ALLOWED_ORIGINS` mutlaka gerçek HTTPS origin'i ile ayarlanmalıdır.
 
+## Kantin Coin ekonomisi
+
+- `coin_wallets`, oyuncunun sunucu tarafından doğrulanan güncel bakiyesini tutar.
+- `coin_transactions`, her kazanma ve harcama hareketini değiştirilemez bir defter olarak saklar.
+- Her ekonomi hareketi bir `idempotency_key` taşır; aynı sunucu isteği tekrar gönderilirse bakiye ikinci kez değişmez.
+- Tarayıcı cüzdana doğrudan yazamaz. Maç ödülü, giriş bedeli ve ilerideki mağaza makbuzları yalnızca service-role kullanan authoritative sunucudan işlenir.
+- `economy_settings`, `economy_stakes` ve `economy_daily_rewards` değerleri Supabase üzerinden değiştirilir; bu değişiklikler için uygulama sürümü çıkarılmaz.
+- Günlük ödül, İstanbul takvim gününe göre yalnızca bir kez verilir ve arayüz gerçek cüzdan bakiyesini gösterir.
+- `profiles.coins` eski istemciler için salt okunur bir uyumluluk aynasıdır; asıl kaynak `coin_wallets.balance` alanıdır.
+
+Gerçek para ürünleri henüz aktif değildir. Google Play Billing, Apple In-App Purchase, Telegram Stars ve Meta ödeme makbuzları yayın aşamasında ayrı adaptörlerle doğrulanıp aynı işlem defterine yazılacaktır.
+
 ## Test
 
 ```powershell
