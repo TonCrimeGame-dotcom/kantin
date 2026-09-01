@@ -3,6 +3,9 @@
   "functions": {
     "api/ws.js": {
       "maxDuration": 300
+    },
+    "api/match.js": {
+      "maxDuration": 30
     }
   }
 }
