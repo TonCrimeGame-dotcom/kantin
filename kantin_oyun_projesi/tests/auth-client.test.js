@@ -85,3 +85,10 @@ test('ana tiklama isleyicisi ceviri fonksiyonunu yerel tas degiskeniyle golgelem
   assert.doesNotMatch(appSource, /const t=e\.target\.closest\('\[data-tile\]'\)/);
   assert.match(appSource, /const tileNode=e\.target\.closest\('\[data-tile\]'\)/);
 });
+
+test('oda kapsayicisinin veri alanlari ic dugmelerin tiklamalarini yutmaz', () => {
+  assert.match(appSource, /closest\('button\[data-family\]'\)/);
+  assert.match(appSource, /closest\('button\[data-mode\]'\)/);
+  assert.doesNotMatch(appSource, /closest\('\[data-family\]'\)/);
+  assert.doesNotMatch(appSource, /closest\('\[data-mode\]'\)/);
+});

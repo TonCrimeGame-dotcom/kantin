@@ -541,8 +541,8 @@
     if(Date.now()<suppressBoardClickUntil&&e.target.closest('.tavla-board,[data-to="off"]'))return;
     const authProvider=e.target.closest('[data-auth-provider]')?.dataset.authProvider;if(authProvider){if(!document.querySelector('#authConsent').checked)return setAuthFeedback(t('auth.consentRequired'));setAuthBusy(true);setAuthFeedback(authProvider==='guest'?t('auth.preparingGuest'):t('auth.redirecting'),'success');try{if(authProvider==='guest'){await auth.signInAsGuest();setAuthBusy(false);closeAuth();updateIdentity();toast(t('auth.welcome',{name:playerName()}))}else await auth.signInWithOAuth(authProvider)}catch(error){setAuthFeedback(error.message);setAuthBusy(false)}return}
     const profileNode=e.target.closest('[data-player-profile]');if(profileNode){if(profileNode.dataset.playerProfile==='self'&&!auth?.isAuthenticated())return openAuth('login');return openPlayerProfile(profileNode.dataset.playerProfile,profileNode.dataset.playerName||'Oyuncu')}
-    const family=e.target.closest('[data-family]')?.dataset.family;if(family)return roomPage(family);
-    const mode=e.target.closest('[data-mode]')?.dataset.mode;if(mode)return roomPage(gameFamilies.find(f=>f.modes.some(x=>x[0]===mode))?.key,mode);
+    const family=e.target.closest('button[data-family]')?.dataset.family;if(family)return roomPage(family);
+    const mode=e.target.closest('button[data-mode]')?.dataset.mode;if(mode)return roomPage(gameFamilies.find(f=>f.modes.some(x=>x[0]===mode))?.key,mode);
     const stake=e.target.closest('[data-stake]')?.dataset.stake;if(stake){selectedStake=Number(stake);return roomPage(selectedFamily,matchmakingMode)}
     const practice=e.target.closest('[data-practice]')?.dataset.practice;if(practice)return open(practice);
     const room=e.target.closest('[data-room]')?.dataset.room;if(room){currentRoom=room;return renderChat()}
