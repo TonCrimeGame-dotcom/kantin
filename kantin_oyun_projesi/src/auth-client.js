@@ -162,11 +162,34 @@
     return Array.isArray(rows) ? rows[0] || null : null;
   }
 
+  function isAnonymousUser() {
+    if (state.localGuest) return true;
+    if (typeof state.user?.is_anonymous === 'boolean') return state.user.is_anonymous;
+    try {
+      const payload = JSON.parse(atob(String(state.session?.access_token || '').split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      if (typeof payload?.is_anonymous === 'boolean') return payload.is_anonymous;
+    } catch {}
+    return Boolean(state.profile?.is_guest);
+  }
+
+  function hasLinkedOAuthIdentity() {
+    return Array.isArray(state.user?.identities) && state.user.identities.some(identity => ['google', 'facebook', 'apple'].includes(identity?.provider));
+  }
+
+  async function promoteProfileIfPermanent(force = false) {
+    if (state.localGuest || !state.profile?.is_guest || isAnonymousUser()) return state.profile;
+    if (!force && !hasLinkedOAuthIdentity()) return state.profile;
+    await request('/rest/v1/rpc/promote_kantin_guest', { method: 'POST', auth: true, body: {} });
+    state.profile = await fetchProfile(state.user.id);
+    return state.profile;
+  }
+
   async function establishSession(payload) {
     persistSession(normalizedSession(payload));
     state.localGuest = false;
     state.user = payload.user || await fetchUser();
     state.profile = await fetchProfile(state.user.id);
+    await promoteProfileIfPermanent();
     state.status = 'authenticated';
     state.error = null;
     emit();
@@ -211,6 +234,7 @@
       if (state.session.expires_at * 1000 <= Date.now() + 30000) return refresh();
       state.user = await fetchUser();
       state.profile = await fetchProfile(state.user.id);
+      await promoteProfileIfPermanent();
       state.status = 'authenticated';
       state.error = null;
       scheduleRefresh();
@@ -389,6 +413,42 @@
     location.assign(`${config.url}/auth/v1/authorize?provider=${encodeURIComponent(provider)}&redirect_to=${encodeURIComponent(redirectTo)}`);
   }
 
+  async function requestEmailUpgrade(email) {
+    if (!state.user || state.localGuest || !state.session?.access_token) throw authError('Hesap sunucusuna bağlanmadan misafir hesabı yükseltilemez.');
+    if (!state.profile?.is_guest) throw authError('Bu hesap zaten kalıcı bir hesaba bağlı.');
+    const cleanEmail = String(email || '').trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) throw authError('Geçerli bir e-posta adresi yazmalısın.');
+    const payload = await request('/auth/v1/user', { method: 'PUT', auth: true, body: { email: cleanEmail } });
+    state.user = payload?.user || payload || state.user;
+    emit();
+    return state.user;
+  }
+
+  async function setAccountPassword(password) {
+    if (!state.user || state.localGuest || !state.session?.access_token) throw authError('Hesap sunucusuna bağlanmadan parola belirlenemez.');
+    if (isAnonymousUser()) throw authError('Önce e-posta adresine gönderilen doğrulama bağlantısını açmalısın.');
+    const payload = await request('/auth/v1/user', { method: 'PUT', auth: true, body: { password: validatePassword(password) } });
+    state.user = payload?.user || payload || state.user;
+    await promoteProfileIfPermanent(true);
+    emit();
+    return snapshot();
+  }
+
+  async function linkIdentity(provider) {
+    const allowed = ['google', 'facebook', 'apple'];
+    if (!allowed.includes(provider)) throw authError('Geçersiz bağlantı yöntemi.');
+    if (!state.user || state.localGuest || !state.session?.access_token) throw authError('Hesap sunucusuna bağlanmadan hesap bağlantısı yapılamaz.');
+    if (!state.profile?.is_guest) throw authError('Bu hesap zaten kalıcı bir hesaba bağlı.');
+    if (!state.providers[provider]) {
+      await loadSettings().catch(() => null);
+      if (!state.providers[provider]) throw authError('Bu bağlantı yöntemi henüz yapılandırılmamış.');
+    }
+    const redirectTo = `${location.origin}${location.pathname}`;
+    const payload = await request(`/auth/v1/user/identities/authorize?provider=${encodeURIComponent(provider)}&redirect_to=${encodeURIComponent(redirectTo)}&skip_http_redirect=true`, { auth: true });
+    if (!payload?.url) throw authError('Bağlantı sayfası açılamadı.');
+    location.assign(payload.url);
+  }
+
   async function signOut() {
     try {
       if (state.session?.access_token) await request('/auth/v1/logout', { method: 'POST', auth: true });
@@ -399,9 +459,11 @@
 
   async function updateProfile(changes) {
     if (!state.user) throw authError('Profilini düzenlemek için giriş yapmalısın.');
+    if (changes.username !== undefined && state.profile?.is_guest) {
+      throw authError('Misafir hesabında kullanıcı adı değiştirilemez. Önce hesabını bağlamalısın.');
+    }
     if (state.localGuest) {
       const guest = localGuestRecord();
-      if (changes.username !== undefined) guest.username = validateUsername(changes.username);
       if (changes.preferred_locale !== undefined) {
         const locale = i18n?.normalize(changes.preferred_locale);
         if (!locale) throw authError('Desteklenmeyen dil seçimi.');
@@ -451,6 +513,7 @@
     get user() { return state.user; },
     get profile() { return state.profile; },
     get providers() { return { ...state.providers }; },
+    get isAnonymous() { return isAnonymousUser(); },
     get anonymousEnabled() { return state.anonymousEnabled; },
     get localGuest() { return state.localGuest; },
     getAccessToken() { return state.session?.access_token || null; },
@@ -461,6 +524,9 @@
     signIn,
     signInAsGuest,
     signInWithOAuth,
+    requestEmailUpgrade,
+    setAccountPassword,
+    linkIdentity,
     signOut,
     updateProfile,
     refreshProfile: async () => {

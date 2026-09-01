@@ -9,6 +9,7 @@ const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'auth-client.js'), 'utf8');
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.js'), 'utf8');
 const guestRecoveryMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901090000_guest_auth_recovery.sql'), 'utf8');
+const guestLinkingMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901113000_guest_account_linking.sql'), 'utf8');
 
 function memoryStorage() {
   const values = new Map();
@@ -86,6 +87,18 @@ test('ayni cihaz sayfa yenilenince ayni misafir profiline otomatik girer', async
   assert.equal(second.profile.player_code, firstCode);
 });
 
+test('misafir kullanici istemci uzerinden adini degistiremez', async () => {
+  const auth = boot(memoryStorage());
+  await auth.ready;
+  await auth.signInAsGuest();
+
+  await assert.rejects(
+    auth.updateProfile({ username: 'Yeni Misafir Adi' }),
+    /Misafir hesabında kullanıcı adı değiştirilemez/
+  );
+  assert.equal(auth.profile.username, 'Misafir 123456');
+});
+
 test('yerel yedek misafir Supabase duzelince ayni acilista bulut oturumuna yukselir', async () => {
   const storage = memoryStorage();
   const offline = boot(storage);
@@ -125,4 +138,12 @@ test('anonim Supabase kaydi eski cihaz profiliyle cakissa bile Auth islemini dus
   assert.match(guestRecoveryMigration, /to_jsonb\(new\) ->> 'is_anonymous'/i);
   assert.match(guestRecoveryMigration, /installation := 'anonymous:' \|\| new\.id::text/i);
   assert.match(guestRecoveryMigration, /preferred_locale/i);
+});
+
+test('misafir adi veritabaninda da kalici hesaba gecene kadar kilitlidir', () => {
+  assert.match(guestLinkingMigration, /before update of username on public\.profiles/i);
+  assert.match(guestLinkingMigration, /old\.is_guest and new\.username is distinct from old\.username/i);
+  assert.match(guestLinkingMigration, /auth\.jwt\(\) ->> 'is_anonymous'/i);
+  assert.match(appSource, /Misafir hesaplarda kullanıcı adı değiştirilemez/);
+  assert.match(appSource, /data-link-provider/);
 });
