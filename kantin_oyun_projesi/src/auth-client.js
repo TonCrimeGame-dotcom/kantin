@@ -204,7 +204,7 @@
       state.session = readStoredSession();
       if (!state.session) {
         const localGuest = readLocalGuest();
-        if (localGuest) return establishLocalGuest(localGuest);
+        if (localGuest) return signInAsGuest();
         clearSession();
         return snapshot();
       }

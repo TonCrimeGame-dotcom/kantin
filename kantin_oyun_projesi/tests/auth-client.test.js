@@ -26,7 +26,7 @@ class TestCustomEvent extends Event {
   }
 }
 
-function boot(storage) {
+function boot(storage, fetchImpl = async () => ({ ok: false, status: 503, json: async () => ({ error: 'service_not_configured' }) })) {
   const window = {
     KANTIN_I18N: {
       locale: 'tr',
@@ -43,8 +43,12 @@ function boot(storage) {
     location: { hash: '', pathname: '/', search: '', origin: 'http://127.0.0.1:4173' },
     history: { replaceState() {} },
     crypto: { randomUUID: () => '12345678-abcd-4000-8000-123456789abc' },
-    fetch: async () => ({ ok: false, status: 503, json: async () => ({ error: 'service_not_configured' }) }),
-    setTimeout,
+    fetch: fetchImpl,
+    setTimeout(...args) {
+      const timer = setTimeout(...args);
+      timer.unref?.();
+      return timer;
+    },
     clearTimeout,
     console
   };
@@ -80,6 +84,28 @@ test('ayni cihaz sayfa yenilenince ayni misafir profiline otomatik girer', async
   assert.equal(second.isAuthenticated(), true);
   assert.equal(second.user.id, firstId);
   assert.equal(second.profile.player_code, firstCode);
+});
+
+test('yerel yedek misafir Supabase duzelince ayni acilista bulut oturumuna yukselir', async () => {
+  const storage = memoryStorage();
+  const offline = boot(storage);
+  await offline.ready;
+  await offline.signInAsGuest();
+
+  const cloudFetch = async (url) => {
+    if (url === '/api/config') return { ok: true, status: 200, json: async () => ({ supabaseUrl: 'https://project.supabase.co', supabasePublishableKey: 'public-key' }) };
+    if (url.endsWith('/auth/v1/settings')) return { ok: true, status: 200, json: async () => ({ external: { anonymous_users: true } }) };
+    if (url.endsWith('/auth/v1/signup')) return { ok: true, status: 200, json: async () => ({ access_token: 'access', refresh_token: 'refresh', expires_in: 3600, user: { id: 'server-user', user_metadata: { username: 'Misafir 123456' } } }) };
+    if (url.includes('/rest/v1/profiles?')) return { ok: true, status: 200, json: async () => ([{ id: 'server-user', username: 'Misafir 123456', player_code: 'KNT-000123', is_guest: true, preferred_locale: 'tr' }]) };
+    throw new Error(`Beklenmeyen istek: ${url}`);
+  };
+
+  const upgraded = boot(storage, cloudFetch);
+  await upgraded.ready;
+  assert.equal(upgraded.isAuthenticated(), true);
+  assert.equal(upgraded.localGuest, false);
+  assert.equal(upgraded.user.id, 'server-user');
+  assert.ok(storage.getItem('kantin:supabase-session:v1'));
 });
 
 test('ana tiklama isleyicisi ceviri fonksiyonunu yerel tas degiskeniyle golgelemez', () => {
