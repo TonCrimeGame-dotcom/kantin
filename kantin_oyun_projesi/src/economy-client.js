@@ -26,6 +26,16 @@
     stakes: DEFAULT_STAKES,
     dailyRewards: DEFAULT_DAILY_REWARDS,
     dailyClaim: { claimedToday: false, claimedOn: null, streakDay: 0 },
+    rewardedAds: {
+      enabled: false,
+      rewardAmount: 150,
+      dailyLimit: 4,
+      watchedToday: 0,
+      remainingToday: 4,
+      cooldownSeconds: 600,
+      cooldownUntil: null,
+      canStart: false
+    },
     error: null
   };
   let publicConfig = null;
@@ -44,6 +54,7 @@
       stakes: state.stakes.map(stake => ({ ...stake })),
       dailyRewards: state.dailyRewards.map(reward => ({ ...reward })),
       dailyClaim: { ...state.dailyClaim },
+      rewardedAds: { ...state.rewardedAds },
       error: state.error
     };
   }
@@ -54,6 +65,11 @@
       [/insufficient_coins/i, 'Bu işlem için yeterli Kantin Coin yok.'],
       [/wallet_not_found/i, 'Cüzdanın henüz hazırlanmadı. Lütfen tekrar giriş yap.'],
       [/daily_reward_not_configured/i, 'Günlük ödül şu anda kullanılamıyor.'],
+      [/rewarded_ads_not_configured|rewarded_ads_disabled/i, 'Ödüllü reklam şu anda kullanılamıyor.'],
+      [/rewarded_ad_daily_limit/i, 'Bugünkü reklam ödülü sınırına ulaştın.'],
+      [/rewarded_ad_cooldown/i, 'Yeni reklam ödülü için biraz beklemelisin.'],
+      [/rewarded_ad_session_expired/i, 'Reklam oturumunun süresi doldu. Yeniden dene.'],
+      [/rewarded_ad_session_not_found/i, 'Reklam oturumu bulunamadı.'],
       [/authentication_required|jwt expired|invalid jwt/i, 'Bu işlem için yeniden giriş yapmalısın.'],
       [/failed to fetch/i, 'Coin sunucusuna ulaşılamadı. İnternet bağlantını kontrol et.']
     ];
@@ -131,6 +147,19 @@
     state.error = null;
   }
 
+  function applyRewardedAds(payload) {
+    state.rewardedAds = {
+      enabled: Boolean(payload?.enabled),
+      rewardAmount: positiveInteger(payload?.rewardAmount, 150),
+      dailyLimit: positiveInteger(payload?.dailyLimit, 4),
+      watchedToday: positiveInteger(payload?.watchedToday, 0),
+      remainingToday: positiveInteger(payload?.remainingToday, 0),
+      cooldownSeconds: positiveInteger(payload?.cooldownSeconds, 600),
+      cooldownUntil: payload?.cooldownUntil || null,
+      canStart: Boolean(payload?.canStart)
+    };
+  }
+
   function reset() {
     state.status = 'anonymous';
     state.balance = null;
@@ -138,6 +167,7 @@
     state.stakes = DEFAULT_STAKES;
     state.dailyRewards = DEFAULT_DAILY_REWARDS;
     state.dailyClaim = { claimedToday: false, claimedOn: null, streakDay: 0 };
+    state.rewardedAds = { ...state.rewardedAds, enabled: false, watchedToday: 0, remainingToday: 0, cooldownUntil: null, canStart: false };
     state.error = null;
     emit();
   }
@@ -151,9 +181,10 @@
     state.status = 'loading';
     state.error = null;
     emit();
-    refreshPromise = rpc('kantin_my_economy')
-      .then(payload => {
+    refreshPromise = Promise.all([rpc('kantin_my_economy'), rpc('kantin_rewarded_ad_state')])
+      .then(([payload, rewardedAds]) => {
         applyEconomy(payload);
+        applyRewardedAds(rewardedAds);
         emit();
         return snapshot();
       })
@@ -192,6 +223,36 @@
     };
   }
 
+  async function refreshRewardedAds() {
+    if (!auth?.isAuthenticated?.()) throw economyError('Ödüllü reklam için giriş yapmalısın.', 401);
+    const payload = await rpc('kantin_rewarded_ad_state');
+    applyRewardedAds(payload);
+    emit();
+    return { ...state.rewardedAds };
+  }
+
+  async function beginRewardedAd({ provider, platform, placement = 'lobby', metadata = {} } = {}) {
+    if (!auth?.isAuthenticated?.()) throw economyError('Ödüllü reklam için giriş yapmalısın.', 401);
+    const session = await rpc('kantin_begin_rewarded_ad', {
+      p_provider: String(provider || ''),
+      p_platform: String(platform || ''),
+      p_placement: String(placement || 'lobby'),
+      p_client_metadata: metadata && typeof metadata === 'object' ? metadata : {}
+    });
+    return session;
+  }
+
+  async function rewardedAdStatus(sessionId) {
+    if (!auth?.isAuthenticated?.()) throw economyError('Ödüllü reklam için giriş yapmalısın.', 401);
+    const payload = await rpc('kantin_rewarded_ad_status', { p_session_id: sessionId });
+    if (payload?.status === 'rewarded') {
+      state.balance = positiveInteger(payload.balance, state.balance || 0);
+      await refreshRewardedAds();
+      auth?.refreshProfile?.().catch(() => null);
+    }
+    return payload;
+  }
+
   const api = {
     ready: null,
     get status() { return state.status; },
@@ -201,10 +262,14 @@
     get stakes() { return state.stakes.map(stake => ({ ...stake })); },
     get dailyRewards() { return state.dailyRewards.map(reward => ({ ...reward })); },
     get dailyClaim() { return { ...state.dailyClaim }; },
+    get rewardedAds() { return { ...state.rewardedAds }; },
     get error() { return state.error; },
     snapshot,
     refresh,
     claimDailyReward,
+    refreshRewardedAds,
+    beginRewardedAd,
+    rewardedAdStatus,
     addEventListener(...args) { return events.addEventListener(...args); },
     removeEventListener(...args) { return events.removeEventListener(...args); }
   };

@@ -26,6 +26,13 @@ module.exports = async function configHandler(req, res) {
   sendJson(res, 200, {
     ok: true,
     supabaseUrl,
-    supabasePublishableKey
+    supabasePublishableKey,
+    rewardedAds: {
+      enabled: Boolean(process.env.REWARDED_AD_PROVIDER) || (process.env.REWARDED_AD_TEST_MODE === 'true' && process.env.VERCEL_ENV !== 'production'),
+      provider: process.env.REWARDED_AD_TEST_MODE === 'true' && process.env.VERCEL_ENV !== 'production'
+        ? 'test'
+        : String(process.env.REWARDED_AD_PROVIDER || ''),
+      testMode: process.env.REWARDED_AD_TEST_MODE === 'true' && process.env.VERCEL_ENV !== 'production'
+    }
   });
 };

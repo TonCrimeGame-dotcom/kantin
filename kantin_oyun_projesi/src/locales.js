@@ -201,5 +201,27 @@
     'daily.eyebrow':'كل يوم في KANTIN','daily.title':'مكافأة الدخول اليومية','daily.copy':'حافظ على السلسلة واحصل على المكافأة الكبرى في اليوم السابع.','daily.day':'اليوم {day}','daily.claim':'استلم مكافأة اليوم · {amount} 🪙','daily.claimed':'تم استلام مكافأة اليوم','daily.adding':'جارٍ إضافة المكافأة…','daily.already':'لقد استلمت مكافأة اليوم بالفعل.','daily.added':'تمت إضافة {amount} Kantin Coin إلى حسابك.','missions.eyebrow':'مهام الحرم','missions.title':'المهام','missions.copy':'العب واربح مع أصدقائك واجمع المكافآت.','store.eyebrow':'متجر KANTIN','store.title':'المتجر','store.copy':'حزم العملات وعناصر خاصة لتخصيص طاولتك.','inventory.eyebrow':'المجموعة','inventory.title':'المقتنيات','inventory.copy':'استخدم العناصر التي تربحها أو تشتريها.','rotate.title':'أدر هاتفك','rotate.copy':'صُممت KANTİN للوضع الأفقي.','error.loginRequired':'يجب تسجيل الدخول لهذا الإجراء.','error.coinUnavailable':'خدمة العملات غير جاهزة بعد.','error.retry':'حاول مجددًا'
   };
 
+  Object.assign(en, {
+    'ad.watchReward':'Watch ad · +{amount} 🪙','ad.todayRemaining':'{count} rewards left today','ad.verifying':'Verifying ad…','ad.pleaseWait':'Please wait','ad.comingSoon':'Rewarded ads coming soon','ad.networkPreparing':'Ad network is being prepared','ad.dailyLimit':'Daily limit reached','ad.tomorrow':'Available again tomorrow','ad.cooldown':'Wait for the next ad','ad.cooldownDetail':'Reward cooldown','ad.rewardAdded':'Ad reward added · +{amount} 🪙'
+  });
+  Object.assign(tr, {
+    'ad.watchReward':'Reklam izle · +{amount} 🪙','ad.todayRemaining':'Bugün {count} hak','ad.verifying':'Reklam doğrulanıyor…','ad.pleaseWait':'Lütfen bekle','ad.comingSoon':'Ödüllü reklam yakında','ad.networkPreparing':'Reklam ağı hazırlanıyor','ad.dailyLimit':'Günlük sınır doldu','ad.tomorrow':'Yarın yeniden açılır','ad.cooldown':'Yeni reklam için bekle','ad.cooldownDetail':'Ödül bekleme süresi','ad.rewardAdded':'Reklam ödülü eklendi · +{amount} 🪙'
+  });
+  Object.assign(de, {
+    'ad.watchReward':'Werbung ansehen · +{amount} 🪙','ad.todayRemaining':'Heute noch {count} Belohnungen','ad.verifying':'Werbung wird geprüft…','ad.pleaseWait':'Bitte warten','ad.comingSoon':'Belohnungswerbung folgt bald','ad.networkPreparing':'Werbenetzwerk wird vorbereitet','ad.dailyLimit':'Tageslimit erreicht','ad.tomorrow':'Morgen wieder verfügbar','ad.cooldown':'Auf die nächste Werbung warten','ad.cooldownDetail':'Belohnungspause','ad.rewardAdded':'Werbebelohnung gutgeschrieben · +{amount} 🪙'
+  });
+  Object.assign(ru, {
+    'ad.watchReward':'Смотреть рекламу · +{amount} 🪙','ad.todayRemaining':'Сегодня осталось: {count}','ad.verifying':'Проверяем рекламу…','ad.pleaseWait':'Подождите','ad.comingSoon':'Реклама с наградой скоро','ad.networkPreparing':'Рекламная сеть готовится','ad.dailyLimit':'Дневной лимит исчерпан','ad.tomorrow':'Снова доступно завтра','ad.cooldown':'Подождите следующую рекламу','ad.cooldownDetail':'Пауза между наградами','ad.rewardAdded':'Награда за рекламу добавлена · +{amount} 🪙'
+  });
+  Object.assign(es, {
+    'ad.watchReward':'Ver anuncio · +{amount} 🪙','ad.todayRemaining':'Quedan {count} recompensas hoy','ad.verifying':'Verificando anuncio…','ad.pleaseWait':'Espera un momento','ad.comingSoon':'Anuncios con premio próximamente','ad.networkPreparing':'Preparando la red publicitaria','ad.dailyLimit':'Límite diario alcanzado','ad.tomorrow':'Disponible mañana','ad.cooldown':'Espera al siguiente anuncio','ad.cooldownDetail':'Pausa de recompensa','ad.rewardAdded':'Recompensa añadida · +{amount} 🪙'
+  });
+  Object.assign(hi, {
+    'ad.watchReward':'विज्ञापन देखें · +{amount} 🪙','ad.todayRemaining':'आज {count} इनाम बाकी','ad.verifying':'विज्ञापन सत्यापित हो रहा है…','ad.pleaseWait':'कृपया प्रतीक्षा करें','ad.comingSoon':'इनामी विज्ञापन जल्द आएँगे','ad.networkPreparing':'विज्ञापन नेटवर्क तैयार हो रहा है','ad.dailyLimit':'दैनिक सीमा पूरी हुई','ad.tomorrow':'कल फिर उपलब्ध','ad.cooldown':'अगले विज्ञापन की प्रतीक्षा करें','ad.cooldownDetail':'इनाम प्रतीक्षा समय','ad.rewardAdded':'विज्ञापन इनाम मिला · +{amount} 🪙'
+  });
+  Object.assign(ar, {
+    'ad.watchReward':'شاهد إعلانًا · +{amount} 🪙','ad.todayRemaining':'متبقي {count} مكافآت اليوم','ad.verifying':'جارٍ التحقق من الإعلان…','ad.pleaseWait':'يرجى الانتظار','ad.comingSoon':'إعلانات المكافآت قريبًا','ad.networkPreparing':'جارٍ إعداد شبكة الإعلانات','ad.dailyLimit':'تم بلوغ الحد اليومي','ad.tomorrow':'متاح مجددًا غدًا','ad.cooldown':'انتظر الإعلان التالي','ad.cooldownDetail':'فترة انتظار المكافأة','ad.rewardAdded':'تمت إضافة مكافأة الإعلان · +{amount} 🪙'
+  });
+
   window.KANTIN_LOCALES = Object.freeze({ en, tr, de, ru, es, hi, ar });
 })();

@@ -72,6 +72,17 @@ Mevcut authoritative WebSocket oyun sunucusu hâlâ SQLite ve process belleğini
 
 Gerçek para ürünleri henüz aktif değildir. Google Play Billing, Apple In-App Purchase, Telegram Stars ve Meta ödeme makbuzları yayın aşamasında ayrı adaptörlerle doğrulanıp aynı işlem defterine yazılacaktır.
 
+## Ödüllü reklamlar
+
+- Ödül miktarı, günlük izleme sınırı ve bekleme süresi Supabase `economy_settings.rewarded_ads` kaydından yönetilir. İlk ayar 150 coin, günde 4 reklam ve reklamlar arasında 10 dakikadır.
+- İstemci yalnız reklam oturumu başlatır. Coin ödülü tarayıcıdan yazılmaz; reklam sağlayıcısının sunucudan sunucuya doğrulaması başarılı olunca service-role RPC'si tarafından tek seferlik işlenir.
+- AdMob doğrulama adresi `https://kantingame.vercel.app/api/admob-ssv` olarak ayarlanmalıdır. Android ve iOS ödüllü reklam birimlerinde bu SSV adresi kullanılmalıdır.
+- Vercel sunucu ortamında `SUPABASE_SERVICE_ROLE_KEY`, `REWARDED_AD_PROVIDER=admob` ve platforma göre `ADMOB_REWARDED_AD_UNIT_ID_ANDROID` / `ADMOB_REWARDED_AD_UNIT_ID_IOS` tanımlanır. Service-role anahtarı hiçbir istemci paketine veya Git deposuna eklenmez.
+- Native uygulama reklam SDK'sı, `window.KANTIN_NATIVE_ADS.showRewarded({ sessionId, customData, placement, userId, rewardAmount })` köprüsünü sağlar. `customData`, değiştirilmeden AdMob SSV isteğine taşınan sunucu oturum kimliğidir.
+- `REWARDED_AD_TEST_MODE=true` yalnız local/preview ortamında sahte reklam akışını açar; production ortamında zorunlu olarak devre dışıdır.
+
+AdMob uygulama ve reklam birimi kimlikleri tanımlanana kadar arayüz butonu görünür fakat devre dışı kalır; bu durumda gerçek ödül üretilemez.
+
 ## Dil altyapısı
 
 - İlk istemci paketi Türkçe, İngilizce, Almanca, Rusça, İspanyolca, Hintçe ve Arapça destekler.
