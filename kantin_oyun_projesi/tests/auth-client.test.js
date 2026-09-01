@@ -8,6 +8,7 @@ const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'auth-client.js'), 'utf8');
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.js'), 'utf8');
+const guestRecoveryMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901090000_guest_auth_recovery.sql'), 'utf8');
 
 function memoryStorage() {
   const values = new Map();
@@ -91,4 +92,11 @@ test('oda kapsayicisinin veri alanlari ic dugmelerin tiklamalarini yutmaz', () =
   assert.match(appSource, /closest\('button\[data-mode\]'\)/);
   assert.doesNotMatch(appSource, /closest\('\[data-family\]'\)/);
   assert.doesNotMatch(appSource, /closest\('\[data-mode\]'\)/);
+});
+
+test('anonim Supabase kaydi eski cihaz profiliyle cakissa bile Auth islemini dusurmez', () => {
+  assert.match(guestRecoveryMigration, /drop index if exists public\.profiles_installation_id_unique/i);
+  assert.match(guestRecoveryMigration, /to_jsonb\(new\) ->> 'is_anonymous'/i);
+  assert.match(guestRecoveryMigration, /installation := 'anonymous:' \|\| new\.id::text/i);
+  assert.match(guestRecoveryMigration, /preferred_locale/i);
 });
