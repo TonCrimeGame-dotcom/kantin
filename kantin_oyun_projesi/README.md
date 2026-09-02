@@ -91,6 +91,7 @@ AdMob uygulama ve reklam birimi kimlikleri tanımlanana kadar arayüz butonu gö
 - Yönetim API'si her istekte Supabase oturumunu ve veritabanı rolünü doğrular. `SUPABASE_SERVICE_ROLE_KEY` / `SUPABASE_SECRET_KEY` yalnız Vercel sunucu ortamında kalır.
 - Tüm ayrıcalıklı işlemler `admin_audit_log` tablosuna yazılır; bu kayıtlar güncellenemez veya silinemez.
 - `ADMIN_AUDIT_SALT`, istek IP'sini saklamadan HMAC özetiyle ilişkilendirmek için uzun ve rastgele bir Vercel sırrı olmalıdır.
+- `ADMIN_EMAILS` veya `ADMIN_AUDIT_SALT` değiştirildikten sonra yeni bir Vercel Production dağıtımı başlatılmalıdır.
 
 ## Dil altyapısı
 
