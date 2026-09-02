@@ -11,6 +11,9 @@ const migration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrat
 const economyClient = fs.readFileSync(path.join(__dirname, '..', 'src', 'economy-client.js'), 'utf8');
 const rewardedClient = fs.readFileSync(path.join(__dirname, '..', 'src', 'rewarded-ads.js'), 'utf8');
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.js'), 'utf8');
+const admobApi = fs.readFileSync(path.join(__dirname, '..', 'api', 'admob-ssv.js'), 'utf8');
+const rewardedTestApi = fs.readFileSync(path.join(__dirname, '..', 'api', 'rewarded-ad-test.js'), 'utf8');
+const mobileAdmob = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'mobile', 'admob.config.json'), 'utf8'));
 
 test('reklam oturumlari kullanicidan gizli yazma yetkisi ve tekil saglayici islemi kullanir', () => {
   assert.match(migration, /create table if not exists public\.rewarded_ad_sessions/i);
@@ -64,4 +67,12 @@ test('AdMob imza ve anahtar parametreleri sonda ve dogru sirada olmalidir', () =
     () => parseCallback('/api/admob-ssv?ad_unit=x&key_id=42&signature=abc'),
     /invalid_signature_order|missing_signature/
   );
+});
+
+test('AdMob sunucusu yeni Supabase secret anahtarini ve Android kimliklerini destekler', () => {
+  assert.match(admobApi, /SUPABASE_SERVICE_ROLE_KEY \|\| process\.env\.SUPABASE_SECRET_KEY/);
+  assert.match(rewardedTestApi, /SUPABASE_SERVICE_ROLE_KEY \|\| process\.env\.SUPABASE_SECRET_KEY/);
+  assert.match(mobileAdmob.android.appId, /^ca-app-pub-\d+~\d+$/);
+  assert.match(mobileAdmob.android.rewardedAdUnitId, /^ca-app-pub-\d+\/\d+$/);
+  assert.equal(mobileAdmob.android.testRewardedAdUnitId, 'ca-app-pub-3940256099942544/5224354917');
 });

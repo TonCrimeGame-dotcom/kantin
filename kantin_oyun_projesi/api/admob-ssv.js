@@ -20,7 +20,7 @@ function configuredAdUnits() {
 
 async function grantReward(sessionId, transactionId, metadata) {
   const supabaseUrl = String(process.env.SUPABASE_URL || '').replace(/\/+$/, '');
-  const serviceRoleKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  const serviceRoleKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '');
   if (!supabaseUrl || !serviceRoleKey) throw new Error('reward_service_not_configured');
   const response = await fetch(`${supabaseUrl}/rest/v1/rpc/kantin_verify_rewarded_ad`, {
     method: 'POST',

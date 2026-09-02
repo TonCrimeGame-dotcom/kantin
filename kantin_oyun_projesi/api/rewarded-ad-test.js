@@ -34,7 +34,7 @@ module.exports = async function rewardedAdTestHandler(req, res) {
   try {
     const supabaseUrl = String(process.env.SUPABASE_URL || '').replace(/\/+$/, '');
     const publishableKey = String(process.env.SUPABASE_PUBLISHABLE_KEY || '');
-    const serviceRoleKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+    const serviceRoleKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '');
     const token = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
     if (!supabaseUrl || !publishableKey || !serviceRoleKey) throw new Error('reward_service_not_configured');
     if (!token) throw new Error('authentication_required');
