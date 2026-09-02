@@ -18,16 +18,16 @@
 }
 
 /* Bordo, gerçekçi dokuma masa örtüsü */
-.word-screen{background-color:#651016;background-image:linear-gradient(#25000638,#25000638),url('../assets/games/sozcuk/burgundy-tablecloth-v1.png');background-position:center;background-repeat:no-repeat;background-size:cover}
+.word-screen{background-color:#651016;background-image:linear-gradient(#25000638,#25000638),url('../assets/games/sozcuk/burgundy-tablecloth-v1.webp');background-position:center;background-repeat:no-repeat;background-size:cover}
 .word-tile.dragging{opacity:.45;transform:scale(.92)}
-.word-tile-dragging{position:fixed!important;z-index:1000!important;margin:0!important;pointer-events:none!important;opacity:.96!important;transform:scale(1.08)!important;background:transparent url('../assets/games/sozcuk/wood-letter-tile-v1.png') center/108% 108% no-repeat!important;color:#24170d!important;box-shadow:0 10px 14px #0009!important;font-family:Arial,sans-serif!important}
+.word-tile-dragging{position:fixed!important;z-index:1000!important;margin:0!important;pointer-events:none!important;opacity:.96!important;transform:scale(1.08)!important;background:transparent url('../assets/games/sozcuk/wood-letter-tile-v1.webp') center/108% 108% no-repeat!important;color:#24170d!important;box-shadow:0 10px 14px #0009!important;font-family:Arial,sans-serif!important}
 .word-tile-dragging>span{display:grid;place-items:center;width:100%;height:100%;font-size:clamp(19px,1.9vw,26px);font-weight:900;line-height:1}
 .word-tile-dragging small{position:absolute;right:8%;bottom:7%;font-size:clamp(7px,.7vw,10px);font-weight:900}
 .word-cell.drag-over{outline:3px solid #ffe06a;filter:brightness(1.18)}
-.word-screen .word-tile{border:0;background-color:transparent;background-image:url('../assets/games/sozcuk/wood-letter-tile-v1.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;color:#24170d;text-shadow:0 1px #fff8;box-shadow:0 3px 4px #0008;font-family:Georgia,serif;font-weight:900}
+.word-screen .word-tile{border:0;background-color:transparent;background-image:url('../assets/games/sozcuk/wood-letter-tile-v1.webp');background-position:center;background-repeat:no-repeat;background-size:100% 100%;color:#24170d;text-shadow:0 1px #fff8;box-shadow:0 3px 4px #0008;font-family:Georgia,serif;font-weight:900}
 .word-screen .word-tile>span{transform:translateY(-1%)}
 .word-screen .word-tile small{right:12%;bottom:10%;color:#2b1b0e;text-shadow:0 1px #fff9}
-.word-screen .word-board{border:0;padding:9.4%;gap:2px;background-color:transparent;background-image:url('../assets/games/sozcuk/realistic-board-base-v1.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:0 14px 32px #000b}
+.word-screen .word-board{border:0;padding:9.4%;gap:2px;background-color:transparent;background-image:url('../assets/games/sozcuk/realistic-board-base-v1.webp');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:0 14px 32px #000b}
 .word-screen .word-cell{font-size:clamp(6px,.62vw,9px);font-weight:1000;text-shadow:0 1px 1px #fff8}
 .word-screen .word-cell .word-tile>span{font-size:clamp(12px,1.45vw,19px);line-height:1;letter-spacing:-.04em;text-shadow:0 1px 0 #fff,0 0 1px #fff,0 1px 2px #0005}
 .word-screen .word-cell .word-tile small{right:10%;bottom:8%;font-size:clamp(5px,.55vw,8px);line-height:1;font-weight:1000}
@@ -36,7 +36,7 @@
 
 /* Dört kenarlı fiziksel kelime masası düzeni */
 @media (orientation:landscape){
-  .word-screen{position:relative;background-color:#651016;background-image:linear-gradient(#25000638,#25000638),url('../assets/games/sozcuk/burgundy-tablecloth-v1.png');background-position:center;background-repeat:no-repeat;background-size:cover}
+  .word-screen{position:relative;background-color:#651016;background-image:linear-gradient(#25000638,#25000638),url('../assets/games/sozcuk/burgundy-tablecloth-v1.webp');background-position:center;background-repeat:no-repeat;background-size:cover}
   .word-layout{position:relative;grid-template-columns:minmax(0,1fr) 258px;gap:8px}
   .word-table-stage{position:relative;height:100%;display:grid;grid-template-rows:42px minmax(0,1fr) 58px;place-items:center;padding:0 55px;overflow:visible}
   .word-board{grid-row:2;width:auto;height:min(calc(100dvh - 108px),calc(100vw - 390px));border-radius:3px;transform:perspective(1000px) rotateX(1.2deg)}
@@ -45,7 +45,7 @@
   .word-cell .word-tile{inset:1px}
   .word-tile{border-radius:4px;color:#24170d;box-shadow:0 2px 3px #0008}
   .word-opponent-rack,.word-rack{height:42px;padding:4px 10px;display:flex;align-items:center;justify-content:center;gap:3px;border:5px solid #087786;border-radius:3px;background:#07464f;box-shadow:0 7px 12px #0007,inset 0 3px #43b8c2}
-  .word-opponent-rack{grid-row:1;width:250px}.word-opponent-rack i{width:27px;height:31px;border:0;background:transparent url('../assets/games/sozcuk/wood-letter-tile-v1.png') center/100% 100% no-repeat;box-shadow:0 2px 2px #0006}
+  .word-opponent-rack{grid-row:1;width:250px}.word-opponent-rack i{width:27px;height:31px;border:0;background:transparent url('../assets/games/sozcuk/wood-letter-tile-v1.webp') center/100% 100% no-repeat;box-shadow:0 2px 2px #0006}
   .word-table-stage>.word-rack{grid-row:3;width:330px;min-height:0;border-width:5px}.word-table-stage>.word-rack .word-tile{width:38px;height:42px;aspect-ratio:auto}
   .word-rack-area>.word-status{position:absolute;left:8px;right:8px;bottom:58px}.word-rack-area>.word-actions{position:absolute;left:8px;right:8px;bottom:8px}
   .word-side{position:relative;padding:8px;grid-template-rows:auto auto minmax(0,1fr) 104px;background:#071518e8;border-color:#4bc2ca55}
@@ -67,7 +67,7 @@
 /* Gerçekçi yedi gözlü ahşap ıstaka asseti */
 @media (orientation:landscape){
   .word-table-stage{grid-template-rows:82px minmax(0,1fr) 124px}
-  .word-opponent-rack,.word-table-stage>.word-rack{box-sizing:border-box;border:0;border-radius:0;background:transparent url('../assets/games/sozcuk/realistic-letter-rack-v1.png') center/100% 100% no-repeat;box-shadow:none}
+  .word-opponent-rack,.word-table-stage>.word-rack{box-sizing:border-box;border:0;border-radius:0;background:transparent url('../assets/games/sozcuk/realistic-letter-rack-v1.webp') center/100% 100% no-repeat;box-shadow:none}
   .word-opponent-rack{width:320px;height:82px;padding:0;gap:0}
   .word-opponent-rack i{width:28px;height:31px;border-radius:3px}
   .word-table-stage>.word-rack{position:relative;display:block;width:370px;height:124px;padding:0;overflow:visible;background-size:100% 100%}
@@ -84,9 +84,9 @@
   .word-table-stage>.word-rack>:nth-child(7){left:308px}
   .word-table-stage>.word-rack .word-tile.selected{transform:none}
   .word-table-stage>.word-rack::after{content:none}
-  .word-opponent-rack{position:relative;padding:0;background-image:url('../assets/games/sozcuk/opponent-rack-back-v2.png');background-size:100% 100%}
+  .word-opponent-rack{position:relative;padding:0;background-image:url('../assets/games/sozcuk/opponent-rack-back-v2.webp');background-size:100% 100%}
   .word-opponent-rack i{display:none}
-  .word-side-rack{width:260px;height:67px;border:0;border-radius:0;background-color:transparent;background-image:url('../assets/games/sozcuk/opponent-rack-back-v2.png');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:none}
+  .word-side-rack{width:260px;height:67px;border:0;border-radius:0;background-color:transparent;background-image:url('../assets/games/sozcuk/opponent-rack-back-v2.webp');background-position:center;background-repeat:no-repeat;background-size:100% 100%;box-shadow:none}
   .word-side-rack.left{left:-89px;transform:translateY(-50%) rotate(-90deg)}
   .word-side-rack.right{right:-89px;transform:translateY(-50%) rotate(90deg)}
   .word-opponent-rack::after,.word-side-rack::after{content:'';position:absolute;z-index:3;left:50%;top:57%;width:30px;height:30px;background:#315b5a;opacity:.68;transform:translate(-50%,-50%);filter:drop-shadow(1px 1px 0 #b68f7155) drop-shadow(-1px -1px 0 #061a1bbb);mix-blend-mode:multiply;-webkit-mask:url('../assets/brand/kantin-emboss-mark.svg') center/contain no-repeat;mask:url('../assets/brand/kantin-emboss-mark.svg') center/contain no-repeat;pointer-events:none}
@@ -97,7 +97,7 @@
 @media (orientation:landscape){
   .word-layout{grid-template-columns:minmax(0,1fr) 190px;gap:0}
   .word-side{position:relative;width:190px;height:100%;min-height:0;padding:0;display:block;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none}
-  .word-score{position:absolute;z-index:3;top:8px;left:50%;width:160px;height:252px;padding:29px 17px 24px 15px;box-sizing:border-box;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:0;background:transparent url('../assets/games/pisti/final/score-paper-blank-v2.png') center/100% 100% no-repeat;filter:drop-shadow(0 8px 8px #0009);transform:translateX(-50%) rotate(-.8deg)}
+  .word-score{position:absolute;z-index:3;top:8px;left:50%;width:160px;height:252px;padding:29px 17px 24px 15px;box-sizing:border-box;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:0;background:transparent url('../assets/games/pisti/final/score-paper-blank-v2.webp') center/100% 100% no-repeat;filter:drop-shadow(0 8px 8px #0009);transform:translateX(-50%) rotate(-.8deg)}
   .word-score article{--word-score-ink:#8e3d35;min-width:0;min-height:0;padding:0 3px;display:grid;grid-template-columns:1fr;grid-template-rows:11px minmax(0,1fr) 11px;align-items:stretch;gap:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--word-score-ink)}
   .word-score article:nth-child(2){--word-score-ink:#35547a}
   .word-score article:nth-child(3){--word-score-ink:#39714c}
@@ -141,7 +141,7 @@
   .word-bag-asset{right:226px;width:116px;height:84px}
 
   .word-side{width:210px}
-  .word-rack-profile{position:absolute;z-index:6;width:118px;height:42px;padding:4px 9px;display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:7px;border:0;border-radius:0;background:transparent url('../assets/games/sozcuk/profile-card-teal-brass-v2.png') center/100% 100% no-repeat;color:#f8edd2;filter:drop-shadow(0 5px 5px #0008);box-shadow:none;text-align:left;cursor:pointer;overflow:visible}
+  .word-rack-profile{position:absolute;z-index:6;width:118px;height:42px;padding:4px 9px;display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:7px;border:0;border-radius:0;background:transparent url('../assets/games/sozcuk/profile-card-teal-brass-v2.webp') center/100% 100% no-repeat;color:#f8edd2;filter:drop-shadow(0 5px 5px #0008);box-shadow:none;text-align:left;cursor:pointer;overflow:visible}
   .word-rack-profile.top{top:7px;right:calc(50% + 132px);left:auto}
   .word-rack-profile.left{top:calc(50% - 138px);left:-13px}
   .word-rack-profile.right{top:calc(50% - 138px);right:-13px}
@@ -160,7 +160,7 @@
   .word-rack-area>.word-actions{
     left:5px;right:5px;height:80px;padding:8px 2.7%;box-sizing:border-box;
     column-gap:.6%;row-gap:1px;
-    background:transparent url('../assets/games/sozcuk/word-action-panel-v1.png') center/100% 100% no-repeat;
+    background:transparent url('../assets/games/sozcuk/word-action-panel-v1.webp') center/100% 100% no-repeat;
     filter:drop-shadow(0 4px 4px #0008)
   }
   .word-rack-area>.word-actions button,
@@ -179,7 +179,7 @@
 
 /* Oyun tamamlandığında çizilmiş ahşap/parşömen final tabelası. */
 .word-result-overlay{position:absolute;z-index:50;inset:0;display:grid;place-items:center;padding:4px;background:radial-gradient(circle at 50% 45%,#18040540,#090001c7 72%);backdrop-filter:blur(2px);animation:word-result-fade .3s ease-out both}
-.word-result-board{position:relative;width:min(520px,calc(100vw - 24px),106dvh);max-height:calc(100dvh - 8px);aspect-ratio:1310/1200;background:transparent url('../assets/games/sozcuk/final-results-board-v2.png') center/contain no-repeat;filter:drop-shadow(0 18px 22px #000b);font-family:Arial,sans-serif;animation:word-result-rise .48s cubic-bezier(.2,.82,.2,1.06) both}
+.word-result-board{position:relative;width:min(520px,calc(100vw - 24px),106dvh);max-height:calc(100dvh - 8px);aspect-ratio:1310/1200;background:transparent url('../assets/games/sozcuk/final-results-board-v2.webp') center/contain no-repeat;filter:drop-shadow(0 18px 22px #000b);font-family:Arial,sans-serif;animation:word-result-rise .48s cubic-bezier(.2,.82,.2,1.06) both}
 .word-result-board header{position:absolute;top:22.5%;left:18%;right:18%;height:14.5%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#432616;text-align:center;text-shadow:0 1px #fff8}
 .word-result-board header small{color:#795835;font-size:clamp(7px,1.4vw,10px);font-weight:900;letter-spacing:.16em}
 .word-result-board header h2{margin:4px 0 3px;color:#153f3d;font:900 clamp(22px,4vw,32px)/.95 Georgia,serif;letter-spacing:0;white-space:nowrap;text-shadow:0 2px #fff8,0 3px 6px #4b270f33}

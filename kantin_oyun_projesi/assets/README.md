@@ -1,7 +1,10 @@
 # KANTİN görsel seti
 
-- `brand/kantin-logo.png`: Saydam arka planlı ana Kantin amblemi; oyun, giriş, favicon ve yönetim panelinde kullanılır.
-- `backgrounds/kantin-home-hero.png`: Ana sayfa kahraman alanı arka planı.
+- `brand/kantin-logo.png`: Saydam arka planlı yüksek çözünürlüklü Kantin amblemi ve favicon kaynağı.
+- `brand/kantin-logo-ui.webp`: Oyun, giriş ve yönetim panelinde kullanılan hafif logo.
+- `backgrounds/kantin-home-hero.webp`: Ana sayfa kahraman alanının web için sıkıştırılmış arka planı.
+- `backgrounds/kantin-loading-v1.webp`: Açılış indirme ekranının web arka planı.
+- `backgrounds/kantin-loading-master-v1.png`: Açılış görselinin yüksek çözünürlüklü ana kaynağı.
 - `menu/tavla.svg`: Tavla menü kartı.
 - `menu/pisti.svg`: Pişti menü kartı.
 - `menu/okey.svg`: 101 Okey menü kartı.

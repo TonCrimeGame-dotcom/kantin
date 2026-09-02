@@ -6,14 +6,14 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
 .okey-player>span{grid-row:1/3;width:clamp(30px,4.2vw,52px);aspect-ratio:1;display:grid;place-items:center;border-radius:7px;background:linear-gradient(#74b9dc,#2778a3);font:900 clamp(16px,2vw,25px) Georgia,serif}.okey-player b{font-size:clamp(9px,1vw,13px)}.okey-player small{color:#bce3f6;font-size:clamp(7px,.72vw,10px)}
 .okey-player.turn{border-color:#ffe17a;box-shadow:0 0 19px #ffd44d99}.okey-player.top{top:1.5%;left:50%;transform:translateX(-50%)}.okey-player.left{top:28%;left:1.5%}.okey-player.right{top:28%;right:1.5%}
 .okey-center{position:absolute;z-index:5;left:72%;top:43%;transform:translate(-50%,-50%);display:flex;align-items:end;gap:clamp(8px,1.5vw,20px)}
-.okey-stock{position:relative;width:clamp(42px,4.6vw,59px);height:clamp(56px,6.5vw,82px);display:grid;place-items:center;border:0;border-radius:7px;background:url('../assets/games/okey101/tile-ivory-v2.png') center/100% 100% no-repeat;box-shadow:-4px 0 #e7dcc2,-8px 0 #cdbf9f,-12px 0 #f0e6ce,0 5px 5px #00172577;color:#3b2b1d;transform:rotate(90deg)}.okey-stock span{z-index:1;align-self:center;padding:2px 7px;border-radius:99px;background:#392719d9;color:#fff;font:900 clamp(13px,1.7vw,21px) Georgia,serif;transform:rotate(-90deg)}.okey-stock small{z-index:1;align-self:end;margin-bottom:6px;color:#6c5136;font-size:6px;font-weight:900;transform:rotate(-90deg)}
+.okey-stock{position:relative;width:clamp(42px,4.6vw,59px);height:clamp(56px,6.5vw,82px);display:grid;place-items:center;border:0;border-radius:7px;background:url('../assets/games/okey101/tile-ivory-v2.webp') center/100% 100% no-repeat;box-shadow:-4px 0 #e7dcc2,-8px 0 #cdbf9f,-12px 0 #f0e6ce,0 5px 5px #00172577;color:#3b2b1d;transform:rotate(90deg)}.okey-stock span{z-index:1;align-self:center;padding:2px 7px;border-radius:99px;background:#392719d9;color:#fff;font:900 clamp(13px,1.7vw,21px) Georgia,serif;transform:rotate(-90deg)}.okey-stock small{z-index:1;align-self:end;margin-bottom:6px;color:#6c5136;font-size:6px;font-weight:900;transform:rotate(-90deg)}
 .okey-indicator{padding:7px 11px;display:grid;grid-template-columns:auto auto;align-items:center;gap:3px 8px;border:1px solid #ffffff25;border-radius:11px;background:#063653c9}.okey-indicator small{grid-column:1/3;color:#99d9f4;font-size:7px;font-weight:900}.okey-indicator .tile{grid-row:2/4}.okey-indicator b{font-size:clamp(9px,1vw,12px)}
 .okey-discard{display:grid;place-items:center;gap:2px}.okey-discard small{font-size:7px;font-weight:900}
 .okey-open-melds{position:absolute;z-index:2;top:13%;left:17%;right:16%;bottom:40%;padding:8px;display:flex;justify-content:center;align-content:start;flex-wrap:wrap;gap:5px;overflow:hidden;border:1px solid #bce7ff32;border-radius:5px;background-color:#0b5b8c25;background-image:linear-gradient(90deg,transparent calc(50% - .5px),#bce7ff38 50%,transparent calc(50% + .5px)),linear-gradient(transparent calc(50% - .5px),#bce7ff38 50%,transparent calc(50% + .5px)),repeating-linear-gradient(90deg,#bce7ff16 0 1px,transparent 1px 34px),repeating-linear-gradient(#bce7ff16 0 1px,transparent 1px 34px);box-shadow:inset 0 0 28px #00314e55}.okey-open-melds .meld{position:relative;z-index:2;padding:3px;border:1px solid transparent;background:#001c2b91}.okey-open-melds button.meld{cursor:pointer}.okey-open-melds button.meld:hover{border-color:#65d891}.okey-open-melds .meld.draft{border-color:#f1c95d;box-shadow:0 0 12px #e2b45455}.okey-open-melds .tile{width:clamp(21px,2.6vw,34px);height:clamp(29px,3.7vw,48px);font-size:clamp(11px,1.5vw,17px)}.empty-table{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#b6d7e6;font-size:9px;opacity:.55;white-space:nowrap}
 .okey-turn-message{position:absolute;z-index:6;left:50%;bottom:40.5%;transform:translateX(-50%);padding:5px 12px;border-radius:99px;background:#001b2dc9;color:#e5f7ff;font-size:clamp(8px,.9vw,12px);font-weight:800;white-space:nowrap}
-.okey-rack{--rack-tile-height:clamp(60px,10.5vh,75px);position:absolute;z-index:5;left:12%;right:14%;bottom:0;height:clamp(176px,42%,230px);padding:0;background:url('../assets/games/okey101/rack-beech-v2.png') center/100% 100% no-repeat;filter:drop-shadow(0 9px 10px #00121dbb)}
+.okey-rack{--rack-tile-height:clamp(60px,10.5vh,75px);position:absolute;z-index:5;left:12%;right:14%;bottom:0;height:clamp(176px,42%,230px);padding:0;background:url('../assets/games/okey101/rack-beech-v2.webp') center/100% 100% no-repeat;filter:drop-shadow(0 9px 10px #00121dbb)}
 .okey-rack-row{position:absolute;left:5.5%;right:5.5%;height:var(--rack-tile-height);min-width:0;display:flex;align-items:end;gap:0}.okey-rack-row:nth-child(1){bottom:59%}.okey-rack-row:nth-child(2){bottom:21%}.okey-rack-row .tile{margin-right:clamp(-9px,-.7vw,-7px)}.okey-rack-row .tile.group-start{margin-left:clamp(16px,1.5vw,20px)}
-.okey-felt .tile{position:relative;display:grid;grid-template-rows:1fr auto;place-items:center;border:0;background-color:transparent;background-image:url('../assets/games/okey101/tile-ivory-v2.png');background-position:center;background-size:100% 100%;background-repeat:no-repeat;box-shadow:none;text-shadow:0 1px #fff8,0 2px 2px #0003;line-height:1}.okey-felt .tile-number{align-self:end}.okey-felt .tile-pip{align-self:start;margin-top:3px;font-size:.3em;line-height:1;opacity:.28}
+.okey-felt .tile{position:relative;display:grid;grid-template-rows:1fr auto;place-items:center;border:0;background-color:transparent;background-image:url('../assets/games/okey101/tile-ivory-v2.webp');background-position:center;background-size:100% 100%;background-repeat:no-repeat;box-shadow:none;text-shadow:0 1px #fff8,0 2px 2px #0003;line-height:1}.okey-felt .tile-number{align-self:end}.okey-felt .tile-pip{align-self:start;margin-top:3px;font-size:.3em;line-height:1;opacity:.28}
 .okey-rack .tile{width:clamp(48px,4.4vw,58px);height:100%;min-width:0;max-width:96%;justify-self:center;align-self:end;border-radius:5px;font-size:clamp(18px,2.3vw,28px);font-weight:950;box-shadow:none;touch-action:none}.okey-rack .tile:hover{transform:translateY(-3px)}.okey-rack .tile.selected{transform:translateY(-5px);outline:2px solid #5dff91}.okey-rack .tile.dragging{z-index:4;opacity:.62;transform:translateY(-9px) scale(1.05)}
 .okey-me{position:absolute;z-index:6;left:2%;bottom:3%;width:11%;padding:5px;display:grid;place-items:center;border-radius:10px;background:#052f49dc;text-align:center}.okey-me span{width:clamp(34px,5vw,64px);aspect-ratio:1;display:grid;place-items:center;border:2px solid #e2b454;border-radius:8px;background:#684327;font:900 clamp(17px,2.5vw,30px) Georgia,serif}.okey-me b{max-width:100%;overflow:hidden;text-overflow:ellipsis;font-size:clamp(8px,1vw,12px)}
 .okey-actions{position:absolute;z-index:7;right:.8%;bottom:1%;width:12.8%;display:grid;grid-template-columns:1fr 1fr;gap:3px}.okey-action{min-height:clamp(25px,4.7vh,34px);padding:3px;border:1px solid #ffffff2d;border-radius:7px;background:#183f55;color:white;font-size:clamp(6px,.72vw,9px);font-weight:900}.okey-action.draw{background:#248b56}.okey-action.commit{background:#b67d25}.okey-action.discard{background:#b64b35}.okey-action:disabled{opacity:.35;cursor:not-allowed}
@@ -24,11 +24,11 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
 @media(orientation:landscape) and (max-height:560px){.okey-player{padding:3px 6px}.okey-open-melds{top:13%;bottom:41%}.okey-center{top:40%}.okey-rack{height:clamp(176px,42%,210px);bottom:0;padding:0;background-size:100% 100%}.okey-rack .tile{height:100%}.okey-turn-message{bottom:42%}.okey-smart-tools{right:.6%;bottom:18%;width:11.2%}.okey-smart-tools button{min-height:24px;padding:3px}.okey-101-counter{top:7%;bottom:auto}.okey-actions{bottom:1%}}
 .okey-open-melds{bottom:43%}
 @media(orientation:landscape) and (max-height:560px){.okey-open-melds{bottom:44%}}
-.okey-stock,.okey-felt .tile{background-image:url('../assets/games/okey101/tile-reference-v3.png')}
+.okey-stock,.okey-felt .tile{background-image:url('../assets/games/okey101/tile-reference-v3.webp')}
 .okey-felt .tile-pip{width:1.05em;height:1.05em;display:grid;place-items:center;border-radius:50%;background:#b9aa8c35;font-size:.42em;opacity:.92}
 .okey-felt .tile-number{position:absolute;left:50%;top:18%;transform:translateX(-50%);align-self:auto;line-height:1}
 .okey-felt .tile-pip{position:absolute;left:50%;top:64%;transform:translateX(-50%);margin:0;align-self:auto;line-height:1}
-.okey-tile-dragging{position:fixed!important;z-index:1000!important;margin:0!important;padding:0!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;border:0!important;border-radius:4px!important;appearance:none;background-color:transparent!important;background-image:url('../assets/games/okey101/tile-reference-v3.png')!important;background-position:center 48%!important;background-size:110% 108%!important;background-repeat:no-repeat!important;box-shadow:none!important;text-shadow:0 1px #fff8,0 2px 2px #0003!important;font-size:clamp(22px,2.5vw,32px)!important;font-weight:950!important;line-height:1!important;pointer-events:none!important;opacity:.96!important;transform:scale(1.06)!important;filter:drop-shadow(0 12px 10px #001725aa)}
+.okey-tile-dragging{position:fixed!important;z-index:1000!important;margin:0!important;padding:0!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;border:0!important;border-radius:4px!important;appearance:none;background-color:transparent!important;background-image:url('../assets/games/okey101/tile-reference-v3.webp')!important;background-position:center 48%!important;background-size:110% 108%!important;background-repeat:no-repeat!important;box-shadow:none!important;text-shadow:0 1px #fff8,0 2px 2px #0003!important;font-size:clamp(22px,2.5vw,32px)!important;font-weight:950!important;line-height:1!important;pointer-events:none!important;opacity:.96!important;transform:scale(1.06)!important;filter:drop-shadow(0 12px 10px #001725aa)}
 .okey-tile-dragging .tile-number{position:absolute;left:50%;top:17%;transform:translateX(-50%);line-height:1}
 .okey-tile-dragging .tile-pip{position:absolute;left:50%;top:65%;width:1.05em;height:1.05em;margin:0;display:grid;place-items:center;border-radius:50%;background:#b9aa8c35;font-size:.42em;line-height:1;opacity:.92;transform:translateX(-50%)}
 .okey-rack-row .tile,.okey-rack-row .tile.group-start{position:absolute;margin:0;transition:left .14s ease,transform .14s ease}
@@ -298,7 +298,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
 .okey-table-screen{background:#041d16}
 .okey-felt{
   background-color:#06422f;
-  background-image:linear-gradient(#02171030,#02171030),url('../assets/games/okey101/felt-emerald-v1.png');
+  background-image:linear-gradient(#02171030,#02171030),url('../assets/games/okey101/felt-emerald-v1.webp');
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
@@ -316,18 +316,18 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   background-image:repeating-linear-gradient(90deg,#a6baa742 0 1px,transparent 1px 16.6667%),repeating-linear-gradient(#a6baa72f 0 1px,transparent 1px 5%)
 }
 .okey-stock,.okey-felt .tile{
-  background-image:url('../assets/games/okey101/tile-ivory-real-v1.png');
+  background-image:url('../assets/games/okey101/tile-ivory-real-v1.webp');
   background-position:center;
   background-size:134% 126%;
   background-repeat:no-repeat
 }
 .okey-tile-dragging{
-  background-image:url('../assets/games/okey101/tile-ivory-real-v1.png')!important;
+  background-image:url('../assets/games/okey101/tile-ivory-real-v1.webp')!important;
   background-position:center!important;
   background-size:134% 126%!important
 }
 .okey-rack{
-  background-image:url('../assets/games/okey101/rack-walnut-v3.png');
+  background-image:url('../assets/games/okey101/rack-walnut-v3.webp');
   background-position:center 48%;
   background-size:100% 135%;
   background-repeat:no-repeat;
@@ -349,10 +349,10 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   box-shadow:none
 }
 .okey-smart-tools button[data-action="sort-runs"],
-.okey-smart-tools button[data-action="sort-pairs"]{background-image:url('../assets/games/okey101/button-blue-v1.png')}
+.okey-smart-tools button[data-action="sort-pairs"]{background-image:url('../assets/games/okey101/button-blue-v1.webp')}
 .okey-smart-tools button[data-action="auto-open-melds"],
-.okey-smart-tools button[data-action="auto-open-pairs"]{background-image:url('../assets/games/okey101/button-gold-v1.png');color:#fff9df}
-.okey-smart-tools button[data-action="auto-layoff"]{background-image:url('../assets/games/okey101/button-green-v1.png');color:#effff6}
+.okey-smart-tools button[data-action="auto-open-pairs"]{background-image:url('../assets/games/okey101/button-gold-v1.webp');color:#fff9df}
+.okey-smart-tools button[data-action="auto-layoff"]{background-image:url('../assets/games/okey101/button-green-v1.webp');color:#effff6}
 .okey-smart-tools button.active{
   border:0;
   background-color:transparent;
@@ -371,7 +371,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   padding:0 3px 3px;
   border:0;
   border-radius:0;
-  background:url('../assets/games/okey101/score-plaque-v1.png') center/100% 100% no-repeat;
+  background:url('../assets/games/okey101/score-plaque-v1.webp') center/100% 100% no-repeat;
   box-shadow:none
 }
 .okey-table-opened::after{display:none}
@@ -420,7 +420,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   place-items:center;
   border:0;
   border-radius:0;
-  background:url('../assets/games/okey101/score-plaque-v1.png') center/100% 100% no-repeat;
+  background:url('../assets/games/okey101/score-plaque-v1.webp') center/100% 100% no-repeat;
   color:#fff8dd;
   box-shadow:none
 }
@@ -443,7 +443,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   overflow:visible;
   border:0;
   border-radius:0;
-  background:url('../assets/games/okey101/score-plaque-v1.png') center/100% 100% no-repeat;
+  background:url('../assets/games/okey101/score-plaque-v1.webp') center/100% 100% no-repeat;
   box-shadow:none;
   color:#f4da8c;
   text-align:left
@@ -493,7 +493,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   padding:5px 8px 5px 5px;
   grid-template-columns:29% minmax(0,1fr);
   gap:5px;
-  background-image:url('../assets/games/okey101/profile-card-emerald-gold-v1.png');
+  background-image:url('../assets/games/okey101/profile-card-emerald-gold-v1.webp');
   background-position:center;
   background-size:100% 100%;
   background-repeat:no-repeat
@@ -544,7 +544,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   border:2px solid #d2ad55;
   border-radius:6px;
   background-color:#073a2d;
-  background-image:linear-gradient(#14745bbf,#052d23e8),url('../assets/games/okey101/felt-emerald-v1.png');
+  background-image:linear-gradient(#14745bbf,#052d23e8),url('../assets/games/okey101/felt-emerald-v1.webp');
   background-position:center;
   background-size:cover;
   color:#fff1bd;
@@ -599,7 +599,7 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
   grid-template-rows:27% 5% 51% 17%;
   border:0;
   border-radius:0;
-  background:transparent url('../assets/games/okey101/result-board-emerald-gold-v2.png') center/100% 100% no-repeat;
+  background:transparent url('../assets/games/okey101/result-board-emerald-gold-v2.webp') center/100% 100% no-repeat;
   color:#fff3cf;
   box-shadow:none;
   filter:drop-shadow(0 22px 32px #000b)

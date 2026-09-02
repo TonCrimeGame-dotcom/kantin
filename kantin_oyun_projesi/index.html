@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="asset-loading">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -11,16 +11,24 @@
   <link rel="stylesheet" href="./src/styles.css">
   <link rel="stylesheet" href="./src/match.css">
   <link rel="stylesheet" href="./src/social.css">
-  <link rel="stylesheet" href="./src/home.css?v=20260902-1">
-  <link rel="stylesheet" href="./src/tavla.css">
-  <link rel="stylesheet" href="./src/okey.css">
-  <link rel="stylesheet" href="./src/pisti.css?v=20260831-1">
-  <link rel="stylesheet" href="./src/sozcuk.css?v=20260830-48">
+  <link rel="stylesheet" href="./src/home.css?v=20260902-2">
+  <link rel="stylesheet" href="./src/tavla.css?v=20260902-1">
+  <link rel="stylesheet" href="./src/okey.css?v=20260902-1">
+  <link rel="stylesheet" href="./src/pisti.css?v=20260902-1">
+  <link rel="stylesheet" href="./src/sozcuk.css?v=20260902-1">
 </head>
 <body>
+  <section class="asset-loader" id="assetLoader" role="progressbar" aria-label="Oyun görselleri yükleniyor" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="asset-loader-panel">
+      <small>KANTİN GAMES</small>
+      <strong id="assetLoaderStatus">Oyun hazırlanıyor</strong>
+      <div class="asset-loader-track"><i id="assetLoaderBar"></i></div>
+      <div class="asset-loader-meta"><span id="assetLoaderDetail">Bağlantı hazırlanıyor</span><b id="assetLoaderPercent">0%</b></div>
+    </div>
+  </section>
   <div id="app">
     <header class="topbar">
-      <button class="brand" data-action="home" aria-label="Main menu"><img src="./assets/brand/kantin-logo.png?v=20260902-1" alt="KANTİN"></button>
+      <button class="brand" data-action="home" aria-label="Main menu"><img src="./assets/brand/kantin-logo-ui.webp?v=20260902-1" alt="KANTİN"></button>
       <button class="profile profile-trigger" data-player-profile="self" aria-label="Profil veya giriş ekranını aç"><div class="avatar" id="headerAvatar">K</div><div><strong id="headerUsername">Bağlanıyor…</strong><small><span id="headerMetaText">Hesap durumu kontrol ediliyor</span><b id="userPublicId"></b></small></div><b class="level" id="headerLevel">·</b></button>
       <div class="social-actions">
         <button class="social-btn" data-action="friends">👥 <span>Arkadaşlar</span><i id="friendBadge"></i></button>
@@ -48,7 +56,7 @@
   <div class="auth-modal open" id="authModal" role="dialog" aria-modal="true" aria-hidden="false" aria-labelledby="authTitle">
     <section class="auth-gateway">
       <header class="auth-gateway-head">
-        <img src="./assets/brand/kantin-logo.png?v=20260902-1" alt="KANTİN">
+        <img src="./assets/brand/kantin-logo-ui.webp?v=20260902-1" alt="KANTİN">
         <div class="auth-head-actions"><label class="language-switch auth-language"><span data-i18n="language.label">Language</span><select data-language-selector></select></label><div class="auth-help"><button data-action="auth-help">?</button><span data-i18n="auth.help">HELP</span></div></div>
       </header>
       <div class="auth-gateway-copy">
@@ -70,7 +78,9 @@
       <footer><span id="authInstallHint" data-i18n="auth.secureSession">Secure session · Supabase Auth</span><b>v0.4</b></footer>
     </section>
   </div>
-  <div class="rotate-notice"><img src="./assets/brand/kantin-logo.png?v=20260902-1" alt=""><b data-i18n="rotate.title">Rotate your phone</b><span data-i18n="rotate.copy">KANTİN is designed for landscape mode.</span></div>
+  <div class="rotate-notice"><img src="./assets/brand/kantin-logo-ui.webp?v=20260902-1" alt=""><b data-i18n="rotate.title">Rotate your phone</b><span data-i18n="rotate.copy">KANTİN is designed for landscape mode.</span></div>
+  <script src="./src/asset-manifest.js?v=20260902-1"></script>
+  <script src="./src/asset-loader.js?v=20260902-1"></script>
   <script src="./src/spvp.js"></script>
   <script src="./src/upvp.js"></script>
   <script src="./src/pisti.js"></script>
@@ -83,6 +93,6 @@
   <script src="./src/economy-client.js?v=20260901-1"></script>
   <script src="./src/rewarded-ads.js?v=20260901-1"></script>
   <script src="./src/match-client.js?v=20260901-3"></script>
-  <script src="./src/app.js?v=20260901-2"></script>
+  <script src="./src/app.js?v=20260902-1"></script>
 </body>
 </html>

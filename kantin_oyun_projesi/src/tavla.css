@@ -1,7 +1,7 @@
 body:has(.tavla-board) {
   background:
     linear-gradient(#09050330, #09050352),
-    url('../assets/games/tavla/tabletop-dark-walnut.png') center / cover fixed no-repeat;
+    url('../assets/games/tavla/tabletop-dark-walnut.webp') center / cover fixed no-repeat;
 }
 
 .tavla-board {
@@ -19,7 +19,7 @@ body:has(.tavla-board) {
   gap: 2px 0;
   border: 0;
   border-radius: clamp(18px, 3vw, 40px);
-  background: url('../assets/games/tavla/board-playfield-24pt-v3.png') center / 100% 100% no-repeat;
+  background: url('../assets/games/tavla/board-playfield-24pt-v3.webp') center / 100% 100% no-repeat;
   box-shadow: 0 18px 48px #000c, 0 3px 8px #0009;
   overflow: hidden;
 }
@@ -152,14 +152,14 @@ body:has(.tavla-board) {
 
 .checker.white {
   background-color: transparent;
-  background-image: url('../assets/games/tavla/checker-ivory-matte-v3-size-matched.png');
+  background-image: url('../assets/games/tavla/checker-ivory-matte-v3-size-matched.webp');
   background-position: center;
   background-size: 108% 108%;
   background-repeat: no-repeat;
 }
 .checker.black {
   background-color: transparent;
-  background-image: url('../assets/games/tavla/checker-ebony-matte-v6-size-matched.png');
+  background-image: url('../assets/games/tavla/checker-ebony-matte-v6-size-matched.webp');
   background-position: center;
   /* The source has a small transparent safety margin. Fill the checker box
      with the physical piece so scaling never exposes that margin as a ring. */
@@ -251,8 +251,8 @@ body:has(.tavla-board) {
   flex: 0 0 calc((100% - 4px) / 30);
   clip-path: none;
 }
-.off-pocket .checker.white { background-image: url('../assets/games/tavla/checker-ivory-side-slot-v3-size-matched.png'); }
-.off-pocket .checker.black { background-image: url('../assets/games/tavla/checker-ebony-side-slot-v3-size-matched.png'); }
+.off-pocket .checker.white { background-image: url('../assets/games/tavla/checker-ivory-side-slot-v3-size-matched.webp'); }
+.off-pocket .checker.black { background-image: url('../assets/games/tavla/checker-ebony-side-slot-v3-size-matched.webp'); }
 
 .doubling-cube {
   position: absolute;
@@ -641,9 +641,9 @@ body:has(.tavla-board) #toast { display: none; }
   align-items:center
 }
 .university-auto-controls{position:absolute;z-index:15;left:calc(100% - clamp(210px,25vw,330px) - 8px);top:75%;transform:translate(-100%,-50%);display:grid;gap:9px;width:clamp(92px,9.4vw,124px);pointer-events:auto}
-.university-auto-toggle{position:relative;isolation:isolate;box-sizing:border-box;width:100%;aspect-ratio:2.5/1;border:0;padding:0 12%;display:grid;place-items:center;align-content:center;gap:0;background:transparent url('../assets/games/tavla/controls/auto-toggle-off-v1.png') center/contain no-repeat;color:#f6e7bd;text-shadow:0 2px 2px #000;font-family:Georgia,serif;cursor:pointer;filter:drop-shadow(0 4px 4px #0009);transition:transform .12s,filter .18s}
+.university-auto-toggle{position:relative;isolation:isolate;box-sizing:border-box;width:100%;aspect-ratio:2.5/1;border:0;padding:0 12%;display:grid;place-items:center;align-content:center;gap:0;background:transparent url('../assets/games/tavla/controls/auto-toggle-off-v1.webp') center/contain no-repeat;color:#f6e7bd;text-shadow:0 2px 2px #000;font-family:Georgia,serif;cursor:pointer;filter:drop-shadow(0 4px 4px #0009);transition:transform .12s,filter .18s}
 .university-auto-toggle b{font-size:clamp(7px,.73vw,10px);line-height:1;white-space:nowrap}.university-auto-toggle small{margin-top:3px;color:#ab9875;font:800 clamp(5px,.49vw,7px) Arial,sans-serif;letter-spacing:.12em}
-.university-auto-toggle.active{background-image:url('../assets/games/tavla/controls/auto-toggle-on-v2.png');filter:brightness(.86) drop-shadow(0 0 7px #f0a928) drop-shadow(0 3px 3px #000b);transform:translateY(2px)}
+.university-auto-toggle.active{background-image:url('../assets/games/tavla/controls/auto-toggle-on-v2.webp');filter:brightness(.86) drop-shadow(0 0 7px #f0a928) drop-shadow(0 3px 3px #000b);transform:translateY(2px)}
 .university-auto-toggle.active::after{content:'';position:absolute;z-index:-1;inset:19% 13%;border-radius:999px;background:#efad32;opacity:.18;box-shadow:0 0 14px 5px #f5b735;animation:university-toggle-glow 1.25s ease-in-out infinite alternate}
 .university-auto-toggle.active small{color:#ffd46d;text-shadow:0 0 5px #f2a92b}
 .university-auto-toggle:active{transform:translateY(3px) scale(.97)}
@@ -778,7 +778,7 @@ body:has(.tavla-board) #toast { display: none; }
 
 /* Üniversite Tavlası: beş oyunluk parti sonuç asseti. */
 .university-result-overlay{position:fixed;z-index:2100;inset:0;display:grid;place-items:center;padding:10px;background:#020806d9;backdrop-filter:blur(5px)}
-.university-result-board{position:relative;width:min(94vw,167dvh,1100px);aspect-ratio:16/9;background:transparent url('../assets/games/tavla/university-result-board-v1.png?v=20260830-2') center/100% 100% no-repeat;filter:drop-shadow(0 20px 38px #000c);color:#f5e5bd;font-family:Georgia,serif}
+.university-result-board{position:relative;width:min(94vw,167dvh,1100px);aspect-ratio:16/9;background:transparent url('../assets/games/tavla/university-result-board-v1.webp?v=20260830-2') center/100% 100% no-repeat;filter:drop-shadow(0 20px 38px #000c);color:#f5e5bd;font-family:Georgia,serif}
 .university-result-board>header{position:absolute;left:26%;right:26%;top:15.4%;height:12%;display:grid;place-items:center;align-content:center;text-align:center}
 .university-result-board>header small{font:800 clamp(7px,.72vw,10px) Arial,sans-serif;letter-spacing:.15em;color:#c9a75f}.university-result-board>header h2{margin:2px 0 0;font:900 clamp(20px,3vw,40px)/1 Georgia,serif;color:#fff0b0;text-shadow:0 2px #39200d,0 0 14px #e3b44e}
 .university-result-teams{position:absolute;left:12.8%;right:12.8%;top:30%;height:30.5%;display:grid;grid-template-columns:1fr 1fr;gap:4.3%}
