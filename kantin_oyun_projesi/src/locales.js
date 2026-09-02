@@ -201,6 +201,13 @@
     'daily.eyebrow':'كل يوم في KANTIN','daily.title':'مكافأة الدخول اليومية','daily.copy':'حافظ على السلسلة واحصل على المكافأة الكبرى في اليوم السابع.','daily.day':'اليوم {day}','daily.claim':'استلم مكافأة اليوم · {amount} 🪙','daily.claimed':'تم استلام مكافأة اليوم','daily.adding':'جارٍ إضافة المكافأة…','daily.already':'لقد استلمت مكافأة اليوم بالفعل.','daily.added':'تمت إضافة {amount} Kantin Coin إلى حسابك.','missions.eyebrow':'مهام الحرم','missions.title':'المهام','missions.copy':'العب واربح مع أصدقائك واجمع المكافآت.','store.eyebrow':'متجر KANTIN','store.title':'المتجر','store.copy':'حزم العملات وعناصر خاصة لتخصيص طاولتك.','inventory.eyebrow':'المجموعة','inventory.title':'المقتنيات','inventory.copy':'استخدم العناصر التي تربحها أو تشتريها.','rotate.title':'أدر هاتفك','rotate.copy':'صُممت KANTİN للوضع الأفقي.','error.loginRequired':'يجب تسجيل الدخول لهذا الإجراء.','error.coinUnavailable':'خدمة العملات غير جاهزة بعد.','error.retry':'حاول مجددًا'
   };
 
+  const foreignPistiKeys = ['auth.subtitle', 'game.pisti', 'mode.pistiSolo', 'mode.pistiTeam'];
+  for (const locale of [en, de, ru, es, hi, ar]) {
+    for (const key of foreignPistiKeys) {
+      locale[key] = locale[key].replace(/Pişti|Пишти/g, 'Pishti');
+    }
+  }
+
   Object.assign(en, {
     'ad.watchReward':'Watch ad · +{amount} 🪙','ad.todayRemaining':'{count} rewards left today','ad.verifying':'Verifying ad…','ad.pleaseWait':'Please wait','ad.comingSoon':'Rewarded ads coming soon','ad.networkPreparing':'Ad network is being prepared','ad.dailyLimit':'Daily limit reached','ad.tomorrow':'Available again tomorrow','ad.cooldown':'Wait for the next ad','ad.cooldownDetail':'Reward cooldown','ad.rewardAdded':'Ad reward added · +{amount} 🪙'
   });

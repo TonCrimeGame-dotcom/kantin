@@ -24,6 +24,19 @@ test('ilk surumde yedi dil ve Almanca paketi bulunur', () => {
   assert.equal(locales.de['game.backgammon'], 'Backgammon');
 });
 
+test('Pisti adi Turkcede korunur ve yabanci dillerde Pishti olur', () => {
+  const locales = loadLocales();
+  const nameKeys = ['auth.subtitle', 'game.pisti', 'mode.pistiSolo', 'mode.pistiTeam'];
+  assert.equal(locales.tr['game.pisti'], 'Pişti');
+  assert.equal(locales.tr['mode.pistiSolo'], 'Klasik Pişti');
+  for (const code of ['en', 'de', 'ru', 'es', 'hi', 'ar']) {
+    for (const key of nameKeys) {
+      assert.match(locales[code][key], /Pishti/, `${code}.${key} Pishti adini kullanmali`);
+      assert.doesNotMatch(locales[code][key], /Pişti|Пишти/, `${code}.${key} yerel yazimi kullanmamali`);
+    }
+  }
+});
+
 test('her dil Ingilizce temel arayuz anahtarlarini kapsar', () => {
   const locales = loadLocales();
   const required = Object.keys(locales.en);
