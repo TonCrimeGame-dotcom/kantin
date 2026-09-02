@@ -8,7 +8,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'">
   <title>Kantin Yönetim Merkezi</title>
   <link rel="icon" href="./assets/brand/kantin-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./src/admin.css?v=20260901-1">
+  <link rel="stylesheet" href="./src/admin.css?v=20260902-1">
 </head>
 <body>
   <main class="admin-shell">
@@ -63,10 +63,15 @@
           <span><b>KANTİN</b><small>YÖNETİM MERKEZİ</small></span>
         </a>
         <nav aria-label="Yönetim bölümleri">
-          <button type="button" class="nav-item active" data-view="dashboard"><span>⌂</span>Genel bakış</button>
-          <button type="button" class="nav-item" data-view="players" data-capability="players"><span>♙</span>Oyuncular</button>
-          <button type="button" class="nav-item" data-view="ads" data-capability="settings"><span>▶</span>Reklam ekonomisi</button>
-          <button type="button" class="nav-item" data-view="audit" data-capability="audit"><span>≡</span>İşlem kayıtları</button>
+          <button type="button" class="nav-item active" data-view="dashboard" title="Genel bakış"><span>⌂</span>Genel bakış</button>
+          <button type="button" class="nav-item" data-view="operations" data-capability="operations" title="Canlı operasyon"><span>O</span>Canlı operasyon</button>
+          <button type="button" class="nav-item" data-view="players" data-capability="players" title="Oyuncular"><span>♙</span>Oyuncular</button>
+          <button type="button" class="nav-item" data-view="moderation" data-capability="moderation" title="Moderasyon"><span>!</span>Moderasyon</button>
+          <button type="button" class="nav-item" data-view="economy" data-capability="economy" title="Coin hareketleri"><span>₺</span>Coin hareketleri</button>
+          <button type="button" class="nav-item" data-view="ads" data-capability="settings" title="Reklam ekonomisi"><span>▶</span>Reklam ekonomisi</button>
+          <button type="button" class="nav-item" data-view="content" data-capability="content" title="Duyuru ve etkinlik"><span>◆</span>Duyuru ve etkinlik</button>
+          <button type="button" class="nav-item" data-view="admins" data-capability="admins" title="Yöneticiler"><span>Y</span>Yöneticiler</button>
+          <button type="button" class="nav-item" data-view="audit" data-capability="audit" title="İşlem kayıtları"><span>≡</span>İşlem kayıtları</button>
         </nav>
         <div class="sidebar-foot">
           <a href="./">← Oyuna dön</a>
@@ -97,6 +102,27 @@
           </div>
         </section>
 
+        <section class="view" data-view-panel="operations" hidden>
+          <div class="metrics" id="operationsMetrics">
+            <article class="metric-card"><small>KUYRUKTA</small><strong>—</strong><span>Oyuncu bekliyor</span></article>
+            <article class="metric-card"><small>AKTİF MAÇ</small><strong>—</strong><span>Devam eden masa</span></article>
+            <article class="metric-card"><small>BAYAT BİLET</small><strong>—</strong><span>İki dakikadır yenilenmedi</span></article>
+            <article class="metric-card"><small>VERİTABANI</small><strong>—</strong><span>Canlı bağlantı</span></article>
+          </div>
+          <div class="dashboard-grid operations-grid">
+            <article class="panel"><div class="panel-head"><div><small>EŞLEŞME HAVUZU</small><h2>Kuyruk dağılımı</h2></div><span class="security-badge">CANLI</span></div><div id="queueGroups" class="summary-list"></div></article>
+            <article class="panel"><div class="panel-head"><div><small>SUNUCU SAATİ</small><h2>Operasyon sağlığı</h2></div></div><div id="operationsHealth" class="summary-list"></div></article>
+          </div>
+          <article class="panel spaced-panel">
+            <div class="panel-head"><div><small>BEKLEYEN OYUNCULAR</small><h2>Eşleşme biletleri</h2></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Oyuncu</th><th>Mod</th><th>Dil</th><th>Katılım</th><th>Son sinyal</th><th></th></tr></thead><tbody id="operationsTickets"><tr><td colspan="6" class="empty-cell">Kuyruk yükleniyor…</td></tr></tbody></table></div>
+          </article>
+          <article class="panel spaced-panel">
+            <div class="panel-head"><div><small>MASALAR</small><h2>Aktif ve son maçlar</h2></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Maç</th><th>Mod</th><th>Oyuncular</th><th>Durum</th><th>Son hareket</th><th></th></tr></thead><tbody id="operationsMatches"><tr><td colspan="6" class="empty-cell">Maçlar yükleniyor…</td></tr></tbody></table></div>
+          </article>
+        </section>
+
         <section class="view" data-view-panel="players" hidden>
           <article class="panel player-browser">
             <div class="panel-head split"><div><small>HESAP YÖNETİMİ</small><h2>Oyuncu ara</h2></div><form id="playerSearchForm" class="search-form"><input id="playerSearch" type="search" maxlength="80" placeholder="Kullanıcı adı veya KNT kodu"><button class="button small" type="submit">Ara</button></form></div>
@@ -112,7 +138,41 @@
               <label class="reason-field">Açıklama<input name="reason" minlength="8" maxlength="240" required placeholder="İşlemin nedenini açıkça yazın"></label>
               <button class="button primary" type="submit">Coin işlemini uygula</button>
             </form>
+            <form id="restrictionForm" class="adjustment-form moderation-form" data-capability="moderation">
+              <div><small>EŞLEŞME ENGELİ</small><p>Oyuncunun çevrimiçi eşleşme kuyruğuna girişini belirli süreyle engeller. İşlem denetim kaydına yazılır.</p></div>
+              <label>Süre (saat)<input name="hours" type="number" min="1" max="8760" step="1" value="24" required></label>
+              <label class="reason-field">Gerekçe<input name="reason" minlength="8" maxlength="240" required placeholder="Engel gerekçesini açıkça yazın"></label>
+              <div class="stack-actions"><button class="button danger-button" type="submit">Engeli uygula</button><button class="button secondary" type="button" id="restrictionClear">Engeli kaldır</button></div>
+            </form>
             <div class="transaction-block"><h3>Son 50 coin hareketi</h3><div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Tür</th><th>Değişim</th><th>Önce</th><th>Sonra</th></tr></thead><tbody id="transactionsTable"></tbody></table></div></div>
+          </article>
+        </section>
+
+        <section class="view" data-view-panel="moderation" hidden>
+          <article class="panel">
+            <div class="panel-head"><div><small>AKTİF KISITLAMALAR</small><h2>Eşleşme engelleri</h2></div><span class="security-badge">SUNUCUDA UYGULANIR</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Oyuncu</th><th>Kod</th><th>Bitiş</th><th>Gerekçe</th><th>Güncelleme</th></tr></thead><tbody id="restrictionsTable"><tr><td colspan="5" class="empty-cell">Kısıtlamalar yükleniyor…</td></tr></tbody></table></div>
+          </article>
+          <article class="panel spaced-panel">
+            <div class="panel-head"><div><small>OYUNCU GÜVENLİĞİ</small><h2>Şikâyet kuyruğu</h2></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Hedef</th><th>Kategori</th><th>Bildiren</th><th>Durum</th><th></th></tr></thead><tbody id="reportsTable"><tr><td colspan="6" class="empty-cell">Şikâyetler yükleniyor…</td></tr></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" data-view-panel="economy" hidden>
+          <div class="metrics" id="economyMetrics">
+            <article class="metric-card"><small>BUGÜNKÜ HAREKET</small><strong>—</strong><span>Coin işlemi</span></article>
+            <article class="metric-card"><small>EKLENEN COIN</small><strong>—</strong><span>Bugün</span></article>
+            <article class="metric-card"><small>ÇIKAN COIN</small><strong>—</strong><span>Bugün</span></article>
+            <article class="metric-card"><small>ÖDENEN SİPARİŞ</small><strong>—</strong><span>Bugün</span></article>
+          </div>
+          <article class="panel spaced-panel">
+            <div class="panel-head"><div><small>DEĞİŞTİRİLEMEZ DEFTER</small><h2>Son coin hareketleri</h2></div><span class="security-badge">LEDGER</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Oyuncu</th><th>Tür</th><th>Kaynak</th><th>Değişim</th><th>Son bakiye</th></tr></thead><tbody id="economyTransactions"><tr><td colspan="6" class="empty-cell">Hareketler yükleniyor…</td></tr></tbody></table></div>
+          </article>
+          <article class="panel spaced-panel">
+            <div class="panel-head"><div><small>MAĞAZA</small><h2>Satın alma ve iadeler</h2></div><span class="chip">Sağlayıcı iadesinden sonra kaydedilir</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Oyuncu</th><th>Sağlayıcı</th><th>Tutar</th><th>Coin</th><th>Durum</th><th></th></tr></thead><tbody id="ordersTable"><tr><td colspan="7" class="empty-cell">Siparişler yükleniyor…</td></tr></tbody></table></div>
           </article>
         </section>
 
@@ -135,6 +195,53 @@
           </div>
         </section>
 
+        <section class="view" data-view-panel="content" hidden>
+          <div class="content-grid">
+            <article class="panel">
+              <div class="panel-head"><div><small>OYUN İÇİ DUYURU</small><h2>Duyuru oluştur</h2></div></div>
+              <form id="announcementForm" class="settings-form content-form">
+                <input name="recordId" type="hidden">
+                <div class="field-grid"><label>Başlık<input name="title" minlength="3" maxlength="100" required></label><label>Dil<select name="locale"><option value="">Tüm diller</option><option value="tr">Türkçe</option><option value="en">English</option><option value="de">Deutsch</option><option value="ru">Русский</option><option value="es">Español</option><option value="hi">हिन्दी</option><option value="ar">العربية</option></select></label></div>
+                <label>Metin<textarea name="body" minlength="3" maxlength="1000" rows="4" required></textarea></label>
+                <div class="field-grid"><label>Başlangıç<input name="startsAt" type="datetime-local" required></label><label>Bitiş (isteğe bağlı)<input name="endsAt" type="datetime-local"></label></div>
+                <label class="check-row"><input name="active" type="checkbox" checked> Duyuruyu etkinleştir</label>
+                <div class="form-actions"><button class="button primary" type="submit">Duyuruyu kaydet</button><button class="button secondary" type="reset">Yeni kayıt</button></div>
+              </form>
+            </article>
+            <article class="panel"><div class="panel-head"><div><small>YAYIN PLANI</small><h2>Duyurular</h2></div></div><div id="announcementsList" class="record-list"></div></article>
+          </div>
+          <div class="content-grid spaced-panel">
+            <article class="panel">
+              <div class="panel-head"><div><small>CANLI ETKİNLİK</small><h2>Etkinlik oluştur</h2></div></div>
+              <form id="eventForm" class="settings-form content-form">
+                <input name="recordId" type="hidden">
+                <div class="field-grid"><label>Etkinlik anahtarı<input name="key" pattern="[a-z][a-z0-9_-]{2,39}" minlength="3" maxlength="40" placeholder="ramazan_2027" required></label><label>Başlık<input name="title" minlength="3" maxlength="100" required></label></div>
+                <label>Açıklama<textarea name="description" maxlength="1000" rows="3"></textarea></label>
+                <div class="field-grid"><label>Başlangıç<input name="startsAt" type="datetime-local" required></label><label>Bitiş<input name="endsAt" type="datetime-local" required></label></div>
+                <label>Yapılandırma (JSON)<textarea name="configuration" rows="3" placeholder='{"theme":"ramazan"}'>{}</textarea></label>
+                <label class="check-row"><input name="active" type="checkbox"> Etkinliği etkinleştir</label>
+                <div class="form-actions"><button class="button primary" type="submit">Etkinliği kaydet</button><button class="button secondary" type="reset">Yeni kayıt</button></div>
+              </form>
+            </article>
+            <article class="panel"><div class="panel-head"><div><small>ETKİNLİK TAKVİMİ</small><h2>Etkinlikler</h2></div></div><div id="eventsList" class="record-list"></div></article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="admins" hidden>
+          <div class="settings-grid admin-grid">
+            <article class="panel">
+              <div class="panel-head"><div><small>ROL YÖNETİMİ</small><h2>Yönetici yetkilendir</h2></div><span class="security-badge">YALNIZ KURUCU</span></div>
+              <form id="adminMemberForm" class="settings-form">
+                <label>Doğrulanmış hesap e-postası<input name="email" type="email" maxlength="254" required></label>
+                <label>Rol<select name="role" required><option value="admin">Yönetici</option><option value="support">Destek</option><option value="analyst">Analist</option><option value="owner">Kurucu</option></select></label>
+                <button class="button primary" type="submit">Yetkiyi kaydet</button>
+              </form>
+            </article>
+            <aside class="panel info-panel"><small>YETKİ MODELİ</small><h2>En az ayrıcalık</h2><p>Her görev yalnız ihtiyaç duyduğu ekranları görür. Son kurucu kaldırılamaz ve kurucu kendi yetkisini düşüremez.</p><ul><li>Kurucu: tüm yetkiler</li><li>Yönetici: operasyon, ekonomi ve içerik</li><li>Destek: oyuncu ve moderasyon</li><li>Analist: salt okunur raporlar</li></ul></aside>
+          </div>
+          <article class="panel spaced-panel"><div class="panel-head"><div><small>YETKİLİ HESAPLAR</small><h2>Yönetim ekibi</h2></div></div><div class="table-wrap"><table><thead><tr><th>Hesap</th><th>E-posta</th><th>Rol</th><th>Durum</th><th>Kayıt</th><th></th></tr></thead><tbody id="adminsTable"><tr><td colspan="6" class="empty-cell">Yöneticiler yükleniyor…</td></tr></tbody></table></div></article>
+        </section>
+
         <section class="view" data-view-panel="audit" hidden>
           <article class="panel">
             <div class="panel-head"><div><small>DEĞİŞTİRİLEMEZ KAYIT</small><h2>Yönetici işlem geçmişi</h2></div><span class="security-badge">AUDIT LOG</span></div>
@@ -150,12 +257,13 @@
       <span class="confirm-mark">!</span>
       <h2 id="confirmTitle">İşlemi onaylayın</h2>
       <p id="confirmMessage"></p>
+      <label class="confirm-reason" id="confirmReasonField" hidden>Gerekçe<textarea id="confirmReason" minlength="8" maxlength="500" rows="3" placeholder="İşlem gerekçesini yazın"></textarea></label>
       <div><button value="cancel" class="button secondary">Vazgeç</button><button value="confirm" class="button primary" id="confirmAccept">Onayla</button></div>
     </form>
   </dialog>
   <div class="toast" id="adminToast" role="status" aria-live="polite"></div>
 
-  <script src="./src/auth-client.js?v=20260901-2"></script>
-  <script src="./src/admin.js?v=20260901-2"></script>
+  <script defer src="./src/auth-client.js?v=20260901-2"></script>
+  <script defer src="./src/admin.js?v=20260902-1"></script>
 </body>
 </html>

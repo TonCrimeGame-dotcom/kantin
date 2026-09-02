@@ -155,6 +155,13 @@ async function statusFor(identity, env) {
 async function join(identity, body, env) {
   const mode = String(body.mode || '');
   if (!MODE_SEATS[mode]) throw new MatchApiError('invalid_game_mode', 400);
+  if (/^[0-9a-f-]{36}$/i.test(String(identity.playerId || ''))) {
+    const restrictions = await serviceRequest(`/rest/v1/player_restrictions?select=matchmaking_blocked_until&user_id=eq.${restFilter(identity.playerId)}&limit=1`, {}, env);
+    const blockedUntil = Array.isArray(restrictions) ? restrictions[0]?.matchmaking_blocked_until : null;
+    if (blockedUntil && Date.parse(blockedUntil) > Date.now()) {
+      throw new MatchApiError('matchmaking_blocked', 403, blockedUntil);
+    }
+  }
   const wordLocale = mode === 'sozcukDuel' ? normalizeWordLocale(body.wordLocale || 'tr') : null;
   await rpc('kantin_join_matchmaking', {
     p_player_id: identity.playerId,

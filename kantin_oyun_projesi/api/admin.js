@@ -33,6 +33,23 @@ function integer(value, field, min, max) {
   return parsed;
 }
 
+function optionalUuid(value, field) {
+  return value === null || value === undefined || value === '' ? null : uuid(value, field);
+}
+
+function timestamp(value, field, optional = false) {
+  if (optional && (value === null || value === undefined || value === '')) return null;
+  const parsed = new Date(value);
+  if (!value || Number.isNaN(parsed.getTime())) throw new AdminApiError(`invalid_${field}`, 400);
+  return parsed.toISOString();
+}
+
+function string(value, field, min, max) {
+  const normalized = String(value || '').trim();
+  if (normalized.length < min || normalized.length > max) throw new AdminApiError(`invalid_${field}`, 400);
+  return normalized;
+}
+
 async function jsonBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
   let raw = '';
@@ -87,6 +104,29 @@ async function handleGet(req, auth, action) {
       p_user_id: uuid(params.get('id'), 'user_id')
     });
   }
+  if (action === 'operations') {
+    hasCapability(auth.access, 'operations');
+    return rpc(auth.env, 'kantin_admin_operations', { p_admin_id: auth.user.id });
+  }
+  if (action === 'moderation') {
+    hasCapability(auth.access, 'moderation');
+    return rpc(auth.env, 'kantin_admin_moderation', { p_admin_id: auth.user.id });
+  }
+  if (action === 'economy') {
+    hasCapability(auth.access, 'economy');
+    return rpc(auth.env, 'kantin_admin_economy', {
+      p_admin_id: auth.user.id,
+      p_limit: integer(params.get('limit') || 100, 'limit', 1, 200)
+    });
+  }
+  if (action === 'content') {
+    hasCapability(auth.access, 'content');
+    return rpc(auth.env, 'kantin_admin_content', { p_admin_id: auth.user.id });
+  }
+  if (action === 'admins') {
+    hasCapability(auth.access, 'admins');
+    return rpc(auth.env, 'kantin_admin_members', { p_admin_id: auth.user.id });
+  }
   if (action === 'audit') {
     hasCapability(auth.access, 'audit');
     return rpc(auth.env, 'kantin_admin_audit', {
@@ -122,6 +162,106 @@ async function handlePost(req, auth, action) {
       p_daily_limit: integer(body.dailyLimit, 'daily_limit', 0, 20),
       p_cooldown_seconds: integer(body.cooldownSeconds, 'cooldown_seconds', 0, 86400),
       p_session_ttl_seconds: integer(body.sessionTtlSeconds, 'session_ttl_seconds', 60, 3600),
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'cancel-ticket') {
+    hasCapability(auth.access, 'operations');
+    return rpc(auth.env, 'kantin_admin_cancel_ticket', {
+      p_admin_id: auth.user.id,
+      p_player_id: string(body.playerId, 'player_id', 1, 96),
+      p_reason: string(body.reason, 'reason', 8, 240),
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'abandon-match') {
+    hasCapability(auth.access, 'operations');
+    return rpc(auth.env, 'kantin_admin_abandon_match', {
+      p_admin_id: auth.user.id,
+      p_match_id: uuid(body.matchId, 'match_id'),
+      p_reason: string(body.reason, 'reason', 8, 240),
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'set-restriction') {
+    hasCapability(auth.access, 'moderation');
+    return rpc(auth.env, 'kantin_admin_set_restriction', {
+      p_admin_id: auth.user.id,
+      p_user_id: uuid(body.userId, 'user_id'),
+      p_blocked_until: timestamp(body.blockedUntil, 'blocked_until', true),
+      p_reason: string(body.reason, 'reason', 8, 240),
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'update-report') {
+    hasCapability(auth.access, 'moderation');
+    const status = String(body.status || '');
+    if (!['reviewed', 'resolved', 'dismissed'].includes(status)) throw new AdminApiError('invalid_report_status', 400);
+    return rpc(auth.env, 'kantin_admin_update_report', {
+      p_admin_id: auth.user.id,
+      p_report_id: uuid(body.reportId, 'report_id'),
+      p_status: status,
+      p_note: string(body.note, 'note', 8, 500),
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'refund-order') {
+    hasCapability(auth.access, 'economy');
+    return rpc(auth.env, 'kantin_admin_mark_order_refunded', {
+      p_admin_id: auth.user.id,
+      p_order_id: uuid(body.orderId, 'order_id'),
+      p_reason: string(body.reason, 'reason', 8, 240),
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'save-announcement') {
+    hasCapability(auth.access, 'content');
+    return rpc(auth.env, 'kantin_admin_save_announcement', {
+      p_admin_id: auth.user.id,
+      p_id: optionalUuid(body.id, 'announcement_id'),
+      p_locale: String(body.locale || '').trim().toLowerCase() || null,
+      p_title: string(body.title, 'title', 3, 100),
+      p_body: string(body.body, 'body', 3, 1000),
+      p_starts_at: timestamp(body.startsAt, 'starts_at'),
+      p_ends_at: timestamp(body.endsAt, 'ends_at', true),
+      p_active: body.active === true,
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'save-event') {
+    hasCapability(auth.access, 'content');
+    const configuration = body.configuration && typeof body.configuration === 'object' && !Array.isArray(body.configuration)
+      ? body.configuration : {};
+    return rpc(auth.env, 'kantin_admin_save_event', {
+      p_admin_id: auth.user.id,
+      p_id: optionalUuid(body.id, 'event_id'),
+      p_event_key: string(body.key, 'event_key', 3, 40).toLowerCase(),
+      p_title: string(body.title, 'title', 3, 100),
+      p_description: String(body.description || '').trim().slice(0, 1000),
+      p_starts_at: timestamp(body.startsAt, 'starts_at'),
+      p_ends_at: timestamp(body.endsAt, 'ends_at'),
+      p_active: body.active === true,
+      p_configuration: configuration,
+      p_request_id: requestId,
+      p_context: auditContext(req)
+    });
+  }
+  if (action === 'set-admin-member') {
+    hasCapability(auth.access, 'admins');
+    const role = String(body.role || '');
+    if (!['owner', 'admin', 'support', 'analyst'].includes(role)) throw new AdminApiError('invalid_admin_role', 400);
+    return rpc(auth.env, 'kantin_admin_set_member', {
+      p_admin_id: auth.user.id,
+      p_target_email: string(body.email, 'email', 5, 254).toLowerCase(),
+      p_role: role,
+      p_active: body.active === true,
       p_request_id: requestId,
       p_context: auditContext(req)
     });

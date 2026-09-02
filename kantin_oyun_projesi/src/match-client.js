@@ -37,7 +37,8 @@
         match_storage_failed: 'Eşleşme veritabanına ulaşılamadı.',
         invalid_match_session: 'Eşleşme oturumu geçersiz. Lütfen yeniden dene.',
         expired_match_session: 'Eşleşme oturumunun süresi doldu. Lütfen yeniden dene.',
-        game_action_rejected: 'Bu hamle oyun kurallarına uygun değil.'
+        game_action_rejected: 'Bu hamle oyun kurallarına uygun değil.',
+        matchmaking_blocked: 'Hesabınız geçici olarak çevrimiçi eşleşmelere kapatılmış.'
       };
       const code = error?.code || error?.error || 'match_error';
       const message = error?.details || messages[code] || error?.message || 'Eşleşme işlemi tamamlanamadı.';

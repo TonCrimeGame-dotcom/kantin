@@ -8,10 +8,12 @@ const test = require('node:test');
 const root = path.join(__dirname, '..');
 const migration = fs.readFileSync(path.join(root, 'supabase', 'migrations', '20260901183000_admin_console_foundation.sql'), 'utf8');
 const dashboardFix = fs.readFileSync(path.join(root, 'supabase', 'migrations', '20260901184500_fix_admin_dashboard_reward_column.sql'), 'utf8');
+const operationsMigration = fs.readFileSync(path.join(root, 'supabase', 'migrations', '20260902103000_admin_operations_console.sql'), 'utf8');
 const api = fs.readFileSync(path.join(root, 'api', 'admin.js'), 'utf8');
 const authHelper = fs.readFileSync(path.join(root, 'api', 'lib', 'admin-auth.js'), 'utf8');
 const client = fs.readFileSync(path.join(root, 'src', 'admin.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'admin.html'), 'utf8');
+const matchApi = fs.readFileSync(path.join(root, 'api', 'match.js'), 'utf8');
 
 test('admin tabloları istemciye kapalı ve audit kaydı değiştirilemezdir', () => {
   assert.match(migration, /alter table public\.admin_memberships enable row level security/i);
@@ -84,4 +86,48 @@ test('admin API desteklenmeyen yöntemi Supabase çağrısı yapmadan reddeder',
   await handler(req, response);
   assert.equal(response.statusCode, 405);
   assert.deepEqual(response.body, { ok: false, error: 'method_not_allowed' });
+});
+
+test('operasyon paneli kuyruk ve maç yönetimini sunucuda yetkilendirip denetler', () => {
+  assert.match(operationsMigration, /kantin_admin_operations\(p_admin_id uuid\)/i);
+  assert.match(operationsMigration, /kantin_admin_cancel_ticket/i);
+  assert.match(operationsMigration, /kantin_admin_abandon_match/i);
+  assert.match(operationsMigration, /'operations\.ticket_cancelled'/i);
+  assert.match(operationsMigration, /'operations\.match_abandoned'/i);
+  assert.match(api, /action === 'operations'/i);
+  assert.match(api, /action === 'cancel-ticket'/i);
+  assert.match(api, /action === 'abandon-match'/i);
+  assert.match(html, /data-view-panel="operations"/i);
+  assert.match(client, /data-cancel-ticket/i);
+  assert.match(client, /data-abandon-match/i);
+});
+
+test('moderasyon engelleri RLS ile kapalıdır ve eşleşme katılımında uygulanır', () => {
+  assert.match(operationsMigration, /create table if not exists public\.player_restrictions/i);
+  assert.match(operationsMigration, /alter table public\.player_restrictions enable row level security/i);
+  assert.match(operationsMigration, /revoke all on table public\.player_restrictions from public, anon, authenticated/i);
+  assert.match(operationsMigration, /kantin_admin_set_restriction/i);
+  assert.match(matchApi, /player_restrictions\?select=matchmaking_blocked_until/i);
+  assert.match(matchApi, /MatchApiError\('matchmaking_blocked', 403/i);
+  assert.match(html, /id="restrictionForm"/i);
+  assert.match(html, /data-view-panel="moderation"/i);
+});
+
+test('ekonomi siparişleri, içerik ve yönetici rolleri audit kayıtlı servis işlemleridir', () => {
+  assert.match(operationsMigration, /create table if not exists public\.store_orders/i);
+  assert.match(operationsMigration, /kantin_admin_mark_order_refunded/i);
+  assert.match(operationsMigration, /'economy\.order_refunded'/i);
+  assert.match(operationsMigration, /create table if not exists public\.admin_announcements/i);
+  assert.match(operationsMigration, /create table if not exists public\.admin_game_events/i);
+  assert.match(operationsMigration, /'content\.announcement_saved'/i);
+  assert.match(operationsMigration, /'content\.event_saved'/i);
+  assert.match(operationsMigration, /admin_self_demote_forbidden/i);
+  assert.match(operationsMigration, /last_owner_required/i);
+  assert.match(api, /action === 'refund-order'/i);
+  assert.match(api, /action === 'save-announcement'/i);
+  assert.match(api, /action === 'save-event'/i);
+  assert.match(api, /action === 'set-admin-member'/i);
+  assert.match(html, /data-view-panel="economy"/i);
+  assert.match(html, /data-view-panel="content"/i);
+  assert.match(html, /data-view-panel="admins"/i);
 });
