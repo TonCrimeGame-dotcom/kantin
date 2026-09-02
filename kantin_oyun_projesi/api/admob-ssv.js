@@ -1,6 +1,7 @@
 'use strict';
 
 const { verifyCallback } = require('./lib/admob-ssv');
+const ADMOB_VERIFICATION_CUSTOM_DATA = 'kantin-admob-verification';
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -11,11 +12,12 @@ function sendJson(res, statusCode, payload) {
 }
 
 function configuredAdUnits() {
-  return new Set([
+  const configured = [
     ...(process.env.ADMOB_REWARDED_AD_UNIT_IDS || '').split(','),
     process.env.ADMOB_REWARDED_AD_UNIT_ID_ANDROID,
     process.env.ADMOB_REWARDED_AD_UNIT_ID_IOS
-  ].map(value => String(value || '').trim()).filter(Boolean));
+  ].map(value => String(value || '').trim()).filter(Boolean);
+  return new Set(configured.flatMap(value => [value, value.split('/').pop()]));
 }
 
 async function grantReward(sessionId, transactionId, metadata) {
@@ -55,9 +57,13 @@ module.exports = async function admobSsvHandler(req, res) {
     const sessionId = String(params.get('custom_data') || '');
     const transactionId = String(params.get('transaction_id') || '');
     const adUnit = String(params.get('ad_unit') || '');
-    if (!/^[0-9a-f-]{36}$/i.test(sessionId)) throw new Error('invalid_reward_session');
     if (transactionId.length < 8 || transactionId.length > 200) throw new Error('invalid_transaction_id');
     if (!adUnits.has(adUnit)) throw new Error('unknown_ad_unit');
+    if (sessionId === ADMOB_VERIFICATION_CUSTOM_DATA) {
+      sendJson(res, 200, { ok: true, status: 'verified' });
+      return;
+    }
+    if (!/^[0-9a-f-]{36}$/i.test(sessionId)) throw new Error('invalid_reward_session');
 
     const reward = await grantReward(sessionId, transactionId, {
       provider: 'admob',

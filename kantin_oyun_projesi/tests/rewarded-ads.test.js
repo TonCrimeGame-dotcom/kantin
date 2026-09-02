@@ -76,3 +76,10 @@ test('AdMob sunucusu yeni Supabase secret anahtarini ve Android kimliklerini des
   assert.match(mobileAdmob.android.rewardedAdUnitId, /^ca-app-pub-\d+\/\d+$/);
   assert.equal(mobileAdmob.android.testRewardedAdUnitId, 'ca-app-pub-3940256099942544/5224354917');
 });
+
+test('AdMob SSV kurulum testi coin vermeden dogrulanir ve sayisal reklam birimini kabul eder', () => {
+  assert.match(admobApi, /ADMOB_VERIFICATION_CUSTOM_DATA = 'kantin-admob-verification'/);
+  assert.match(admobApi, /value\.split\('\/'\)\.pop\(\)/);
+  assert.match(admobApi, /status: 'verified'/);
+  assert.ok(admobApi.indexOf("status: 'verified'") < admobApi.indexOf('const reward = await grantReward(sessionId'));
+});
