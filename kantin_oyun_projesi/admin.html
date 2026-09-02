@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#100d0a">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'">
+  <title>Kantin Yönetim Merkezi</title>
+  <link rel="icon" href="./assets/brand/kantin-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/admin.css?v=20260901-1">
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="gate-card" id="adminLoading" aria-live="polite">
+      <img src="./assets/brand/kantin-mark.svg" alt="" width="64" height="64">
+      <span class="gate-spinner" aria-hidden="true"></span>
+      <h1>Yönetim Merkezi hazırlanıyor</h1>
+      <p>Oturum ve yetki güvenli biçimde doğrulanıyor.</p>
+    </section>
+
+    <section class="gate-card" id="adminLogin" hidden>
+      <img src="./assets/brand/kantin-logo.svg" class="gate-logo" alt="Kantin">
+      <p class="eyebrow">YETKİLİ ERİŞİMİ</p>
+      <h1>Kantin Yönetim Merkezi</h1>
+      <p>Yalnız doğrulanmış ve yönetici olarak atanmış kalıcı hesaplar giriş yapabilir.</p>
+      <form id="adminLoginForm" class="gate-form">
+        <label>E-posta<input name="email" type="email" autocomplete="username" required></label>
+        <label>Şifre<input name="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <button type="submit" class="button primary">Güvenli giriş yap</button>
+      </form>
+      <button type="button" class="button google" id="adminGoogleLogin">Google ile devam et</button>
+      <p class="gate-error" id="adminLoginError" role="alert"></p>
+      <details class="setup-details">
+        <summary>İlk yönetici hesabını oluştur</summary>
+        <p>Yalnız sistemde önceden izin verilen kurucu e-posta adresi yönetici olabilir.</p>
+        <form id="adminSetupForm" class="gate-form compact">
+          <label>Kullanıcı adı<input name="username" type="text" autocomplete="nickname" minlength="3" maxlength="24" required></label>
+          <label>E-posta<input name="email" type="email" autocomplete="email" required></label>
+          <label>Şifre<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+          <button type="submit" class="button secondary">Kurucu hesabını oluştur</button>
+        </form>
+        <p class="gate-success" id="adminSetupMessage" role="status"></p>
+      </details>
+      <a href="./" class="text-link">Oyuna dön</a>
+    </section>
+
+    <section class="gate-card" id="adminDenied" hidden>
+      <span class="gate-icon" aria-hidden="true">!</span>
+      <p class="eyebrow">ERİŞİM REDDEDİLDİ</p>
+      <h1>Bu hesap yönetici değil</h1>
+      <p id="adminDeniedMessage">Hesabınız doğrulandı fakat yönetim yetkisi bulunmuyor.</p>
+      <div class="gate-actions">
+        <button type="button" class="button" id="adminDeniedLogout">Başka hesapla giriş</button>
+        <a href="./" class="button secondary">Oyuna dön</a>
+      </div>
+    </section>
+
+    <section class="console" id="adminConsole" hidden>
+      <aside class="sidebar">
+        <a class="admin-brand" href="./admin.html" aria-label="Kantin Yönetim Merkezi">
+          <img src="./assets/brand/kantin-mark.svg" alt="" width="42" height="42">
+          <span><b>KANTİN</b><small>YÖNETİM MERKEZİ</small></span>
+        </a>
+        <nav aria-label="Yönetim bölümleri">
+          <button type="button" class="nav-item active" data-view="dashboard"><span>⌂</span>Genel bakış</button>
+          <button type="button" class="nav-item" data-view="players" data-capability="players"><span>♙</span>Oyuncular</button>
+          <button type="button" class="nav-item" data-view="ads" data-capability="settings"><span>▶</span>Reklam ekonomisi</button>
+          <button type="button" class="nav-item" data-view="audit" data-capability="audit"><span>≡</span>İşlem kayıtları</button>
+        </nav>
+        <div class="sidebar-foot">
+          <a href="./">← Oyuna dön</a>
+          <button type="button" id="adminLogout">Güvenli çıkış</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <div><p class="eyebrow" id="viewEyebrow">CANLI DURUM</p><h1 id="viewTitle">Genel bakış</h1></div>
+          <div class="topbar-actions">
+            <button type="button" class="icon-button" id="adminRefresh" aria-label="Verileri yenile" title="Yenile">↻</button>
+            <div class="admin-identity"><span id="adminInitial">Y</span><div><b id="adminName">Yönetici</b><small id="adminRole">—</small></div></div>
+          </div>
+        </header>
+
+        <section class="view active" data-view-panel="dashboard">
+          <div class="status-strip"><span class="live-dot"></span><b>Sistem bağlantısı aktif</b><small id="dashboardGenerated">—</small></div>
+          <div class="metrics" id="dashboardMetrics">
+            <article class="metric-card"><small>TOPLAM OYUNCU</small><strong>—</strong><span>Yükleniyor</span></article>
+            <article class="metric-card"><small>DOLAŞIMDAKİ COIN</small><strong>—</strong><span>Yükleniyor</span></article>
+            <article class="metric-card"><small>BUGÜNKÜ İŞLEMLER</small><strong>—</strong><span>Yükleniyor</span></article>
+            <article class="metric-card"><small>ÖDÜLLÜ REKLAMLAR</small><strong>—</strong><span>Yükleniyor</span></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel"><div class="panel-head"><div><small>OYUNCULAR</small><h2>Bugünün özeti</h2></div></div><div id="playerSummary" class="summary-list"></div></article>
+            <article class="panel"><div class="panel-head"><div><small>REKLAM EKONOMİSİ</small><h2>Ödül durumu</h2></div></div><div id="adSummary" class="summary-list"></div></article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="players" hidden>
+          <article class="panel player-browser">
+            <div class="panel-head split"><div><small>HESAP YÖNETİMİ</small><h2>Oyuncu ara</h2></div><form id="playerSearchForm" class="search-form"><input id="playerSearch" type="search" maxlength="80" placeholder="Kullanıcı adı veya KNT kodu"><button class="button small" type="submit">Ara</button></form></div>
+            <div class="table-wrap"><table><thead><tr><th>Oyuncu</th><th>Kod</th><th>Tür</th><th>Seviye</th><th>Coin</th><th>Kayıt</th><th></th></tr></thead><tbody id="playersTable"><tr><td colspan="7" class="empty-cell">Oyuncular yükleniyor…</td></tr></tbody></table></div>
+            <footer class="table-footer"><span id="playersCount">—</span><div><button type="button" class="button tiny" id="playersPrev">Önceki</button><button type="button" class="button tiny" id="playersNext">Sonraki</button></div></footer>
+          </article>
+          <article class="panel player-detail" id="playerDetailPanel" hidden>
+            <div class="panel-head split"><div><small>OYUNCU DETAYI</small><h2 id="playerDetailName">—</h2></div><button type="button" class="icon-button" id="playerDetailClose" aria-label="Detayı kapat">×</button></div>
+            <div id="playerDetailMeta" class="player-meta"></div>
+            <form id="coinAdjustmentForm" class="adjustment-form" data-capability="economy">
+              <div><small>MANUEL COIN DÜZELTMESİ</small><p>Pozitif değer coin verir, negatif değer geri alır. Her işlem kalıcı olarak kaydedilir.</p></div>
+              <label>Miktar<input name="amount" type="number" min="-1000000" max="1000000" step="1" required placeholder="Örn. 500 veya -250"></label>
+              <label class="reason-field">Açıklama<input name="reason" minlength="8" maxlength="240" required placeholder="İşlemin nedenini açıkça yazın"></label>
+              <button class="button primary" type="submit">Coin işlemini uygula</button>
+            </form>
+            <div class="transaction-block"><h3>Son 50 coin hareketi</h3><div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Tür</th><th>Değişim</th><th>Önce</th><th>Sonra</th></tr></thead><tbody id="transactionsTable"></tbody></table></div></div>
+          </article>
+        </section>
+
+        <section class="view" data-view-panel="ads" hidden>
+          <div class="settings-grid">
+            <article class="panel">
+              <div class="panel-head"><div><small>CANLI AYAR</small><h2>Ödüllü reklam politikası</h2></div><span class="security-badge">SUNUCU KORUMALI</span></div>
+              <form id="rewardedSettingsForm" class="settings-form">
+                <label class="toggle-row"><span><b>Ödüllü reklamı aç</b><small>Reklam sağlayıcısı yapılandırılmışsa oyuncular izleyebilir.</small></span><input name="enabled" type="checkbox"><i></i></label>
+                <div class="field-grid">
+                  <label>Reklam başına coin<input name="rewardAmount" type="number" min="1" max="10000" required></label>
+                  <label>Günlük izleme sınırı<input name="dailyLimit" type="number" min="0" max="20" required></label>
+                  <label>Bekleme süresi (dakika)<input name="cooldownMinutes" type="number" min="0" max="1440" required></label>
+                  <label>Oturum geçerliliği (dakika)<input name="sessionTtlMinutes" type="number" min="1" max="60" required></label>
+                </div>
+                <button type="submit" class="button primary">Ayarları kaydet</button>
+              </form>
+            </article>
+            <aside class="panel info-panel"><small>GÜVENLİK NOTU</small><h2>Coin tarayıcıdan verilmez</h2><p>Bu ekrandaki değerler yalnız politikayı değiştirir. Gerçek ödül ancak reklam sağlayıcısının imzalı sunucu doğrulaması tamamlanınca cüzdana geçer.</p><ul><li>Günlük limit sunucuda uygulanır.</li><li>Aynı reklam iki kez ödül vermez.</li><li>Her ayar değişikliği kayıt altındadır.</li></ul></aside>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="audit" hidden>
+          <article class="panel">
+            <div class="panel-head"><div><small>DEĞİŞTİRİLEMEZ KAYIT</small><h2>Yönetici işlem geçmişi</h2></div><span class="security-badge">AUDIT LOG</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Yönetici</th><th>İşlem</th><th>Hedef</th><th>Ayrıntı</th></tr></thead><tbody id="auditTable"><tr><td colspan="5" class="empty-cell">Kayıtlar yükleniyor…</td></tr></tbody></table></div>
+          </article>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="confirmDialog" class="confirm-dialog">
+    <form method="dialog">
+      <span class="confirm-mark">!</span>
+      <h2 id="confirmTitle">İşlemi onaylayın</h2>
+      <p id="confirmMessage"></p>
+      <div><button value="cancel" class="button secondary">Vazgeç</button><button value="confirm" class="button primary" id="confirmAccept">Onayla</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="adminToast" role="status" aria-live="polite"></div>
+
+  <script src="./src/auth-client.js?v=20260901-2"></script>
+  <script src="./src/admin.js?v=20260901-2"></script>
+</body>
+</html>

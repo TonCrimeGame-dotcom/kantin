@@ -83,6 +83,15 @@ Gerçek para ürünleri henüz aktif değildir. Google Play Billing, Apple In-Ap
 
 AdMob uygulama ve reklam birimi kimlikleri tanımlanana kadar arayüz butonu görünür fakat devre dışı kalır; bu durumda gerçek ödül üretilemez.
 
+## Yönetim merkezi
+
+- Yönetim arayüzü `/admin` adresindedir (`/admin.html` da çalışır) ve arama motorlarına kapalıdır.
+- İlk kurucu yönetici, Vercel'de `ADMIN_EMAILS` değişkenine yazılan doğrulanmış kalıcı hesap e-postasıyla ilk başarılı girişte oluşturulur. Veritabanında aktif bir yönetici oluştuktan sonra bu otomatik ilk kurulum tekrar çalışmaz.
+- `owner` ve `admin` rolleri açıklamalı, idempotent coin düzeltmesi ve ödüllü reklam politikası değişikliği yapabilir. `support` oyuncu bilgilerini okuyabilir; `analyst` yalnız özet ve işlem kayıtlarını okuyabilir.
+- Yönetim API'si her istekte Supabase oturumunu ve veritabanı rolünü doğrular. `SUPABASE_SERVICE_ROLE_KEY` / `SUPABASE_SECRET_KEY` yalnız Vercel sunucu ortamında kalır.
+- Tüm ayrıcalıklı işlemler `admin_audit_log` tablosuna yazılır; bu kayıtlar güncellenemez veya silinemez.
+- `ADMIN_AUDIT_SALT`, istek IP'sini saklamadan HMAC özetiyle ilişkilendirmek için uzun ve rastgele bir Vercel sırrı olmalıdır.
+
 ## Dil altyapısı
 
 - İlk istemci paketi Türkçe, İngilizce, Almanca, Rusça, İspanyolca, Hintçe ve Arapça destekler.
