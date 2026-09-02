@@ -1,7 +1,6 @@
 # KANTİN görsel seti
 
-- `brand/kantin-logo.svg`: Ana logo ve sloganlı yatay kullanım.
-- `brand/kantin-mark.svg`: Favicon ve dar alanlar için K simgesi.
+- `brand/kantin-logo.png`: Saydam arka planlı ana Kantin amblemi; oyun, giriş, favicon ve yönetim panelinde kullanılır.
 - `backgrounds/kantin-home-hero.png`: Ana sayfa kahraman alanı arka planı.
 - `menu/tavla.svg`: Tavla menü kartı.
 - `menu/pisti.svg`: Pişti menü kartı.
