@@ -115,3 +115,16 @@ body:has(.pisti-screen) .pisti-table{width:100%;height:100%;max-width:none;margi
 .pisti-screen.dealing .pisti-hand .card.pisti-deal-visible,.pisti-screen.dealing .pisti-card-fan span.pisti-deal-visible{opacity:1!important}
 .pisti-screen.dealing .pisti-hand,.pisti-screen.dealing .pisti-card-fan{transition:opacity .15s ease}
 @media(prefers-reduced-motion:reduce){.pisti-deal-layer{display:none}}
+
+/* --- 101 OKEY HALL / OKAY EXTRA TARZI DAĞITIM SIFIRLAMA STİLLERİ --- */
+.pisti-hall-flying-card {
+  position: fixed !important;
+  z-index: 9999 !important;
+  margin: 0 !important;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform, left, top;
+  border-radius: 6px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
+  background: url('../assets/games/pisti/final/card-back.webp') center/100% 100% no-repeat !important;
+}
