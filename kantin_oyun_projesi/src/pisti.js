@@ -5,32 +5,6 @@
  * Desteklenen modlar:
  *   1) Tekli: 2 oyuncu (1v1)
  *   2) Eşli: 4 oyuncu (2v2)
- *
- * Temel kurallar:
- * - 52 kartlık standart deste, jokersiz.
- * - Her oyuncuya 4 kart dağıtılır.
- * - Ortaya başlangıçta 4 kart konur; yalnız en üstteki kart açık kabul edilir.
- * - Oyuncular sırayla bir kart atar.
- * - Atılan kart yerdeki en üst kartla aynı değerdeyse yerdeki tüm kartları alır.
- * - Vale (J) yerdeki kartların tamamını alır.
- * - Yerde yalnız 1 kart varken aynı değerde kartla almak "pişti"dir.
- * - Vale ile tek kartlık yığını alma davranışı `jackPisti` ayarıyla kontrol edilir.
- * - Eller bitince destede kart varsa tekrar 4'er kart dağıtılır.
- * - Deste tamamen bittiğinde yerde kalan kartları son kart alan oyuncu/takım alır.
- *
- * Varsayılan puanlama:
- * - Her As: 1 puan
- * - Her Vale: 1 puan
- * - Sinek 2: 2 puan
- * - Karo 10: 3 puan
- * - Her pişti: 10 puan
- * - Vale ile pişti (açıksa): 20 puan
- * - En çok kart: 3 puan
- *
- * Online kullanım:
- * - Deste karıştırma ve dağıtım SUNUCUDA yapılmalıdır.
- * - Client'a yalnızca kendi eli gönderilmelidir.
- * - Aşağıdaki motor authoritative server mantığına uygundur.
  */
 
 (function (global) {
@@ -56,23 +30,16 @@
     diamondsTenPoints: 3,
     mostCardsPoints: 3,
 
-    // true -> yerde tek kart varken Vale atıp almak "vale piştisi" sayılır.
     jackPisti: true,
-
-    // true -> Vale, Vale'nin üstüne atılıp tek kart alınırsa da pişti kabul edilir.
     jackOnJackPisti: true,
 
-    // Masada tek kart varken kapalı kartla pişti iddiasına izin verir.
     bluffEnabled: true,
     bluffBelievedPoints: 10,
     bluffProvedPoints: 20,
     bluffCaughtPoints: 10,
     jackBluffMultiplier: 1,
 
-    // Başlangıçta ortaya 4 kart konur.
     initialTableCards: 4,
-
-    // Her dağıtımda oyuncu başına kart.
     cardsPerDeal: 4
   });
 
@@ -165,9 +132,6 @@
       let team = null;
 
       if (mode === MODE_TEAM) {
-        // Varsayılan oturma düzeni:
-        // 0=A1, 1=B1, 2=A2, 3=B2
-        // Böylece eşler karşılıklı değil, dönüşümlü sırada oynar.
         team = p.team || (index % 2 === 0 ? TEAM_A : TEAM_B);
 
         if (team !== TEAM_A && team !== TEAM_B) {
@@ -194,7 +158,6 @@
         throw new Error('Eşli modda her takımda tam olarak 2 oyuncu olmalı.');
       }
 
-      // Pişti'de sıra düzeni A-B-A-B olmalı.
       for (let i = 0; i < normalized.length; i++) {
         const current = normalized[i];
         const next = normalized[(i + 1) % normalized.length];
@@ -275,7 +238,7 @@
       this.state = {
         version: 1,
         mode: this.mode,
-        status: 'playing', // playing | finished
+        status: 'playing',
 
         deck: [],
         hands: {},
@@ -312,10 +275,6 @@
       return this.getPublicState();
     }
 
-    /**
-     * Authoritative server için:
-     * Hazır karıştırılmış 52 kartlık deste yüklenebilir.
-     */
     startNewDeck(preShuffledDeck = null) {
       const source = preShuffledDeck
         ? clone(preShuffledDeck)
@@ -376,8 +335,6 @@
         throw new Error('Başlangıç masa kartları için destede yeterli kart yok.');
       }
 
-      // İlk 3 kart kapalı, son kart açık mantığını UI yönetebilir.
-      // Motor, masa yığınını tam olarak saklar.
       for (let i = 0; i < count; i++) {
         this.state.table.push(this.state.deck.pop());
       }
@@ -403,7 +360,6 @@
       }
 
       if (this.state.deck.length < needed) {
-        // 52 kart yapısı nedeniyle normal akışta bu durum oluşmamalı.
         throw new Error(
           `Dağıtım için yeterli kart yok. Gerekli: ${needed}, kalan: ${this.state.deck.length}`
         );
@@ -411,7 +367,6 @@
 
       this.state.dealNumber += 1;
 
-      // Gerçek kart dağıtımı gibi tur tur birer kart.
       for (let round = 0; round < handSize; round++) {
         for (const player of this.players) {
           this.state.hands[player.id].push(this.state.deck.pop());
@@ -469,9 +424,6 @@
       return this.state.hands[playerId].some(c => c.id === cardIdValue);
     }
 
-    /**
-     * Ana oyun hamlesi.
-     */
     playCard(playerId, cardIdValue) {
       if (this.state.pendingBluff) {
         throw new Error('Önce blöf kararı verilmelidir.');
@@ -519,7 +471,6 @@
         if (sameRank || isJack) {
           captured = true;
 
-          // Pişti: yerde kart atılmadan önce yalnız bir kart vardı.
           if (tableCountBefore === 1) {
             if (isJack) {
               const jackAllowed =
@@ -722,8 +673,6 @@
     }
 
     finishGame() {
-      // Deste bittikten sonra ortada kalan kartlar,
-      // son kez kart alan oyuncuya / takım oyuncusuna gider.
       if (
         this.state.table.length > 0 &&
         this.state.lastCollectorId
@@ -852,7 +801,6 @@
         r => r.cardCount === maxCards
       );
 
-      // En çok kart bonusu yalnız tek lider varsa verilir.
       if (leaders.length === 1) {
         leaders[0].mostCardsPoints = this.rules.mostCardsPoints;
       }
@@ -962,10 +910,6 @@
       };
     }
 
-    /**
-     * İstemciye gönderilebilecek public state.
-     * Eller gizlenir, yalnız kart sayıları görünür.
-     */
     getPublicState() {
       return {
         version: this.state.version,
@@ -1030,10 +974,6 @@
       };
     }
 
-    /**
-     * Belirli client için state.
-     * Sadece kendi elini açık verir.
-     */
     getStateForPlayer(playerId) {
       this.getPlayer(playerId);
 
@@ -1050,9 +990,6 @@
       };
     }
 
-    /**
-     * Sunucu / debug için tam state.
-     */
     getFullState() {
       return {
         ...clone(this.state),
@@ -1065,9 +1002,6 @@
       return JSON.stringify(this.getFullState());
     }
 
-    /**
-     * Bağlantı durumu.
-     */
     setPlayerConnected(playerId, connected) {
       const player = this.getPlayer(playerId);
       player.connected = Boolean(connected);
@@ -1099,6 +1033,157 @@
     }
   }
 
+  /**
+   * 101 OKEY HALL TARZI DAĞITIM SİSTEMİ ENTEGRASYONU
+   */
+  class OkeyHallDealer {
+    constructor(gameInstance, uiContainerSelector = '.pisti-screen') {
+      this.game = gameInstance;
+      this.container = document.querySelector(uiContainerSelector) || document.body;
+      this.audioContext = null;
+      
+      this.initEvents();
+    }
+
+    playCardFlipSound() {
+      try {
+        if (!this.audioContext) {
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.audioContext.state === 'suspended') {
+          this.audioContext.resume();
+        }
+        
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(120, this.audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, this.audioContext.currentTime + 0.08);
+        
+        gain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.08);
+        
+        osc.connect(gain);
+        gain.connect(this.audioContext.destination);
+        
+        osc.start();
+        osc.stop(this.audioContext.currentTime + 0.08);
+      } catch (e) {
+        // Ses çalınamazsa oyunu engellemez
+      }
+    }
+
+    initEvents() {
+      this.game.on('deal', (data) => {
+        this.startHallSequence(data);
+      });
+    }
+
+    animateCardFly({ startRect, endRect, duration = 380, delay = 0, onComplete }) {
+      setTimeout(() => {
+        const card = document.createElement('div');
+        card.className = 'pisti-hall-flying-card';
+        card.style.width = `${startRect.width}px`;
+        card.style.height = `${startRect.height}px`;
+        card.style.left = `${startRect.left}px`;
+        card.style.top = `${startRect.top}px`;
+
+        document.body.appendChild(card);
+        this.playCardFlipSound();
+
+        const startTime = performance.now();
+        const midX = (startRect.left + endRect.left) / 2 + (Math.random() * 50 - 25);
+        const midY = (startRect.top + endRect.top) / 2 - 90; // Kavis yüksekliği
+
+        const animate = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeProgress = 1 - Math.pow(1 - progress, 3); // Cubic Ease-Out
+
+          const currentX = (1 - easeProgress) * (1 - easeProgress) * startRect.left +
+                           2 * (1 - easeProgress) * easeProgress * midX +
+                           easeProgress * easeProgress * endRect.left;
+
+          const currentY = (1 - easeProgress) * (1 - easeProgress) * startRect.top +
+                           2 * (1 - easeProgress) * easeProgress * midY +
+                           easeProgress * easeProgress * endRect.top;
+
+          const currentScale = 1 + Math.sin(progress * Math.PI) * 0.12;
+          const currentRotate = (easeProgress * 360) % 360;
+
+          card.style.left = `${currentX}px`;
+          card.style.top = `${currentY}px`;
+          card.style.transform = `scale(${currentScale}) rotate(${currentRotate * 0.08}deg)`;
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            card.remove();
+            if (onComplete) onComplete();
+          }
+        };
+
+        requestAnimationFrame(animate);
+      }, delay);
+    }
+
+    startHallSequence(dealData) {
+      this.container.classList.add('dealing');
+
+      const stockEl = document.querySelector('.pisti-stock-card') || this.container;
+      const startRect = stockEl.getBoundingClientRect();
+
+      const targets = [];
+      const playerSeats = ['.pisti-player-me', '.pisti-opponent.left', '.pisti-opponent.top', '.pisti-opponent.right'];
+      
+      playerSeats.forEach((seatSelector) => {
+        const seatEl = document.querySelector(seatSelector);
+        if (seatEl) {
+          const targetCards = seatEl.querySelectorAll('.card, .pisti-card-fan span');
+          targetCards.forEach((cardEl) => {
+            targets.push(cardEl);
+          });
+        }
+      });
+
+      let delayStep = 65; // Okey Hall seri kart çıkış hızı
+      let totalAnimationTime = 0;
+
+      targets.forEach((targetEl, index) => {
+        const delay = index * delayStep;
+        totalAnimationTime = delay + 400;
+
+        const endRect = targetEl.getBoundingClientRect();
+
+        this.animateCardFly({
+          startRect: {
+            left: startRect.left,
+            top: startRect.top,
+            width: 56,
+            height: 82
+          },
+          endRect: {
+            left: endRect.left,
+            top: endRect.top,
+            width: endRect.width,
+            height: endRect.height
+          },
+          duration: 380,
+          delay: delay,
+          onComplete: () => {
+            targetEl.classList.add('pisti-deal-visible');
+          }
+        });
+      });
+
+      setTimeout(() => {
+        this.container.classList.remove('dealing');
+        document.querySelectorAll('.pisti-deal-visible').forEach(el => el.classList.remove('pisti-deal-visible'));
+      }, totalAnimationTime);
+    }
+  }
+
   global.PISTI = Object.freeze({
     MODE_SOLO,
     MODE_TEAM,
@@ -1115,7 +1200,8 @@
 
     PistiGame,
     SoloPisti,
-    TeamPisti
+    TeamPisti,
+    OkeyHallDealer
   });
 
 })(typeof window !== 'undefined' ? window : globalThis);
