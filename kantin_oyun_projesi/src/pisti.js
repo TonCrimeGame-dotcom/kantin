@@ -210,6 +210,13 @@
           : 0;
 
       this.reset();
+
+      // OTOMATİK ANİMASYON ENTEGRASYONU: Oyun oluşturulduğunda OkeyHallDealer'ı bağla
+      setTimeout(() => {
+        if (typeof document !== 'undefined') {
+          new OkeyHallDealer(this);
+        }
+      }, 0);
     }
 
     on(eventName, handler) {
@@ -1042,7 +1049,28 @@
       this.container = document.querySelector(uiContainerSelector) || document.body;
       this.audioContext = null;
       
+      this.injectStyles();
       this.initEvents();
+    }
+
+    // Ekstra CSS yükleme zorunluluğunu kaldırır
+    injectStyles() {
+      if (document.getElementById('okey-hall-dealer-styles')) return;
+      const style = document.createElement('style');
+      style.id = 'okey-hall-dealer-styles';
+      style.textContent = `
+        .pisti-hall-flying-card {
+          position: fixed !important;
+          z-index: 999999 !important;
+          background: linear-gradient(135deg, #1e3c72, #2a5298);
+          border: 2px solid #ffffff;
+          border-radius: 6px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+          pointer-events: none;
+          will-change: transform, left, top;
+        }
+      `;
+      document.head.appendChild(style);
     }
 
     playCardFlipSound() {
@@ -1075,6 +1103,7 @@
     }
 
     initEvents() {
+      if (!this.game) return;
       this.game.on('deal', (data) => {
         this.startHallSequence(data);
       });
@@ -1084,8 +1113,8 @@
       setTimeout(() => {
         const card = document.createElement('div');
         card.className = 'pisti-hall-flying-card';
-        card.style.width = `${startRect.width}px`;
-        card.style.height = `${startRect.height}px`;
+        card.style.width = `${startRect.width || 56}px`;
+        card.style.height = `${startRect.height || 82}px`;
         card.style.left = `${startRect.left}px`;
         card.style.top = `${startRect.top}px`;
 
@@ -1094,12 +1123,12 @@
 
         const startTime = performance.now();
         const midX = (startRect.left + endRect.left) / 2 + (Math.random() * 50 - 25);
-        const midY = (startRect.top + endRect.top) / 2 - 90; // Kavis yüksekliği
+        const midY = (startRect.top + endRect.top) / 2 - 90;
 
         const animate = (currentTime) => {
           const elapsed = currentTime - startTime;
           const progress = Math.min(elapsed / duration, 1);
-          const easeProgress = 1 - Math.pow(1 - progress, 3); // Cubic Ease-Out
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
 
           const currentX = (1 - easeProgress) * (1 - easeProgress) * startRect.left +
                            2 * (1 - easeProgress) * easeProgress * midX +
@@ -1132,42 +1161,75 @@
       this.container.classList.add('dealing');
 
       const stockEl = document.querySelector('.pisti-stock-card') || this.container;
-      const startRect = stockEl.getBoundingClientRect();
+      let startRect = stockEl.getBoundingClientRect();
+
+      // Deste pozisyonu ekranda kapalıysa veya 0 gelirse ekran ortasını baz al
+      if (startRect.width === 0 || startRect.height === 0) {
+        startRect = {
+          left: window.innerWidth / 2 - 28,
+          top: window.innerHeight / 2 - 41,
+          width: 56,
+          height: 82
+        };
+      }
 
       const targets = [];
-      const playerSeats = ['.pisti-player-me', '.pisti-opponent.left', '.pisti-opponent.top', '.pisti-opponent.right'];
+      const playerSeats = ['.pisti-player-me', '.pisti-opponent.left', '.pisti-opponent.top', '.pisti-opponent.right', '.player-hand', '.opponent-hand'];
       
       playerSeats.forEach((seatSelector) => {
         const seatEl = document.querySelector(seatSelector);
         if (seatEl) {
-          const targetCards = seatEl.querySelectorAll('.card, .pisti-card-fan span');
+          const targetCards = seatEl.querySelectorAll('.card, .pisti-card-fan span, .hand-card');
           targetCards.forEach((cardEl) => {
             targets.push(cardEl);
           });
         }
       });
 
-      let delayStep = 65; // Okey Hall seri kart çıkış hızı
+      // Eğer DOM üzerinde henüz kart nesneleri basılmamışsa, genel ekran sınırlarına dağıt
+      if (targets.length === 0) {
+        const defaultTargets = [
+          { left: window.innerWidth / 2 - 28, top: window.innerHeight - 100, width: 56, height: 82 },
+          { left: 50, top: window.innerHeight / 2 - 41, width: 56, height: 82 },
+          { left: window.innerWidth / 2 - 28, top: 50, width: 56, height: 82 },
+          { left: window.innerWidth - 100, top: window.innerHeight / 2 - 41, width: 56, height: 82 }
+        ];
+
+        defaultTargets.forEach((rect, idx) => {
+          this.animateCardFly({
+            startRect,
+            endRect: rect,
+            duration: 380,
+            delay: idx * 80
+          });
+        });
+        return;
+      }
+
+      let delayStep = 65;
       let totalAnimationTime = 0;
 
       targets.forEach((targetEl, index) => {
         const delay = index * delayStep;
         totalAnimationTime = delay + 400;
 
-        const endRect = targetEl.getBoundingClientRect();
+        let endRect = targetEl.getBoundingClientRect();
+        if (endRect.width === 0) {
+          endRect = { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 56, height: 82 };
+        }
 
         this.animateCardFly({
           startRect: {
             left: startRect.left,
             top: startRect.top,
-            width: 56,
-            height: 82
+            width: startRect.width || 56,
+            height: startRect.height || 82
           },
           endRect: {
             left: endRect.left,
             top: endRect.top,
-            width: endRect.width,
-            height: endRect.height
+            width: endRect.width || 56,
+            height: endRect.height || 82
           },
           duration: 380,
           delay: delay,
