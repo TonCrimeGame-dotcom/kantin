@@ -1,111 +1,53 @@
 /**
- * Pişti / Okey Hall Tarzı UI Katmanı Kart Dağıtım Motoru
+ * UI Katmanı Kart Dağıtım Tetikleyicisi
+ * @param {HTMLElement} targetElement - Kartın gideceği yer (örn: .pisti-hand içindeki .card veya rakiplerin fan span'i)
+ * @param {Object} options - Opsiyonel ayarlar (kart yüzü, gecikme vs.)
  */
-class PistiUIAnimator {
-  constructor() {
-    this.tableScreen = document.querySelector('.pisti-screen');
-    this.deckEl = document.querySelector('.pisti-deal-deck') || document.querySelector('.pisti-stock-card');
-  }
+function animateCardDealUI(targetElement, options = {}) {
+  // 1. Deste (Başlangıç) ve Hedef Elemanın Ekran Pozisyonlarını Al
+  const deckEl = document.querySelector('.pisti-deal-deck') || document.querySelector('.pisti-stock-card');
+  if (!deckEl || !targetElement) return;
 
-  /**
-   * Tek bir kartı desteden hedef elemama uçurur
-   * @param {HTMLElement} targetEl - Kartın gideceği DOM elemanı
-   * @param {Object} config - Süre, gecikme ve kart yüzü ayarları
-   */
-  animateCard(targetEl, config = {}) {
-    if (!this.deckEl || !targetEl) return Promise.resolve();
+  const startRect = deckEl.getBoundingClientRect();
+  const endRect = targetElement.getBoundingClientRect();
 
-    return new Promise((resolve) => {
-      const startRect = this.deckEl.getBoundingClientRect();
-      const endRect = targetEl.getBoundingClientRect();
+  // 2. Geçici Uçan Kart Elemanını Oluştur
+  const flyingCard = document.createElement('div');
+  flyingCard.className = 'pisti-hall-flying-card';
+  
+  // Başlangıç Boyut ve Konumu (Destenin üstü)
+  flyingCard.style.left = `${startRect.left}px`;
+  flyingCard.style.top = `${startRect.top}px`;
+  flyingCard.style.width = `${startRect.width}px`;
+  flyingCard.style.height = `${startRect.height}px`;
+  
+  document.body.appendChild(flyingCard);
 
-      // Uçan geçici kart elemanı
-      const flyingCard = document.createElement('div');
-      flyingCard.className = `pisti-hall-flying-card ${config.isFaceAsset ? 'pisti-face-asset' : ''}`;
-      
-      if (config.assetSrc) {
-        const img = document.createElement('img');
-        img.src = config.assetSrc;
-        flyingCard.appendChild(img);
-      }
+  // 3. Web Animations API ile UI Katmanında Animasyon (GPU Hızlandırmalı)
+  const deltaX = endRect.left - startRect.left;
+  const deltaY = endRect.top - startRect.top;
 
-      // Başlangıç konumlandırması (Masa ortasındaki deste)
-      flyingCard.style.left = `${startRect.left}px`;
-      flyingCard.style.top = `${startRect.top}px`;
-      flyingCard.style.width = `${startRect.width}px`;
-      flyingCard.style.height = `${startRect.height}px`;
-
-      document.body.appendChild(flyingCard);
-
-      // Hedefe olan mesafe hesabı
-      const deltaX = endRect.left - startRect.left;
-      const deltaY = endRect.top - startRect.top;
-
-      // GPU hızlandırmalı UI animasyonu
-      const animation = flyingCard.animate([
-        {
-          transform: 'translate(0, 0) scale(1) rotate(18deg)',
-          opacity: 1
-        },
-        {
-          transform: `translate(${deltaX}px, ${deltaY}px) scale(${endRect.width / startRect.width}) rotate(0deg)`,
-          opacity: 1
-        }
-      ], {
-        duration: config.duration || 300,
-        easing: 'cubic-bezier(0.18, 0.72, 0.24, 1)',
-        fill: 'forwards'
-      });
-
-      animation.onfinish = () => {
-        targetEl.classList.add('pisti-deal-visible');
-        flyingCard.remove();
-        resolve();
-      };
-    });
-  }
-
-  /**
-   * Masadaki 4 oyuncuya (Top, Left, Right, Player) sırayla kart dağıtır
-   * @param {Object} cardsData - Dağıtılacak kartların verisi/görselleri
-   */
-  async startDealSequence(cardsData = {}) {
-    if (!this.tableScreen) return;
-
-    // Masayı 'dealing' moduna al (CSS kuralları gereği orijinal kartlar gizlenir)
-    this.tableScreen.classList.add('dealing');
-
-    // Dağıtım sırası hedefleri
-    const targets = [
-      ...document.querySelectorAll('.pisti-opponent.top .pisti-card-fan span'),
-      ...document.querySelectorAll('.pisti-opponent.left .pisti-card-fan span'),
-      ...document.querySelectorAll('.pisti-opponent.right .pisti-card-fan span'),
-      ...document.querySelectorAll('.pisti-hand .card')
-    ];
-
-    // Kartları 75ms aralıklarla sırayla uçur
-    for (let i = 0; i < targets.length; i++) {
-      const target = targets[i];
-      const isMyCard = target.closest('.pisti-hand');
-      
-      // Oyuncu kendi kartıysa ön yüzü, rakipse arka yüzü gösterilir
-      const assetSrc = isMyCard && cardsData.myCards ? cardsData.myCards[i % 4] : null;
-
-      this.animateCard(target, {
-        duration: 320,
-        isFaceAsset: !!assetSrc,
-        assetSrc: assetSrc
-      });
-
-      await new Promise(res => setTimeout(res, 75));
+  const animation = flyingCard.animate([
+    {
+      transform: 'translate(0, 0) scale(1) rotate(18deg)',
+      opacity: 1
+    },
+    {
+      // Yolda hafif kavis/yaylanma efekti için rotate ekliyoruz
+      transform: `translate(${deltaX}px, ${deltaY}px) scale(${endRect.width / startRect.width}) rotate(0deg)`,
+      opacity: 1
     }
+  ], {
+    duration: options.duration || 320, // Animasyon süresi (ms)
+    easing: 'cubic-bezier(0.2, 0.8, 0.25, 1)', // Okey Hall tarzı yumuşak duruş
+    fill: 'forwards'
+  });
 
-    // Dağıtım bitince 'dealing' modundan çık
-    setTimeout(() => {
-      this.tableScreen.classList.remove('dealing');
-    }, 400);
-  }
+  // 4. Animasyon Bittiğinde UI Temizliği
+  animation.onfinish = () => {
+    // Gerçek eldeki kartı görünür yap (CSS'indeki .pisti-deal-visible sınıfı)
+    targetElement.classList.add('pisti-deal-visible');
+    // Geçici kartı DOM'dan kaldır
+    flyingCard.remove();
+  };
 }
-
-// Global olarak erişip kullanabilmeniz için örneklendirme:
-window.pistiAnimator = new PistiUIAnimator();
