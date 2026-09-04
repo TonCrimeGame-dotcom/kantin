@@ -1,8 +1,3 @@
-// Telegram Mini App tam ekran genişletmesi
-if (window.Telegram?.WebApp) {
-  window.Telegram.WebApp.ready();
-  window.Telegram.WebApp.expand();
-}
 (() => {
   'use strict';
   const manager = new KANTIN.GameManager();
