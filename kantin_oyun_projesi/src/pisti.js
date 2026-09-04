@@ -382,3 +382,139 @@
   });
 
 })(typeof window !== 'undefined' ? window : globalThis);
+/**
+ * Pişti / Okey Hall Tarzı UI Katmanı Animasyon Motoru
+ */
+class PistiUIAnimator {
+  constructor() {
+    this.tableScreen = document.querySelector('.pisti-screen');
+  }
+
+  /**
+   * Merkezdeki destenin anlık ekran konumunu döndürür
+   */
+  getDeckElement() {
+    return document.querySelector('.pisti-deal-deck') || document.querySelector('.pisti-stock-card');
+  }
+
+  /**
+   * GPU Destekli Tekil Kart Uçuş Animasyonu
+   */
+  animateCard(fromEl, toEl, config = {}) {
+    if (!fromEl || !toEl) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      const startRect = fromEl.getBoundingClientRect();
+      const endRect = toEl.getBoundingClientRect();
+
+      // Uçan geçici DOM elementi
+      const flyingCard = document.createElement('div');
+      flyingCard.className = `pisti-hall-flying-card ${config.isFaceAsset ? 'pisti-face-asset' : ''}`;
+      
+      if (config.assetSrc) {
+        const img = document.createElement('img');
+        img.src = config.assetSrc;
+        flyingCard.appendChild(img);
+      }
+
+      // Başlangıç Pozisyonu
+      flyingCard.style.left = `${startRect.left}px`;
+      flyingCard.style.top = `${startRect.top}px`;
+      flyingCard.style.width = `${startRect.width}px`;
+      flyingCard.style.height = `${startRect.height}px`;
+
+      document.body.appendChild(flyingCard);
+
+      const deltaX = endRect.left - startRect.left;
+      const deltaY = endRect.top - startRect.top;
+
+      // Web Animations API (UI Katmanı Hızlandırması)
+      const animation = flyingCard.animate([
+        {
+          transform: `translate(0, 0) scale(1) rotate(${config.startRotate || 0}deg)`,
+          opacity: 1
+        },
+        {
+          transform: `translate(${deltaX}px, ${deltaY}px) scale(${endRect.width / startRect.width}) rotate(${config.endRotate || 0}deg)`,
+          opacity: 1
+        }
+      ], {
+        duration: config.duration || 300,
+        easing: config.easing || 'cubic-bezier(0.18, 0.72, 0.24, 1)',
+        fill: 'forwards'
+      });
+
+      animation.onfinish = () => {
+        toEl.classList.add('pisti-deal-visible');
+        flyingCard.remove();
+        resolve();
+      };
+    });
+  }
+
+  /**
+   * 1. MASADAKİ TÜM OYUNCULARA KART DAĞITIMI
+   * @param {Object} options - { myCards: ['path/to/card1.png', ...] }
+   */
+  async startDealSequence(options = {}) {
+    const deckEl = this.getDeckElement();
+    if (!this.tableScreen || !deckEl) return;
+
+    // CSS'inizdeki dealing modunu açarak asıl kartları gizler
+    this.tableScreen.classList.add('dealing');
+
+    // Dağıtım Hedefleri (Üst, Sol, Sağ, Oyuncu Eli)
+    const targets = [
+      ...document.querySelectorAll('.pisti-opponent.top .pisti-card-fan span'),
+      ...document.querySelectorAll('.pisti-opponent.left .pisti-card-fan span'),
+      ...document.querySelectorAll('.pisti-opponent.right .pisti-card-fan span'),
+      ...document.querySelectorAll('.pisti-hand .card')
+    ];
+
+    // Kartları 75ms arayla sırayla uçur
+    for (let i = 0; i < targets.length; i++) {
+      const target = targets[i];
+      const isMyCard = target.closest('.pisti-hand');
+      const assetSrc = isMyCard && options.myCards ? options.myCards[i % 4] : null;
+
+      this.animateCard(deckEl, target, {
+        duration: 320,
+        startRotate: 18,
+        endRotate: 0,
+        isFaceAsset: !!assetSrc,
+        assetSrc: assetSrc
+      });
+
+      await new Promise(res => setTimeout(res, 75));
+    }
+
+    // Dağıtım tamamlanınca 'dealing' modunu kapat
+    setTimeout(() => {
+      this.tableScreen.classList.remove('dealing');
+    }, 350);
+  }
+
+  /**
+   * 2. OYUNCU VEYA RAKİBİN ORTAYA KART ATMA ANİMASYONU
+   * @param {HTMLElement} sourceEl - Kartı atan oyuncunun elindeki kart elementi
+   * @param {string} cardAsset - Atılan kartın resmi/yüzü
+   */
+  async playCardToCenter(sourceEl, cardAsset = null) {
+    const centerStack = document.querySelector('.pisti-table-stack') || document.querySelector('.pisti-center');
+    if (!sourceEl || !centerStack) return;
+
+    await this.animateCard(sourceEl, centerStack, {
+      duration: 250,
+      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+      isFaceAsset: !!cardAsset,
+      assetSrc: cardAsset
+    });
+  }
+}
+
+// Global olarak erişilebilir başlatıcı
+window.pistiAnimator = new PistiUIAnimator();
+// Örn: Oyuncunun tıkladığı kart
+const clickedCard = document.querySelector('.pisti-hand .card:first-child');
+
+window.pistiAnimator.playCardToCenter(clickedCard, '../assets/games/pisti/final/cards/kupa_a.png');
