@@ -24,6 +24,6 @@ const manifest = included
   }))
   .sort((a, b) => a.url.localeCompare(b.url));
 
-const output = `(() => {\n  'use strict';\n  window.KANTIN_ASSET_MANIFEST = Object.freeze(${JSON.stringify({ version: '20260902-1', assets: manifest }, null, 2)});\n})();\n`;
+const output = `(() => {\n  'use strict';\n  window.KANTIN_ASSET_MANIFEST = Object.freeze(${JSON.stringify({ version: '20260906-1', assets: manifest }, null, 2)});\n})();\n`;
 fs.writeFileSync(path.join(root, 'src', 'asset-manifest.js'), output);
 process.stdout.write(`Manifest: ${manifest.length} assets, ${manifest.reduce((sum, asset) => sum + asset.bytes, 0)} bytes.\n`);

@@ -366,7 +366,7 @@
       id: state.user.id,
       username: guest.username,
       player_code: guest.playerCode,
-      avatar_url: null,
+      avatar_url: guest.avatarUrl || null,
       level: 1,
       coins: 2500,
       is_guest: true,
@@ -469,6 +469,7 @@
         if (!locale) throw authError('Desteklenmeyen dil seçimi.');
         guest.preferredLocale = locale;
       }
+      if (changes.avatar_url !== undefined) guest.avatarUrl = String(changes.avatar_url || '');
       guest.updatedAt = new Date().toISOString();
       writeLocalGuest(guest);
       state.user.user_metadata.username = guest.username;
@@ -476,6 +477,7 @@
       state.profile = {
         ...state.profile,
         username: guest.username,
+        avatar_url: guest.avatarUrl || null,
         preferred_locale: guest.preferredLocale,
         updated_at: guest.updatedAt
       };
@@ -495,6 +497,7 @@
       if (!locale) throw authError('Desteklenmeyen dil seçimi.');
       body.preferred_locale = locale;
     }
+    if (changes.avatar_url !== undefined) body.avatar_url = String(changes.avatar_url || '').slice(0, 500) || null;
     if (!Object.keys(body).length) return state.profile;
     const rows = await request(`/rest/v1/profiles?id=eq.${encodeURIComponent(state.user.id)}&select=id,username,player_code,avatar_url,level,coins,is_guest,preferred_locale,created_at,updated_at`, {
       method: 'PATCH',

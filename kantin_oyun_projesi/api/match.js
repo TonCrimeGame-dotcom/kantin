@@ -111,7 +111,7 @@ async function persistRoom(row, room, actionLog, result, env) {
 
 async function advanceExpiredTurn(row, env) {
   if (!row?.state || row.status !== 'playing') return row;
-  const sent = [], room = roomFor(row, sent), deadline = Number(room.engine.state?.turnDeadlineAt || 0), key = room.clockKey();
+  const sent = [], room = roomFor(row, sent), deadline = room.turnDeadline(), key = room.clockKey();
   if (!key || !deadline || deadline > Date.now()) return row;
   room.handleTimeout(key);
   const result = sent.find(message => message.type === 'game:finished')?.payload?.result || null;
@@ -141,15 +141,45 @@ async function queuePacket(ticket, env) {
 }
 
 async function statusFor(identity, env) {
-  const ticket = await ticketFor(identity.playerId, env);
+  let ticket = await ticketFor(identity.playerId, env);
   if (!ticket) return { status: 'idle' };
-  if (ticket.status === 'waiting') return queuePacket(ticket, env);
+  if (ticket.status === 'waiting') {
+    await rpc('kantin_backfill_matchmaking', { p_player_id: identity.playerId }, env);
+    ticket = await ticketFor(identity.playerId, env);
+    if (ticket?.status === 'waiting') return queuePacket(ticket, env);
+  }
   if (!ticket.match_id) throw new MatchApiError('match_ticket_corrupt', 503);
   let match = await matchFor(ticket.match_id, env);
   if (!match) throw new MatchApiError('match_not_found', 404);
   match = await initializeMatch(match, env);
   match = await advanceExpiredTurn(match, env);
   return packetFor(match, identity.playerId);
+}
+
+function profileStats(rows, userId) {
+  const stats = { played: 0, wins: 0, losses: 0, byMode: {} };
+  for (const row of rows || []) {
+    const players = Array.isArray(row.players) ? row.players : [], player = players.find(item => item.id === userId);
+    if (!player) continue;
+    const result = row.result || {}, winners = Array.isArray(result.winners) ? result.winners : [];
+    const won = [result.winnerPlayerId, result.winnerTeam, result.winner, ...winners].filter(value => value != null).some(value => value === player.id || value === player.seat || value === player.team);
+    stats.played++; stats.byMode[row.mode] = (stats.byMode[row.mode] || 0) + 1; won ? stats.wins++ : stats.losses++;
+  }
+  return stats;
+}
+
+async function publicProfile(userId, env) {
+  const id = String(userId || '').trim();
+  if (!id || id.length > 96) throw new MatchApiError('invalid_profile_id', 400);
+  const matchRows = await serviceRequest(`/rest/v1/online_matches?select=mode,players,result&status=eq.finished&players=cs.${restFilter(JSON.stringify([{ id }]))}&limit=500`, {}, env);
+  if (id.startsWith('BOT-')) {
+    const rows = await serviceRequest(`/rest/v1/bot_profiles?select=id,username,difficulty,level,avatar_url,created_at&id=eq.${restFilter(id)}&limit=1`, {}, env), bot = Array.isArray(rows) ? rows[0] : null;
+    if (!bot) throw new MatchApiError('profile_not_found', 404);
+    return { id: bot.id, username: bot.username, avatarUrl: bot.avatar_url, isBot: true, botDifficulty: bot.difficulty, level: bot.level, createdAt: bot.created_at, online: true, stats: profileStats(matchRows, id) };
+  }
+  const rows = await serviceRequest(`/rest/v1/profiles?select=id,username,player_code,avatar_url,level,created_at&or=(id.eq.${restFilter(id)},player_code.eq.${restFilter(id)})&limit=1`, {}, env), profile = Array.isArray(rows) ? rows[0] : null;
+  if (!profile) throw new MatchApiError('profile_not_found', 404);
+  return { id, username: profile.username, avatarUrl: profile.avatar_url, level: profile.level, createdAt: profile.created_at, online: false, stats: profileStats(matchRows, id) };
 }
 
 async function join(identity, body, env) {
@@ -175,6 +205,30 @@ async function join(identity, body, env) {
 async function cancel(identity, env) {
   await rpc('kantin_cancel_matchmaking', { p_player_id: identity.playerId }, env);
   return { status: 'idle', cancelled: true };
+}
+
+async function leave(identity, env) {
+  const ticket = await ticketFor(identity.playerId, env);
+  if (!ticket) return { status: 'idle', left: true };
+  if (ticket.status === 'waiting' || !ticket.match_id) {
+    await rpc('kantin_cancel_matchmaking', { p_player_id: identity.playerId }, env);
+    return { status: 'idle', left: true };
+  }
+  const row = await matchFor(ticket.match_id, env);
+  if (row?.status === 'playing' && assignmentFor(row, identity.playerId)) {
+    const room = roomFor(await initializeMatch(row, env));
+    room.replaceWithBot(identity.playerId);
+    await serviceRequest(`/rest/v1/online_matches?id=eq.${restFilter(row.id)}`, {
+      method: 'PATCH',
+      headers: { prefer: 'return=minimal' },
+      body: { players: room.players, state: room.fullState(), updated_at: new Date().toISOString() }
+    }, env);
+  }
+  await serviceRequest(`/rest/v1/matchmaking_tickets?player_id=eq.${restFilter(identity.playerId)}`, {
+    method: 'DELETE',
+    headers: { prefer: 'return=minimal' }
+  }, env);
+  return { status: 'idle', left: true };
 }
 
 async function act(identity, body, env) {
@@ -251,7 +305,9 @@ module.exports = async function matchHandler(req, res) {
     if (action === 'join') payload = await join(identity, body, env);
     else if (action === 'status' || action === 'sync') payload = await statusFor(identity, env);
     else if (action === 'cancel') payload = await cancel(identity, env);
+    else if (action === 'leave') payload = await leave(identity, env);
     else if (action === 'gameAction') payload = await act(identity, body, env);
+    else if (action === 'profile') payload = { status: 'profile', profile: await publicProfile(body.userId, env) };
     else throw new MatchApiError('unknown_action', 400);
     sendJson(res, 200, { ok: true, ...payload });
   } catch (error) {
@@ -265,4 +321,4 @@ module.exports = async function matchHandler(req, res) {
   }
 };
 
-module.exports._test = { bodyOf, guestIdentity: require('./lib/match-service').guestIdentity, packetFor, roomFor };
+module.exports._test = { bodyOf, guestIdentity: require('./lib/match-service').guestIdentity, packetFor, profileStats, roomFor };

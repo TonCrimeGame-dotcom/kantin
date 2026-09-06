@@ -1,0 +1,186 @@
+/* Telegram owns the outer WebView. Keep document scrolling disabled and size
+   the game from Telegram's stable viewport instead of the browser page. */
+html.telegram-webapp {
+  width:100%;
+  height:var(--telegram-viewport-height,100dvh);
+  min-height:0;
+  overflow:hidden;
+  overscroll-behavior:none;
+  background:#080503;
+}
+
+html.telegram-webapp body {
+  position:fixed;
+  inset:var(--telegram-viewport-offset,0) 0 auto;
+  width:100%;
+  height:var(--telegram-viewport-height,100dvh);
+  min-height:0;
+  margin:0;
+  overflow:hidden !important;
+  overscroll-behavior:none;
+}
+
+html.telegram-webapp #telegramStage {
+  position:relative;
+  width:100%;
+  height:100%;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  isolation:isolate;
+  transform:translateZ(0);
+  background:#100b08;
+}
+
+html.telegram-webapp #app {
+  width:100%;
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+
+html.telegram-webapp #screen {
+  height:calc(100% - 72px);
+  min-height:0;
+  overflow:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+html.telegram-webapp #screen[data-view="game"],
+html.telegram-webapp #screen[data-view="match"],
+html.telegram-webapp #screen[data-view="room"] {
+  height:100%;
+  overflow:hidden;
+}
+
+html.telegram-webapp body:has(#screen[data-view="game"]) .topbar,
+html.telegram-webapp body:has(#screen[data-view="match"]) .topbar,
+html.telegram-webapp body:has(#screen[data-view="room"]) .topbar {
+  display:none;
+}
+
+html.telegram-webapp .mobile-lobby,
+html.telegram-webapp .arcade-home,
+html.telegram-webapp .room-select,
+html.telegram-webapp .match-screen,
+html.telegram-webapp .utility-screen,
+html.telegram-webapp .pisti-screen,
+html.telegram-webapp .okey-table-screen,
+html.telegram-webapp .word-screen,
+html.telegram-webapp .game:has(.tavla-board) {
+  height:100% !important;
+  min-height:0 !important;
+  max-height:100%;
+  overflow:hidden;
+}
+
+html.telegram-webapp .auth-modal,
+html.telegram-webapp .auth-gateway,
+html.telegram-webapp .profile-modal,
+html.telegram-webapp .social-panel,
+html.telegram-webapp .asset-loader,
+html.telegram-webapp .rotate-notice {
+  height:100% !important;
+  max-height:100%;
+  min-height:0 !important;
+}
+
+html.telegram-webapp .profile-card {
+  max-height:calc(100% - 12px);
+}
+
+/* Telegram Desktop cannot resize its WebView from page code. Present the game
+   inside a centered phone-landscape canvas and keep the unused area inert. */
+html.telegram-webapp.telegram-desktop body {
+  display:grid;
+  place-items:center;
+  background:radial-gradient(circle,#2b1b12 0,#080503 66%);
+}
+
+html.telegram-webapp.telegram-desktop #telegramStage {
+  width:var(--telegram-stage-width,min(932px,calc(100vw - 24px)));
+  height:var(--telegram-stage-height,min(430px,calc(100dvh - 24px)));
+  max-width:calc(100vw - 24px);
+  max-height:calc(var(--telegram-viewport-height,100dvh) - 24px);
+  aspect-ratio:19.5 / 9;
+  border:1px solid #e2b45435;
+  border-radius:16px;
+  box-shadow:0 24px 80px #000d;
+}
+
+html.telegram-webapp.telegram-desktop .topbar {
+  height:58px;
+  padding:5px 12px;
+}
+
+html.telegram-webapp.telegram-desktop #screen {
+  height:calc(100% - 58px);
+}
+
+html.telegram-webapp.telegram-desktop #screen[data-view="game"],
+html.telegram-webapp.telegram-desktop #screen[data-view="match"],
+html.telegram-webapp.telegram-desktop #screen[data-view="room"] {
+  height:100%;
+}
+
+html.telegram-webapp.telegram-desktop .mobile-lobby {
+  padding:7px 9px 9px;
+  gap:7px;
+}
+
+html.telegram-webapp.telegram-desktop .lobby-heading h1 { font-size:20px; }
+html.telegram-webapp.telegram-desktop .lobby-layout { grid-template-columns:minmax(0,1fr) 220px; gap:8px; }
+html.telegram-webapp.telegram-desktop .game-families { gap:7px; }
+html.telegram-webapp.telegram-desktop .family-card { grid-template-rows:minmax(0,46%) auto auto; }
+html.telegram-webapp.telegram-desktop .family-card h2 { font-size:15px; }
+html.telegram-webapp.telegram-desktop .family-modes button { padding:5px; }
+html.telegram-webapp.telegram-desktop .lobby-tools { gap:6px; }
+
+html.telegram-webapp.telegram-desktop .room-body {
+  min-height:calc(100% - 58px);
+  height:calc(100% - 58px);
+  grid-template-columns:220px 1fr;
+}
+
+html.telegram-webapp.telegram-desktop .room-head { height:58px; padding:5px 12px; }
+html.telegram-webapp.telegram-desktop .stake-area { padding:10px 16px; gap:8px; }
+html.telegram-webapp.telegram-desktop .stake-cards { gap:12px; }
+html.telegram-webapp.telegram-desktop .stake-card { padding-top:12px; }
+html.telegram-webapp.telegram-desktop .stake-card>strong { font-size:38px; }
+html.telegram-webapp.telegram-desktop .stake-card>span { margin-bottom:6px; }
+
+html.telegram-webapp.telegram-desktop .match-screen { padding:6px; }
+html.telegram-webapp.telegram-desktop .match-panel {
+  width:min(520px,calc(100% - 24px));
+  max-height:calc(100% - 12px);
+  padding:10px 22px;
+  overflow:hidden;
+}
+html.telegram-webapp.telegram-desktop .match-icon img { width:min(112px,22vh); height:min(63px,12.5vh); }
+html.telegram-webapp.telegram-desktop .match-panel h1 { margin:3px 0; font-size:32px; }
+html.telegram-webapp.telegram-desktop .match-panel p { margin:5px 0; font-size:12px; }
+html.telegram-webapp.telegram-desktop .match-panel .btn { margin:3px; padding:8px 12px; }
+html.telegram-webapp.telegram-desktop .match-panel .btn.big { width:min(300px,100%); margin:7px auto 3px; padding:10px; }
+html.telegram-webapp.telegram-desktop .radar { width:104px; height:104px; margin:5px auto; }
+
+html.telegram-webapp.telegram-desktop .game:has(.tavla-board) {
+  width:100%;
+  max-width:none;
+  padding:3px;
+  display:grid;
+  place-items:center;
+}
+html.telegram-webapp.telegram-desktop .tavla-stage { height:100%; display:grid; place-items:center; }
+html.telegram-webapp.telegram-desktop .tavla-board { width:auto; height:100%; max-width:100%; max-height:100%; margin:0 auto; }
+html.telegram-webapp.telegram-desktop .pisti-table { border-width:5px; border-radius:0; }
+html.telegram-webapp.telegram-desktop .pisti-hand .card { width:61px; height:84px; }
+html.telegram-webapp.telegram-desktop .pisti-paper-score { width:88px; }
+html.telegram-webapp.telegram-desktop .word-screen { padding:5px; }
+html.telegram-webapp.telegram-desktop .word-layout { grid-template-columns:minmax(0,1fr) 230px; }
+html.telegram-webapp.telegram-desktop .word-board { height:100%; max-height:100%; }
+html.telegram-webapp.telegram-desktop .okey-rack { --rack-tile-height:clamp(60px,11.6vh,66px); height:30%; min-height:138px; }
+
+@media (max-width:700px) and (orientation:portrait) {
+  html.telegram-webapp.telegram-mobile #telegramStage { border-radius:0; }
+}

@@ -90,3 +90,17 @@ test('Migration ortak kuyruk ve iyimser maç kilidini içerir', () => {
   assert.match(sql, /turn_version integer not null/i);
   assert.match(sql, /service_role_required/i);
 });
+
+test('Bot migration kalıcı profilleri ve kademeli kuyruk dolumunu içerir', () => {
+  const sql = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260906120000_bot_matchmaking.sql'), 'utf8');
+  assert.match(sql, /create table if not exists public\.bot_profiles/i);
+  assert.match(sql, /difficulty in \('ORTA', 'İYİ'\)/i);
+  assert.match(sql, /interval '3 seconds'.*interval '1 second'/is);
+  assert.match(sql, /kantin_backfill_matchmaking/i);
+  assert.match(sql, /'Misafir ' \|\| code/i);
+});
+
+test('Bot profil istatistiği galibiyet ve mod sayılarını hesaplar', () => {
+  const rows = [{mode:'pistiSolo',players:[{id:'BOT-1',seat:'P2'}],result:{winner:'P2'}},{mode:'spvp',players:[{id:'BOT-1',seat:'black'}],result:{winnerPlayerId:'white'}}];
+  assert.deepEqual(matchHandler._test.profileStats(rows,'BOT-1'),{played:2,wins:1,losses:1,byMode:{pistiSolo:1,spvp:1}});
+});

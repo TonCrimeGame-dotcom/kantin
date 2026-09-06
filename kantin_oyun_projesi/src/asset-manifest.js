@@ -1,8 +1,52 @@
 (() => {
   'use strict';
   window.KANTIN_ASSET_MANIFEST = Object.freeze({
-  "version": "20260902-1",
+  "version": "20260906-1",
   "assets": [
+    {
+      "url": "./assets/avatars/aslan.webp",
+      "bytes": 117990
+    },
+    {
+      "url": "./assets/avatars/avatar-a1.webp",
+      "bytes": 81422
+    },
+    {
+      "url": "./assets/avatars/avatar-a2.webp",
+      "bytes": 71182
+    },
+    {
+      "url": "./assets/avatars/avatar-a3.webp",
+      "bytes": 87506
+    },
+    {
+      "url": "./assets/avatars/avatar-k1.webp",
+      "bytes": 101286
+    },
+    {
+      "url": "./assets/avatars/avatar-k2.webp",
+      "bytes": 78352
+    },
+    {
+      "url": "./assets/avatars/avatar-k3.webp",
+      "bytes": 103016
+    },
+    {
+      "url": "./assets/avatars/cane.webp",
+      "bytes": 113198
+    },
+    {
+      "url": "./assets/avatars/kedi.webp",
+      "bytes": 130294
+    },
+    {
+      "url": "./assets/avatars/panter.webp",
+      "bytes": 104458
+    },
+    {
+      "url": "./assets/avatars/tavsan.webp",
+      "bytes": 106600
+    },
     {
       "url": "./assets/backgrounds/kantin-home-hero.webp",
       "bytes": 67454
@@ -12,12 +56,20 @@
       "bytes": 206198
     },
     {
+      "url": "./assets/brand/coin.webp",
+      "bytes": 35078
+    },
+    {
       "url": "./assets/brand/kantin-emboss-mark.svg",
       "bytes": 627
     },
     {
       "url": "./assets/brand/kantin-logo-ui.webp",
       "bytes": 71288
+    },
+    {
+      "url": "./assets/brand/kantin-mark.svg",
+      "bytes": 840
     },
     {
       "url": "./assets/games/okey101/button-blue-v1.webp",
@@ -462,6 +514,30 @@
     {
       "url": "./assets/menu/tavla.svg",
       "bytes": 2171
+    },
+    {
+      "url": "./assets/social-gifts/buzS2.webp",
+      "bytes": 100012
+    },
+    {
+      "url": "./assets/social-gifts/domates.webp",
+      "bytes": 27570
+    },
+    {
+      "url": "./assets/social-gifts/domatesS2.webp",
+      "bytes": 84716
+    },
+    {
+      "url": "./assets/social-gifts/gul.webp",
+      "bytes": 54354
+    },
+    {
+      "url": "./assets/social-gifts/kova.webp",
+      "bytes": 40658
+    },
+    {
+      "url": "./assets/social-gifts/terlik.webp",
+      "bytes": 54088
     }
   ]
 });

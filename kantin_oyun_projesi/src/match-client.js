@@ -25,6 +25,7 @@
       this.lastStateKey = '';
       this.finishedMatchId = null;
       this.socialPlayerId = null;
+      this.useWebSocketMatch = false;
     }
 
     emit(type, payload = {}) {
@@ -76,7 +77,17 @@
         const auth = global.KANTIN_AUTH;
         await auth?.ready;
         const installationId = auth?.user?.user_metadata?.installation_id || auth?.user?.user_metadata?.installationId || null;
-        const payload = await this.request({ action: 'session', username: this.username, installationId });
+        let payload;
+        try { payload = await this.request({ action: 'session', username: this.username, installationId }); }
+        catch (error) {
+          if (!['localhost','127.0.0.1'].includes(location.hostname)) throw error;
+          this.useWebSocketMatch = true;
+          this.connectSocial();
+          return new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error('Yerel eşleşme sunucusuna bağlanılamadı.')), 5000);
+            this.addEventListener('socket:identity', event => { clearTimeout(timer); resolve(event.detail); }, { once: true });
+          });
+        }
         const identity = payload.identity;
         this.playerId = identity.id;
         this.matchSessionToken = identity.authToken || null;
@@ -96,7 +107,7 @@
       const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
       const socket = this.socket = new WebSocket(`${protocol}://${location.host}/api/ws`);
       socket.addEventListener('open', () => {
-        socket.send(JSON.stringify({ type: 'hello', payload: { username: this.username, token: localStorage.getItem('kantinAuthToken') } }));
+        socket.send(JSON.stringify({ type: 'hello', payload: { username: this.username, token: localStorage.getItem('kantinAuthToken'), avatarUrl: localStorage.getItem('kantin:profile-avatar:v1') } }));
       });
       socket.addEventListener('message', event => {
         let message;
@@ -106,10 +117,26 @@
           this.socialPlayerId = payload.id;
           if (payload.authToken) localStorage.setItem('kantinAuthToken', payload.authToken);
           this.profile = { ...this.profile, friends: payload.friends || [], incoming: payload.incoming || [], outgoing: payload.outgoing || [] };
+          if (this.useWebSocketMatch) { this.playerId = payload.id; this.profile = { ...this.profile, ...payload }; this.emit('identity', this.profile); }
           this.emit('friends:state', this.profile);
+          this.emit('socket:identity', this.profile);
           return;
         }
+        if (this.useWebSocketMatch && message.type === 'queue:update') { this.queued = true; this.emit('queue:update', payload); return; }
+        if (this.useWebSocketMatch && (message.type === 'match:found' || message.type === 'match:resumed')) { this.queued = false; this.match = payload; this.emit(message.type, payload); return; }
+        if (this.useWebSocketMatch && message.type === 'game:state') { this.gameState = payload; this.emit('game:state', payload); return; }
+        if (this.useWebSocketMatch && message.type === 'game:finished') {
+          if (payload.coin) { this.profile = { ...this.profile, coins: payload.coin.balance }; this.emit('coins:updated', { ...payload.coin, matchId: payload.matchId }); }
+          this.emit('game:finished', payload); return;
+        }
+        if (this.useWebSocketMatch && (message.type === 'game:ack' || message.type === 'game:kicked')) { this.emit(message.type, payload); return; }
         if (message.type === 'friends:state') this.profile = { ...this.profile, ...payload };
+        if (message.type === 'profile:updated') {
+          if (payload.id === this.playerId || payload.id === this.socialPlayerId) this.profile = { ...this.profile, avatarUrl: payload.avatarUrl };
+          const player = this.match?.players?.find(item => item.id === payload.id);
+          if (player) player.avatarUrl = payload.avatarUrl;
+        }
+        if (message.type === 'coins:updated') this.profile = { ...this.profile, coins: payload.balance };
         if (message.type === 'lobby:stats') this.stats = payload;
         if (message.type === 'chat:history') this.messages[payload.room] = payload.messages;
         if (message.type === 'chat:message') {
@@ -179,22 +206,34 @@
     }
 
     join(mode, options = {}) {
+      if (this.useWebSocketMatch) { this.queued = true; this.send('queue:join', { mode, wordLocale: mode === 'sozcukDuel' ? options.wordLocale : undefined, stake: Number(options.stake) || 0 }); return; }
       this.polling = true;
       this.lastQueueKey = '';
-      this.request({ action: 'join', mode, wordLocale: mode === 'sozcukDuel' ? options.wordLocale : undefined })
+      this.request({ action: 'join', mode, wordLocale: mode === 'sozcukDuel' ? options.wordLocale : undefined, stake: Number(options.stake) || 0 })
         .then(payload => this.consume(payload))
         .catch(error => { this.polling = false; this.emitError(error); });
       this.schedulePoll(1000);
     }
 
     leave() {
-      const wasSearching = this.queued || this.polling;
+      if (this.useWebSocketMatch) {
+        if (this.match) this.send('game:leave', { matchId: this.match.matchId });
+        else if (this.queued) this.send('queue:leave');
+        this.queued = false;
+        this.match = null;
+        this.gameState = null;
+        return;
+      }
+      const wasMatched = Boolean(this.match);
+      const wasSearching = this.queued || this.polling || wasMatched;
       clearTimeout(this.pollTimer);
       this.polling = false;
       if (!wasSearching) return;
-      this.request({ action: 'cancel' })
+      this.request({ action: wasMatched ? 'leave' : 'cancel' })
         .then(() => {
           this.queued = false;
+          this.match = null;
+          this.gameState = null;
           this.lastQueueKey = '';
         })
         .catch(error => this.emitError(error));
@@ -205,18 +244,21 @@
         this.emitError(new Error('Oyun durumu henüz hazır değil.'));
         return;
       }
-      this.request({
+      const request = {
         action: 'gameAction',
         matchId: this.match.matchId,
         turnId: this.gameState.turnId,
         actionId: crypto.randomUUID(),
         gameAction: action,
         payload
-      }).then(result => this.consume(result, { forceState: true })).catch(error => this.emitError(error));
+      };
+      if (this.useWebSocketMatch) { this.send('game:action', { matchId: request.matchId, turnId: request.turnId, actionId: request.actionId, action, payload }); return; }
+      this.request(request).then(result => this.consume(result, { forceState: true })).catch(error => this.emitError(error));
     }
 
     sync() {
       if (!this.playerId) return;
+      if (this.useWebSocketMatch) { this.send('game:sync'); return; }
       this.polling = true;
       this.request({ action: 'sync' })
         .then(payload => this.consume(payload, { resumed: true, forceState: true }))
@@ -234,13 +276,24 @@
     }
 
     getProfile(userId) {
-      if (userId === this.playerId || userId === 'self') this.emit('profile:data', this.profile || {});
-      else this.send('profile:get', { userId });
+      if (userId === this.playerId || userId === 'self') { this.emit('profile:data', this.profile || {}); return; }
+      this.request({ action: 'profile', userId })
+        .then(payload => this.emit('profile:data', payload.profile || {}))
+        .catch(() => this.send('profile:get', { userId }));
     }
     addFriend(userId) { this.send('friend:add', { userId }); }
     acceptFriend(userId) { this.send('friend:accept', { userId }); }
     removeFriend(userId) { this.send('friend:remove', { userId }); }
     sendChat(text, room = 'lobby') { this.send('chat:send', { text, room }); }
+    sendGift(giftId, targetId) { return this.send('gift:send', { giftId, targetId }); }
+    setAvatar(avatarUrl) {
+      if (this.profile) this.profile.avatarUrl = avatarUrl;
+      const player = this.match?.players?.find(item => item.id === this.playerId);
+      if (player) player.avatarUrl = avatarUrl;
+      if (this.socket?.readyState !== WebSocket.OPEN) return false;
+      this.socket.send(JSON.stringify({ type: 'profile:avatar', payload: { avatarUrl } }));
+      return true;
+    }
   }
 
   global.KANTIN_MATCH = new MatchClient();

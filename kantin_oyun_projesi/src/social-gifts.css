@@ -1,0 +1,106 @@
+.table-gift-ui {
+  position: fixed;
+  inset: 0;
+  z-index: 82;
+  pointer-events: none;
+}
+
+.table-gift-target {
+  position: fixed;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #f0c86d99;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #7c6336, #20150e 72%);
+  box-shadow: 0 5px 15px #000a, inset 0 1px #fff4;
+  font-size: 17px;
+  pointer-events: auto;
+  animation: gift-button-arrive .25s ease-out both;
+}
+
+.table-gift-target:hover { transform: translateY(-2px) scale(1.06); }
+.table-gift-backdrop { position: fixed; inset: 0; z-index: 4; border: 0; background: #0007; pointer-events: auto; }
+
+.table-gift-picker {
+  position: fixed;
+  z-index: 5;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  width: min(620px, calc(100vw - 24px));
+  overflow: hidden;
+  border: 1px solid #e1b45988;
+  border-radius: 22px;
+  background: radial-gradient(circle at 50% 0, #86532655, transparent 48%), #17100ef7;
+  box-shadow: 0 25px 80px #000e;
+  color: #fff6df;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  animation: gift-picker-arrive .22s ease-out both;
+}
+
+.table-gift-picker > header { padding: 12px 15px 10px; display: flex; align-items: center; justify-content: space-between; }
+.table-gift-picker > header span small,.table-gift-picker > header span b { display: block; }
+.table-gift-picker > header span small { color: #cda85f; font-size: 9px; font-weight: 900; letter-spacing: .13em; }
+.table-gift-picker > header span b { margin-top: 2px; font: 900 18px Georgia, serif; }
+.table-gift-picker > header > button { width: 31px; height: 31px; padding: 0; border: 1px solid #ffffff22; border-radius: 50%; background: #ffffff0d; font-size: 20px; }
+.table-gift-picker nav { padding: 0 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; border-bottom: 1px solid #ffffff13; }
+.table-gift-picker nav button { padding: 9px 3px 8px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: #a99782; font-size: 10px; font-weight: 950; letter-spacing: .06em; }
+.table-gift-picker nav button.active { border-color: #efbd59; color: #ffdd88; }
+.table-gift-items { min-height: 148px; padding: 13px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.table-gift-items button { min-width: 0; padding: 7px; display: grid; grid-template-rows: 92px auto; place-items: center; border: 1px solid #ffffff18; border-radius: 14px; background: linear-gradient(145deg, #ffffff10, #0002); }
+.table-gift-items button:hover { border-color: #e7b95b99; background: #dcae4b16; transform: translateY(-2px); }
+.table-gift-items img { width: 100%; height: 88px; object-fit: contain; filter: drop-shadow(0 6px 5px #0008); }
+.table-gift-items b { overflow: hidden; max-width: 100%; color: #f8e4b0; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+
+.table-gift-flight {
+  position: fixed;
+  z-index: 120;
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  filter: drop-shadow(0 9px 7px #0009);
+  pointer-events: none;
+}
+
+.table-gift-impact {
+  position: fixed;
+  z-index: 121;
+  width: clamp(125px, 16vw, 215px);
+  height: clamp(125px, 16vw, 215px);
+  object-fit: contain;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 8px 10px #0008);
+  animation: gift-impact 1.45s cubic-bezier(.2,.75,.2,1) both;
+}
+
+.table-gift-impact.gift-terlik { width: clamp(90px, 11vw, 145px); height: clamp(130px, 18vw, 220px); animation-duration: 1.15s; }
+.table-gift-impact.gift-gul { width: clamp(120px, 15vw, 190px); height: clamp(120px, 15vw, 190px); animation: gift-love 1.2s ease-out both; }
+.table-gift-impact.gift-gul img { width: 100%; height: 100%; object-fit: contain; }
+.table-gift-impact.gift-gul i { position: absolute; color: #ff4f70; font-style: normal; font-size: 25px; text-shadow: 0 3px 5px #0007; animation: gift-heart 1s ease-out both; }
+.table-gift-impact.gift-gul i:nth-child(2) { left: 5%; top: 40%; animation-delay: .08s; }
+.table-gift-impact.gift-gul i:nth-child(3) { right: 4%; top: 28%; animation-delay: .18s; }
+.table-gift-impact.gift-gul i:nth-child(4) { left: 48%; top: 4%; animation-delay: .28s; }
+
+@keyframes gift-button-arrive { from { opacity: 0; scale: .65; } }
+@keyframes gift-picker-arrive { from { opacity: 0; transform: translate(-50%, 20px) scale(.97); } }
+@keyframes gift-impact { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(-12deg); } 18% { opacity: 1; transform: translate(-50%, -50%) scale(1.18) rotate(3deg); } 34%,76% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); } }
+@keyframes gift-love { 0% { opacity: 0; transform: translate(-50%, -35%) scale(.3); } 28%,72% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -70%) scale(.9); } }
+@keyframes gift-heart { 0% { opacity: 0; translate: 0 20px; scale: .4; } 30% { opacity: 1; } 100% { opacity: 0; translate: 0 -55px; scale: 1.25; } }
+
+@media (max-height: 600px) {
+  .table-gift-picker { bottom: 8px; width: min(560px, calc(100vw - 16px)); }
+  .table-gift-picker > header { padding: 7px 12px 5px; }
+  .table-gift-picker nav button { padding: 6px 2px 5px; }
+  .table-gift-items { min-height: 105px; padding: 8px; }
+  .table-gift-items button { grid-template-rows: 64px auto; }
+  .table-gift-items img { height: 61px; }
+}
+
+@media (max-width: 620px) {
+  .table-gift-items { grid-template-columns: repeat(2, 1fr); max-height: 240px; overflow: auto; }
+}

@@ -25,7 +25,7 @@ test('acilis indirme ekrani tum kullanilan web gorsellerini onbellege alir', () 
   const total = manifest.assets.reduce((sum, asset) => sum + asset.bytes, 0);
   assert.match(indexHtml, /id="assetLoader"[^>]+role="progressbar"/);
   assert.ok(indexHtml.indexOf('asset-manifest.js') < indexHtml.indexOf('asset-loader.js'));
-  assert.ok(indexHtml.indexOf('asset-loader.js') < indexHtml.indexOf('app.js'));
+  assert.ok(indexHtml.indexOf('./src/asset-loader.js') < indexHtml.indexOf('./src/app.js'));
   assert.match(loaderSource, /response\.body\.getReader\(\)/, 'ilerleme gercek indirilen baytlardan hesaplanmali');
   assert.match(loaderSource, /previousVersion === manifest\.version \? 'force-cache' : 'reload'/);
   assert.match(loaderSource, /localStorage\.setItem\(versionKey, manifest\.version\)/);
