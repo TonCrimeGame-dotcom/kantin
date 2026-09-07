@@ -109,6 +109,9 @@ async function persistRoom(row, room, actionLog, result, env) {
   return Array.isArray(rows) ? rows[0] || null : null;
 }
 
+function winnerIdFor(row,result){const keys=new Set([result?.winnerPlayerId,result?.winnerTeam,result?.winner,...(result?.winners||[])].filter(Boolean));return(row.players||[]).find(player=>keys.has(player.id)||keys.has(player.seat)||keys.has(player.team))?.id||null}
+async function advanceTournament(row,result,env){const winnerId=winnerIdFor(row,result);if(!winnerId)return;try{await rpc('kantin_advance_tournament',{p_match_id:row.id,p_winner_id:winnerId},env)}catch(error){console.error('Tournament advance failed',{matchId:row.id,message:error.message})}}
+
 async function advanceExpiredTurn(row, env) {
   if (!row?.state || row.status !== 'playing') return row;
   const sent = [], room = roomFor(row, sent), deadline = room.turnDeadline(), key = room.clockKey();
@@ -116,6 +119,7 @@ async function advanceExpiredTurn(row, env) {
   room.handleTimeout(key);
   const result = sent.find(message => message.type === 'game:finished')?.payload?.result || null;
   const saved = await persistRoom(row, room, Array.isArray(row.action_log) ? row.action_log : [], result, env);
+  if(saved&&result)await advanceTournament(saved,result,env);
   return saved || await matchFor(row.id, env);
 }
 
@@ -260,6 +264,7 @@ async function act(identity, body, env) {
       const current = await matchFor(row.id, env);
       return { ...packetFor(current, identity.playerId), conflict: true };
     }
+    if(result)await advanceTournament(saved,result,env);
     return { ...packetFor(saved, identity.playerId), ack };
   } catch (error) {
     if (/State güncel değil/.test(error.message)) {

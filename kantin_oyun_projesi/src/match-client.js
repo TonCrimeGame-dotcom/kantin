@@ -26,6 +26,7 @@
       this.finishedMatchId = null;
       this.socialPlayerId = null;
       this.useWebSocketMatch = false;
+      this.tournaments = [];
     }
 
     emit(type, payload = {}) {
@@ -137,6 +138,11 @@
           if (player) player.avatarUrl = payload.avatarUrl;
         }
         if (message.type === 'coins:updated') this.profile = { ...this.profile, coins: payload.balance };
+        if (message.type === 'tournament:list') this.tournaments = payload.tournaments || [];
+        if (message.type === 'tournament:update') {
+          const index = this.tournaments.findIndex(item => item.id === payload.id);
+          if (index >= 0) this.tournaments.splice(index, 1, payload); else this.tournaments.unshift(payload);
+        }
         if (message.type === 'lobby:stats') this.stats = payload;
         if (message.type === 'chat:history') this.messages[payload.room] = payload.messages;
         if (message.type === 'chat:message') {
@@ -286,6 +292,17 @@
     removeFriend(userId) { this.send('friend:remove', { userId }); }
     sendChat(text, room = 'lobby') { this.send('chat:send', { text, room }); }
     sendGift(giftId, targetId) { return this.send('gift:send', { giftId, targetId }); }
+    async tournamentRequest(action, tournamentId = null) {
+      const auth = global.KANTIN_AUTH, headers = { accept: 'application/json', 'content-type': 'application/json' }, accessToken = auth?.getAccessToken?.();
+      if (accessToken) headers.authorization = `Bearer ${accessToken}`; else if (this.matchSessionToken) headers['x-kantin-match-session'] = this.matchSessionToken;
+      const response = await fetch('/api/tournament', { method: 'POST', headers, body: JSON.stringify({ action, tournamentId }), signal: AbortSignal.timeout(12000) });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.ok === false) { const error = new Error(payload.message || payload.error || 'Turnuva işlemi tamamlanamadı.'); error.code = payload.error; throw error; }
+      this.tournaments = payload.tournaments || this.tournaments; this.emit('tournament:list', { tournaments: this.tournaments }); return payload;
+    }
+    loadTournaments() { if (this.useWebSocketMatch) return this.send('tournament:list'); return this.tournamentRequest('list').catch(error => this.emitError(error)); }
+    joinTournament(tournamentId) { if (this.useWebSocketMatch) return this.send('tournament:join', { tournamentId }); return this.tournamentRequest('join', tournamentId).catch(error => this.emitError(error)); }
+    leaveTournament(tournamentId) { if (this.useWebSocketMatch) return this.send('tournament:leave', { tournamentId }); return this.tournamentRequest('leave', tournamentId).catch(error => this.emitError(error)); }
     setAvatar(avatarUrl) {
       if (this.profile) this.profile.avatarUrl = avatarUrl;
       const player = this.match?.players?.find(item => item.id === this.playerId);
