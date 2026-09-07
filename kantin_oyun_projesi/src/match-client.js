@@ -28,6 +28,9 @@
       this.useWebSocketMatch = false;
       this.tournaments = [];
       this.missions = [];
+      this.privateRooms = [];
+      this.privateInvites = [];
+      this.privateRoomPollTimer = null;
     }
 
     emit(type, payload = {}) {
@@ -99,6 +102,7 @@
         this.stats = identity.stats || {};
         this.emit('identity', this.profile);
         this.connectSocial();
+        this.startPrivateRoomPolling();
         return this.profile;
       })().finally(() => { this.connecting = null; });
       return this.connecting;
@@ -145,6 +149,9 @@
           if (index >= 0) this.tournaments.splice(index, 1, payload); else this.tournaments.unshift(payload);
         }
         if (message.type === 'mission:list' || message.type === 'mission:update') this.missions = payload.missions || [];
+        if (message.type === 'private-room:state') { this.privateRooms = payload.rooms || []; this.privateInvites = payload.invites || []; }
+        if (message.type === 'private-room:created' && payload.room) { const index = this.privateRooms.findIndex(room => room.id === payload.room.id); if (index >= 0) this.privateRooms.splice(index, 1, payload.room); else this.privateRooms.unshift(payload.room); }
+        if (message.type === 'private-room:invite' && payload.id) { const index = this.privateInvites.findIndex(room => room.id === payload.id); if (index >= 0) this.privateInvites.splice(index, 1, payload); else this.privateInvites.unshift(payload); }
         if (message.type === 'lobby:stats') this.stats = payload;
         if (message.type === 'chat:history') this.messages[payload.room] = payload.messages;
         if (message.type === 'chat:message') {
@@ -324,6 +331,24 @@
     }
     loadMissions() { if (this.useWebSocketMatch) return this.send('mission:list'); return this.missionRequest('list').catch(error => this.emitError(error)); }
     claimMission(missionId) { if (this.useWebSocketMatch) return this.send('mission:claim', { missionId }); return this.missionRequest('claim', missionId).catch(error => this.emitError(error)); }
+    async privateRoomRequest(action, details = {}) {
+      const auth = global.KANTIN_AUTH, headers = { accept: 'application/json', 'content-type': 'application/json' }, accessToken = auth?.getAccessToken?.();
+      if (accessToken) headers.authorization = `Bearer ${accessToken}`; else if (this.matchSessionToken) headers['x-kantin-match-session'] = this.matchSessionToken;
+      const response = await fetch('/api/private-rooms', { method: 'POST', headers, body: JSON.stringify({ action, ...details }), signal: AbortSignal.timeout(12000) });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.ok === false) { const error = new Error(payload.message || payload.error || 'Özel masa işlemi tamamlanamadı.'); error.code = payload.error; throw error; }
+      this.privateRooms = payload.rooms || []; this.privateInvites = payload.invites || []; this.emit('private-room:state', { rooms: this.privateRooms, invites: this.privateInvites });
+      const startedRoom = this.privateRooms.find(room => room.status === 'started' && room.matchId && room.matchId !== this.match?.matchId);
+      if (startedRoom) this.sync();
+      return payload;
+    }
+    loadPrivateRooms() { if (this.useWebSocketMatch) return this.send('private-room:list'); return this.privateRoomRequest('list').catch(error => this.emitError(error)); }
+    startPrivateRoomPolling() { if (this.useWebSocketMatch || this.privateRoomPollTimer) return; this.privateRoomPollTimer = setInterval(() => this.loadPrivateRooms(), 4000); }
+    createPrivateRoom(mode, options = {}) { if (this.useWebSocketMatch) return this.send('private-room:create', { mode, wordLocale: options.wordLocale, stake: Number(options.stake)||0 }); return this.privateRoomRequest('create', { mode, wordLocale: options.wordLocale }); }
+    inviteToPrivateRoom(roomId, userId) { if (this.useWebSocketMatch) return this.send('private-room:invite', { roomId, userId }); return this.privateRoomRequest('invite', { roomId, userId }); }
+    respondPrivateRoom(roomId, accept) { if (this.useWebSocketMatch) return this.send(accept?'private-room:accept':'private-room:decline', { roomId }); return this.privateRoomRequest(accept?'accept':'decline', { roomId }); }
+    cancelPrivateRoom(roomId) { if (this.useWebSocketMatch) return this.send('private-room:cancel', { roomId }); return this.privateRoomRequest('cancel', { roomId }); }
+    leavePrivateRoom(roomId) { if (this.useWebSocketMatch) return this.send('private-room:leave', { roomId }); return this.privateRoomRequest('leave', { roomId }); }
     setAvatar(avatarUrl) {
       if (this.profile) this.profile.avatarUrl = avatarUrl;
       const player = this.match?.players?.find(item => item.id === this.playerId);

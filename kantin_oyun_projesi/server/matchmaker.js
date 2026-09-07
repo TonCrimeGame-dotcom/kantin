@@ -1,7 +1,7 @@
 'use strict';
 const {randomBytes,randomUUID}=require('node:crypto');
 
-const MODE_SEATS=Object.freeze({spvp:['white','black'],upvp:['A1','B1','A2','B2'],pistiSolo:['P1','P2'],pistiTeam:['A1','B1','A2','B2'],okeySolo:['P1','P2','P3','P4'],okeyTeam:['A1','B1','A2','B2'],sozcukDuel:['P1','P2','P3','P4']});
+const MODE_SEATS=Object.freeze({spvp:['white','black'],upvp:['A1','B1','A2','B2'],pistiSolo:['P1','P2'],pistiTeam:['A1','B1','A2','B2'],okeySolo:['P1','P2','P3','P4'],okeyTeam:['A1','B1','A2','B2'],batakKozMaca:['A1','B1','A2','B2'],batakGommeli:['A1','B1','A2','B2'],sozcukDuel:['P1','P2','P3','P4']});
 const WORD_LOCALES=Object.freeze(['tr','en','de','ru','es','hi','ar']);
 const BOT_DIFFICULTIES=Object.freeze(['ORTA','İYİ']);
 
