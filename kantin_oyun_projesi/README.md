@@ -120,6 +120,6 @@ node tests/social-smoke.js
 
 ## Lisans ve kullanım şartları
 
-Copyright 2026 TonCrimeGame-dotcom. Bu depodaki kaynak kod, [Apache License 2.0](../LICENSE) ile lisanslanmıştır. Apache 2.0; kaynak kodun kullanılması, değiştirilmesi ve dağıtılması için izin verir, değiştirilen dosyaların belirtilmesini ve lisans/atıf bildirimlerinin korunmasını ister. Lisans, KANTİN markasını kullanma hakkı vermez.
+Copyright 2026 TonCrimeGame-dotcom (proje hesabı). Bu depodaki kaynak kod, [Apache License 2.0](../LICENSE) ile lisanslanmıştır. Apache 2.0; kaynak kodun kullanılması, değiştirilmesi ve dağıtılması için izin verir, değiştirilen dosyaların belirtilmesini ve lisans/atıf bildirimlerinin korunmasını ister. Lisans, KANTİN markasını kullanma hakkı vermez.
 
 KANTİN adı, logoları, avatarları, oyun görselleri, sesleri ve diğer medya varlıkları Apache 2.0 kapsamına dahil değildir; ilgili dosyada açıkça aksi belirtilmedikçe tüm hakları saklıdır. Barındırılan oyunun hesap, eşleştirme, Kantin Coin, sohbet ve kabul edilebilir kullanım kuralları [Kullanım Şartları](./TERMS_OF_USE.md) belgesinde açıklanır. Üçüncü taraf bileşenler kendi lisanslarına tabidir.

@@ -2,7 +2,7 @@
 
 **Yürürlük tarihi:** 7 Eylül 2026
 
-Bu Kullanım Şartları, TonCrimeGame-dotcom tarafından sunulan KANTİN internet sitesi, Telegram Mini App, mobil istemciler ve bunlarla bağlantılı oyun, sosyal özellik ve hizmetlerin (birlikte “Hizmet”) kullanımını düzenler. Hizmete erişerek bu şartları kabul etmiş olursunuz. Bu şartları kabul etmiyorsanız Hizmeti kullanmayın.
+Bu Kullanım Şartları, kayıtlı bir ticari unvan kullanmayan bireysel geliştirici ve gerçek kişi işletmeci tarafından **KANTİN** adıyla sunulan internet sitesi, Telegram Mini App, mobil istemciler ve bunlarla bağlantılı oyun, sosyal özellik ve hizmetlerin (birlikte “Hizmet”) kullanımını düzenler. “KANTİN işletmecisi” ifadesi bu bireysel geliştiriciyi belirtir. Hizmete erişerek bu şartları kabul etmiş olursunuz. Bu şartları kabul etmiyorsanız Hizmeti kullanmayın.
 
 ## 1. Uygunluk
 
@@ -43,7 +43,7 @@ Aşağıdaki davranışlar yasaktır:
 
 ## 6. Sohbet ve kullanıcı içeriği
 
-Paylaştığınız içerik üzerindeki haklarınız sizde kalır. İçerik paylaşarak TonCrimeGame-dotcom’a bu içeriği Hizmeti işletmek, görüntülemek, iletmek, güvenliğini sağlamak ve moderasyon uygulamak için gereken ölçüde, dünya çapında ve bedelsiz kullanma izni verirsiniz.
+Paylaştığınız içerik üzerindeki haklarınız sizde kalır. İçerik paylaşarak KANTİN işletmecisine bu içeriği Hizmeti işletmek, görüntülemek, iletmek, güvenliğini sağlamak ve moderasyon uygulamak için gereken ölçüde, dünya çapında ve bedelsiz kullanma izni verirsiniz.
 
 Başkalarının haklarını ihlal eden içerik paylaşamazsınız. Bildirilen veya otomatik sistemlerce tespit edilen içerikler incelenebilir; gerekli görülen içerikler kaldırılabilir ve ilgili hesaplara kısıtlama uygulanabilir.
 
@@ -71,7 +71,7 @@ Bu bölüm; kasıt, ağır ihmal, kişisel yaralanma, tüketicinin kanuni haklar
 
 ## 11. Üçüncü taraf hizmetleri
 
-Hizmet; Telegram, Vercel, Supabase, Google AdMob ve uygulama mağazaları gibi üçüncü taraf sistemlerle çalışabilir. Bu sağlayıcıların hizmetleri kendi koşullarına ve gizlilik uygulamalarına tabidir. TonCrimeGame-dotcom, üçüncü taraf hizmetlerin kendi kontrolü dışındaki kesintilerinden sorumlu değildir.
+Hizmet; Telegram, Vercel, Supabase, Google AdMob ve uygulama mağazaları gibi üçüncü taraf sistemlerle çalışabilir. Bu sağlayıcıların hizmetleri kendi koşullarına ve gizlilik uygulamalarına tabidir. KANTİN işletmecisi, üçüncü taraf hizmetlerin kendi kontrolü dışındaki kesintilerinden sorumlu değildir.
 
 ## 12. Gizlilik
 
@@ -87,4 +87,6 @@ Bu şartlara Türkiye Cumhuriyeti hukuku uygulanır. Tüketicilerin yerleşim ye
 
 ## 15. İletişim
 
-Sorular, hak talepleri ve ihlal bildirimleri için projenin [GitHub Issues](https://github.com/TonCrimeGame-dotcom/kantin/issues) sayfası kullanılabilir. Ücretli ürünler veya herkese açık üretim sürümü etkinleştirilmeden önce işletmeci unvanı, tebligat adresi ve doğrudan destek e-postası Hizmet içinde ayrıca yayımlanmalıdır.
+Sorular, destek talepleri, hak talepleri ve ihlal bildirimleri için **gameskantin@gmail.com** adresine e-posta gönderilebilir. Teknik hata bildirimleri için projenin [GitHub Issues](https://github.com/TonCrimeGame-dotcom/kantin/issues) sayfası da kullanılabilir.
+
+KANTİN şu anda kayıtlı bir şirket veya ticari unvan altında sunulmamaktadır. Ücretli ürünler ya da ticari satışlar etkinleştirilmeden önce mevzuatın gerektirdiği gerçek kişi işletmeci bilgileri, tebligat adresi, vergi ve elektronik ticaret bilgileri Hizmet içinde yayımlanacaktır.
