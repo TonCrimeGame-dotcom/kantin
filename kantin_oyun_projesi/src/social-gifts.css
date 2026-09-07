@@ -78,7 +78,7 @@
   animation: gift-impact 1.45s cubic-bezier(.2,.75,.2,1) both;
 }
 
-.table-gift-impact.gift-terlik { width: clamp(90px, 11vw, 145px); height: clamp(130px, 18vw, 220px); animation-duration: 1.15s; }
+.table-gift-impact.gift-terlik { width: clamp(72px, 8vw, 108px); height: clamp(126px, 14vw, 190px); filter: drop-shadow(0 3px 2px #0008); animation: gift-slipper-mark 1.5s cubic-bezier(.16,.76,.25,1) both; }
 .table-gift-impact.gift-gul { width: clamp(120px, 15vw, 190px); height: clamp(120px, 15vw, 190px); animation: gift-love 1.2s ease-out both; }
 .table-gift-impact.gift-gul img { width: 100%; height: 100%; object-fit: contain; }
 .table-gift-impact.gift-gul i { position: absolute; color: #ff4f70; font-style: normal; font-size: 25px; text-shadow: 0 3px 5px #0007; animation: gift-heart 1s ease-out both; }
@@ -89,6 +89,7 @@
 @keyframes gift-button-arrive { from { opacity: 0; scale: .65; } }
 @keyframes gift-picker-arrive { from { opacity: 0; transform: translate(-50%, 20px) scale(.97); } }
 @keyframes gift-impact { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(-12deg); } 18% { opacity: 1; transform: translate(-50%, -50%) scale(1.18) rotate(3deg); } 34%,76% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); } }
+@keyframes gift-slipper-mark { 0% { opacity: 0; transform: translate(-50%, -50%) scale(1.8) rotate(-24deg); } 13% { opacity: 1; transform: translate(-50%, -50%) scale(.88) rotate(-13deg); } 20% { transform: translate(calc(-50% - 4px), calc(-50% + 2px)) scale(1.06) rotate(-16deg); } 28%,76% { opacity: .9; transform: translate(-50%, -50%) scale(1) rotate(-14deg); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.03) rotate(-14deg); } }
 @keyframes gift-love { 0% { opacity: 0; transform: translate(-50%, -35%) scale(.3); } 28%,72% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -70%) scale(.9); } }
 @keyframes gift-heart { 0% { opacity: 0; translate: 0 20px; scale: .4; } 30% { opacity: 1; } 100% { opacity: 0; translate: 0 -55px; scale: 1.25; } }
 

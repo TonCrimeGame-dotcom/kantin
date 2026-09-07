@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   window.KANTIN_ASSET_MANIFEST = Object.freeze({
-  "version": "20260906-1",
+  "version": "20260907-1",
   "assets": [
     {
       "url": "./assets/avatars/aslan.webp",
@@ -534,6 +534,10 @@
     {
       "url": "./assets/social-gifts/kova.webp",
       "bytes": 40658
+    },
+    {
+      "url": "./assets/social-gifts/terlik-taban-izi.svg",
+      "bytes": 1458
     },
     {
       "url": "./assets/social-gifts/terlik.webp",
