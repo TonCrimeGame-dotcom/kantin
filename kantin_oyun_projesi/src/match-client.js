@@ -27,6 +27,7 @@
       this.socialPlayerId = null;
       this.useWebSocketMatch = false;
       this.tournaments = [];
+      this.missions = [];
     }
 
     emit(type, payload = {}) {
@@ -143,6 +144,7 @@
           const index = this.tournaments.findIndex(item => item.id === payload.id);
           if (index >= 0) this.tournaments.splice(index, 1, payload); else this.tournaments.unshift(payload);
         }
+        if (message.type === 'mission:list' || message.type === 'mission:update') this.missions = payload.missions || [];
         if (message.type === 'lobby:stats') this.stats = payload;
         if (message.type === 'chat:history') this.messages[payload.room] = payload.messages;
         if (message.type === 'chat:message') {
@@ -287,9 +289,18 @@
         .then(payload => this.emit('profile:data', payload.profile || {}))
         .catch(() => this.send('profile:get', { userId }));
     }
-    addFriend(userId) { this.send('friend:add', { userId }); }
-    acceptFriend(userId) { this.send('friend:accept', { userId }); }
-    removeFriend(userId) { this.send('friend:remove', { userId }); }
+    async friendRequest(action, userId = null) {
+      const auth = global.KANTIN_AUTH, headers = { accept: 'application/json', 'content-type': 'application/json' }, accessToken = auth?.getAccessToken?.();
+      if (accessToken) headers.authorization = `Bearer ${accessToken}`; else if (this.matchSessionToken) headers['x-kantin-match-session'] = this.matchSessionToken;
+      const response = await fetch('/api/friends', { method: 'POST', headers, body: JSON.stringify({ action, userId }), signal: AbortSignal.timeout(12000) });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.ok === false) { const error = new Error(payload.message || payload.error || 'Arkadaşlık işlemi tamamlanamadı.'); error.code = payload.error; throw error; }
+      this.profile = { ...this.profile, friends: payload.friends || [], incoming: payload.incoming || [], outgoing: payload.outgoing || [] }; this.emit('friends:state', this.profile); if (action === 'request' || action === 'accept') this.loadMissions(); return payload;
+    }
+    loadFriends() { if (this.useWebSocketMatch) return; return this.friendRequest('list').catch(error => this.emitError(error)); }
+    addFriend(userId) { if (this.useWebSocketMatch) return this.send('friend:add', { userId }); return this.friendRequest('request', userId).catch(error => this.emitError(error)); }
+    acceptFriend(userId) { if (this.useWebSocketMatch) return this.send('friend:accept', { userId }); return this.friendRequest('accept', userId).then(result => { this.loadMissions(); return result; }).catch(error => this.emitError(error)); }
+    removeFriend(userId) { if (this.useWebSocketMatch) return this.send('friend:remove', { userId }); return this.friendRequest('remove', userId).catch(error => this.emitError(error)); }
     sendChat(text, room = 'lobby') { this.send('chat:send', { text, room }); }
     sendGift(giftId, targetId) { return this.send('gift:send', { giftId, targetId }); }
     async tournamentRequest(action, tournamentId = null) {
@@ -303,6 +314,16 @@
     loadTournaments() { if (this.useWebSocketMatch) return this.send('tournament:list'); return this.tournamentRequest('list').catch(error => this.emitError(error)); }
     joinTournament(tournamentId) { if (this.useWebSocketMatch) return this.send('tournament:join', { tournamentId }); return this.tournamentRequest('join', tournamentId).catch(error => this.emitError(error)); }
     leaveTournament(tournamentId) { if (this.useWebSocketMatch) return this.send('tournament:leave', { tournamentId }); return this.tournamentRequest('leave', tournamentId).catch(error => this.emitError(error)); }
+    async missionRequest(action, missionId = null) {
+      const auth = global.KANTIN_AUTH, headers = { accept: 'application/json', 'content-type': 'application/json' }, accessToken = auth?.getAccessToken?.();
+      if (accessToken) headers.authorization = `Bearer ${accessToken}`; else if (this.matchSessionToken) headers['x-kantin-match-session'] = this.matchSessionToken;
+      const response = await fetch('/api/missions', { method: 'POST', headers, body: JSON.stringify({ action, missionId }), signal: AbortSignal.timeout(12000) });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.ok === false) { const error = new Error(payload.message || payload.error || 'Görev işlemi tamamlanamadı.'); error.code = payload.error; throw error; }
+      this.missions = payload.missions || this.missions; this.emit('mission:list', { missions: this.missions }); if (payload.claim) { if (Number.isSafeInteger(Number(payload.claim.balance))) { this.profile = { ...this.profile, coins: Number(payload.claim.balance) }; this.emit('coins:updated', { balance: Number(payload.claim.balance), delta: Number(payload.claim.reward)||0, type: 'mission_reward' }); } global.KANTIN_ECONOMY?.refresh?.(); this.emit('mission:claimed', payload.claim); } return payload;
+    }
+    loadMissions() { if (this.useWebSocketMatch) return this.send('mission:list'); return this.missionRequest('list').catch(error => this.emitError(error)); }
+    claimMission(missionId) { if (this.useWebSocketMatch) return this.send('mission:claim', { missionId }); return this.missionRequest('claim', missionId).catch(error => this.emitError(error)); }
     setAvatar(avatarUrl) {
       if (this.profile) this.profile.avatarUrl = avatarUrl;
       const player = this.match?.players?.find(item => item.id === this.playerId);
