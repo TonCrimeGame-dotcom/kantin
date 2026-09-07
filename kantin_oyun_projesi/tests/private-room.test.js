@@ -30,9 +30,9 @@ function befriend(registry,a,b){registry.request(a.id,b.id);registry.accept(b.id
   const players=['Ada','Bora','Cem','Duru'].map(name=>user(registry,name));players.slice(1).forEach(player=>befriend(registry,players[0],player));
   const room=manager.create(players[0].id,{mode:'batakKozMaca'});
   players.slice(1).forEach(player=>{manager.invite(room.id,players[0].id,player.id);manager.accept(room.id,player.id)});
-  assert.equal(matches.length,1);assert.deepEqual(matches[0].players.map(player=>player.seat),['A1','B1','A2','B2']);
+  assert.equal(matches.length,1);assert.deepEqual(matches[0].players.map(player=>player.seat),['P1','P2','P3','P4']);
   registry.close();
-  console.log('✓ Dört kişilik Batak özel masası doğru takım koltuklarıyla başlar');
+  console.log('✓ Dört kişilik Batak özel masası doğru bireysel koltuklarla başlar');
 }
 
 {
