@@ -7,6 +7,8 @@ function test(name,fn){try{fn();console.log(`✓ ${name}`)}catch(error){console.
 
 test('Koz Maça 13 kart dağıtır, kozu maçaya sabitler ve tahmin aşamasıyla başlar',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players,deck:createDeck()});assert.equal(game.state.phase,'bidding');assert.equal(game.state.trump,'spades');assert.deepEqual(Object.values(game.getHandCounts()),[13,13,13,13]);assert.equal(game.state.deck.length,0)});
 
+test('Eldeki kartlar renklere ayrılmış ve büyükten küçüğe sabit dizilir',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players,deck:createDeck()}),hand=game.getHand('P1'),suits={spades:0,hearts:1,diamonds:2,clubs:3},ranks={A:14,K:13,Q:12,J:11,'10':10,'9':9,'8':8,'7':7,'6':6,'5':5,'4':4,'3':3,'2':2};for(let index=1;index<hand.length;index++){const before=hand[index-1],after=hand[index];assert.ok(suits[before.suit]<suits[after.suit]||suits[before.suit]===suits[after.suit]&&ranks[before.rank]>=ranks[after.rank])}});
+
 test('Koz Maça dört oyuncunun bağımsız tahmini bitince kart oyununa geçer',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players});game.bid('P1',0);game.bid('P2',2);game.bid('P3',4);game.bid('P4',3);assert.equal(game.state.phase,'playing');assert.equal(game.getCurrentPlayer().id,'P1');assert.throws(()=>game.pass('P1'),/tahmin/)});
 
 test('Gömmeli Batak 12 kart ve kapalı dört kartlık gömü dağıtır',()=>{const game=new BatakGame({mode:MODE_GOMMELI,players,deck:createDeck()});assert.equal(game.state.phase,'auction');assert.deepEqual(Object.values(game.getHandCounts()),[12,12,12,12]);assert.equal(game.state.kitty.length,4);const view=game.getStateForPlayer('P1');assert.equal(view.kittyCount,4);assert.equal('kitty' in view,false)});
