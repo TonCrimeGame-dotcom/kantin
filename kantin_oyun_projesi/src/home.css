@@ -273,6 +273,12 @@
 .arcade-dock button { min-width:62px; padding:4px 7px; display:grid; gap:2px; place-items:center; border:0; background:transparent; font-size:21px; }
 .arcade-dock span { color:#c5b5a1; font-size:9px; font-weight:800; }
 
+/* Utility pages and the home dock reveal the shared Kantin scene instead of a black panel. */
+body{background:radial-gradient(circle at 58% 38%,#6b422326,transparent 52%),linear-gradient(90deg,#0d090780,#0d090738 50%,#0d090766),url('../assets/backgrounds/kantin-home-hero.webp') center/cover fixed no-repeat}
+.utility-screen{background:transparent}
+.arcade-dock{border-color:transparent;background:transparent;box-shadow:none;backdrop-filter:none}
+.reward-day,.mission-list article,.store-grid article,.inventory-slot{background:#211711a3;backdrop-filter:blur(7px)}
+
 /* Mode and stake lobby */
 .room-select { min-height:calc(100dvh - 72px); background:linear-gradient(90deg,#120b08ed,#15100ab0),url('../assets/backgrounds/kantin-home-hero.webp') center/cover; }
 .room-head { height:82px; padding:10px clamp(16px,3vw,44px); display:flex; align-items:center; gap:16px; border-bottom:1px solid #ffffff18; background:#100b08c9; }
