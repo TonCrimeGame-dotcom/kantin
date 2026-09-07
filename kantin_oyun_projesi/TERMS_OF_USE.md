@@ -2,7 +2,7 @@
 
 **Yürürlük tarihi:** 7 Eylül 2026
 
-Bu Kullanım Şartları, kayıtlı bir ticari unvan kullanmayan bireysel geliştirici ve gerçek kişi işletmeci tarafından **KANTİN** adıyla sunulan internet sitesi, Telegram Mini App, mobil istemciler ve bunlarla bağlantılı oyun, sosyal özellik ve hizmetlerin (birlikte “Hizmet”) kullanımını düzenler. “KANTİN işletmecisi” ifadesi bu bireysel geliştiriciyi belirtir. Hizmete erişerek bu şartları kabul etmiş olursunuz. Bu şartları kabul etmiyorsanız Hizmeti kullanmayın.
+Bu Kullanım Şartları, kayıtlı bir ticari unvan kullanmayan bireysel geliştirici ve gerçek kişi işletmeci **Bülent Yağız ÖZGÜNEY** tarafından **KANTİN** adıyla sunulan internet sitesi, Telegram Mini App, mobil istemciler ve bunlarla bağlantılı oyun, sosyal özellik ve hizmetlerin (birlikte “Hizmet”) kullanımını düzenler. “KANTİN işletmecisi” ifadesi Bülent Yağız ÖZGÜNEY’i belirtir. Hizmete erişerek bu şartları kabul etmiş olursunuz. Bu şartları kabul etmiyorsanız Hizmeti kullanmayın.
 
 ## 1. Uygunluk
 
@@ -87,6 +87,9 @@ Bu şartlara Türkiye Cumhuriyeti hukuku uygulanır. Tüketicilerin yerleşim ye
 
 ## 15. İletişim
 
-Sorular, destek talepleri, hak talepleri ve ihlal bildirimleri için **gameskantin@gmail.com** adresine e-posta gönderilebilir. Teknik hata bildirimleri için projenin [GitHub Issues](https://github.com/TonCrimeGame-dotcom/kantin/issues) sayfası da kullanılabilir.
+- **İşletmeci:** Bülent Yağız ÖZGÜNEY
+- **İletişim:** gameskantin@gmail.com
+
+Sorular, destek talepleri, hak talepleri ve ihlal bildirimleri için yukarıdaki e-posta adresi kullanılabilir. Teknik hata bildirimleri için projenin [GitHub Issues](https://github.com/TonCrimeGame-dotcom/kantin/issues) sayfası da kullanılabilir.
 
 KANTİN şu anda kayıtlı bir şirket veya ticari unvan altında sunulmamaktadır. Ücretli ürünler ya da ticari satışlar etkinleştirilmeden önce mevzuatın gerektirdiği gerçek kişi işletmeci bilgileri, tebligat adresi, vergi ve elektronik ticaret bilgileri Hizmet içinde yayımlanacaktır.
