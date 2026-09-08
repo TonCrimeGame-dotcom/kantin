@@ -1,6 +1,6 @@
 create table if not exists public.private_game_rooms(
   id uuid primary key default gen_random_uuid(), owner_id uuid not null references public.profiles(id) on delete cascade,
-  mode text not null check(mode in('spvp','upvp','pistiSolo','pistiTeam','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel')),
+  mode text not null check(mode in('spvp','upvp','pistiSolo','pistiTeam','okeyClassic','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel')),
   word_locale text, status text not null default 'open' check(status in('open','started','cancelled','expired')),
   match_id uuid references public.online_matches(id), created_at timestamptz not null default now(), expires_at timestamptz not null default(now()+interval '15 minutes')
 );
@@ -29,7 +29,7 @@ returns jsonb language plpgsql security definer set search_path='' as $$
 declare room_id uuid;
 begin
   if auth.role()<>'service_role' then raise exception 'service_role_required' using errcode='42501';end if;
-  if p_mode not in('spvp','upvp','pistiSolo','pistiTeam','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel') then raise exception 'invalid_game_mode';end if;
+  if p_mode not in('spvp','upvp','pistiSolo','pistiTeam','okeyClassic','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel') then raise exception 'invalid_game_mode';end if;
   if p_mode='sozcukDuel' and lower(split_part(replace(coalesce(p_word_locale,'tr'),'_','-'),'-',1)) not in('tr','en','de','ru','es','hi','ar') then raise exception 'unsupported_word_locale';end if;
   if exists(select 1 from public.private_game_room_members m join public.private_game_rooms r on r.id=m.room_id where m.user_id=p_user_id and r.status='open' and r.expires_at>now()) then raise exception 'private_room_already_open';end if;
   if exists(select 1 from public.matchmaking_tickets where player_id=p_user_id::text and status in('waiting','matched')) then raise exception 'active_match_or_queue';end if;

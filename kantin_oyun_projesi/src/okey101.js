@@ -38,6 +38,8 @@
 
   const MODE_SOLO = 'solo';
   const MODE_TEAM = 'team';
+  const VARIANT_101 = '101';
+  const VARIANT_CLASSIC = 'classic';
 
   const TEAM_A = 'teamA';
   const TEAM_B = 'teamB';
@@ -256,6 +258,7 @@
 
       this.mode = options.mode || MODE_SOLO;
       assertMode(this.mode);
+      this.variant = options.variant === VARIANT_CLASSIC ? VARIANT_CLASSIC : VARIANT_101;
 
       this.rules = {
         ...DEFAULT_RULES,
@@ -332,6 +335,7 @@
       this.state = {
         version: 1,
         mode: this.mode,
+        variant: this.variant,
         status: 'playing', // playing | finished
 
         stock: [],
@@ -441,8 +445,9 @@
         this.state.discardsByPlayer[p.id] = [];
       }
 
-      // Başlayan oyuncuya 22, diğerlerine 21.
-      for (let round = 0; round < 21; round++) {
+      // 101'de 22/21, Normal Okey'de 15/14 taş dağıtılır.
+      const baseHandSize = this.variant === VARIANT_CLASSIC ? 14 : 21;
+      for (let round = 0; round < baseHandSize; round++) {
         for (const p of this.players) {
           this.state.hands[p.id].push(this.drawFromStockInternal());
         }
@@ -1844,6 +1849,81 @@
       return false;
     }
 
+    classicWinningType(tiles) {
+      if (this.variant !== VARIANT_CLASSIC || !Array.isArray(tiles) || tiles.length !== 14) return null;
+      const resolved = tiles.map(tile => this.resolveTile(tile));
+      const naturals = resolved.filter(tile => !tile.isJoker);
+      const jokerCount = resolved.length - naturals.length;
+      const counts = new Map();
+      for (const tile of naturals) {
+        const key = `${tile.color}:${tile.number}`;
+        counts.set(key, (counts.get(key) || 0) + 1);
+      }
+      let pairs = 0, singles = 0;
+      for (const count of counts.values()) {
+        pairs += Math.floor(count / 2);
+        singles += count % 2;
+      }
+      if (singles <= jokerCount && pairs + singles + Math.floor((jokerCount - singles) / 2) >= 7) return 'pairs';
+
+      const allSequences = [];
+      for (let start = 1; start <= 11; start++) {
+        for (let end = start + 2; end <= 13; end++) allSequences.push(Array.from({ length: end - start + 1 }, (_, i) => start + i));
+      }
+      for (let start = 1; start <= 12; start++) {
+        const sequence = [];
+        for (let number = start; number <= 13; number++) sequence.push(number);
+        sequence.push(1);
+        if (sequence.length >= 3) allSequences.push(sequence);
+      }
+      const memo = new Map();
+      const solve = (remaining, jokers) => {
+        if (!remaining.length) return jokers === 0;
+        const memoKey = `${remaining.map(tile => tile.id).sort().join(',')}|${jokers}`;
+        if (memo.has(memoKey)) return memo.get(memoKey);
+        const first = remaining[0];
+        const tryCandidate = required => {
+          const used = new Set([0]);
+          let missing = 0;
+          for (const match of required) {
+            if (match.color === first.color && match.number === first.number) continue;
+            const index = remaining.findIndex((tile, i) => !used.has(i) && tile.color === match.color && tile.number === match.number);
+            if (index < 0) missing++;
+            else used.add(index);
+          }
+          if (missing > jokers) return false;
+          return solve(remaining.filter((_, index) => !used.has(index)), jokers - missing);
+        };
+        const setColors = COLORS.filter(color => remaining.some(tile => tile.color === color && tile.number === first.number));
+        for (const size of [3, 4]) {
+          const combinations = [[]];
+          for (const color of setColors) for (let i = combinations.length - 1; i >= 0; i--) combinations.push([...combinations[i], color]);
+          for (const colors of combinations) {
+            if (!colors.includes(first.color) || colors.length > size || colors.length + jokers < size) continue;
+            if (tryCandidate(colors.map(color => ({ color, number: first.number })).concat(Array.from({ length: size - colors.length }, () => ({ color: null, number: null }))))) {
+              memo.set(memoKey, true); return true;
+            }
+          }
+        }
+        for (const sequence of allSequences) {
+          if (!sequence.includes(first.number)) continue;
+          if (tryCandidate(sequence.map(number => ({ color: first.color, number })))) {
+            memo.set(memoKey, true); return true;
+          }
+        }
+        memo.set(memoKey, false);
+        return false;
+      };
+      return solve(naturals, jokerCount) ? 'melds' : null;
+    }
+
+    classicWinningDiscardIds(playerId) {
+      if (this.variant !== VARIANT_CLASSIC) return [];
+      const hand = this.state.hands[playerId] || [];
+      if (hand.length !== 15) return [];
+      return hand.filter((_, index) => this.classicWinningType(hand.filter((__, other) => other !== index))).map(tile => tile.id);
+    }
+
     discard(playerId, tileId) {
       this.assertTurn(playerId);
 
@@ -1866,6 +1946,9 @@
       }
 
       const tile = hand[index];
+      const classicWinningType = this.variant === VARIANT_CLASSIC
+        ? this.classicWinningType(hand.filter((_, handIndex) => handIndex !== index))
+        : null;
       const willFinish =
         this.state.opened[playerId] &&
         this.state.hands[playerId].length === 1;
@@ -1899,9 +1982,9 @@
         tile: clone(tile)
       };
 
-      const finished =
-        this.state.opened[playerId] &&
-        this.state.hands[playerId].length === 0;
+      const finished = this.variant === VARIANT_CLASSIC
+        ? Boolean(classicWinningType)
+        : this.state.opened[playerId] && this.state.hands[playerId].length === 0;
 
       this.emit('discard', {
         playerId,
@@ -1910,6 +1993,10 @@
       });
 
       if (finished) {
+        if (this.variant === VARIANT_CLASSIC) {
+          this.state.opened[playerId] = true;
+          this.state.openType[playerId] = classicWinningType;
+        }
         this.finishWithWinner(playerId, this.isOkey(tile));
         return clone(tile);
       }
@@ -2083,6 +2170,20 @@
     }
 
     calculateScores(winnerPlayerId) {
+      if (this.variant === VARIANT_CLASSIC) {
+        const multiplier = (this.state.finishedWithJoker ? 2 : 1) * (this.state.finishedWithPairs ? 2 : 1);
+        const individual = Object.fromEntries(this.players.map(player => [player.id, {
+          playerId: player.id,
+          opened: player.id === winnerPlayerId,
+          openType: player.id === winnerPlayerId ? this.state.openType[player.id] : null,
+          handPenalty: 0,
+          actionPenalties: 0,
+          multiplier,
+          roundPenalty: player.id === winnerPlayerId ? -2 * multiplier : 2 * multiplier,
+          total: player.id === winnerPlayerId ? -2 * multiplier : 2 * multiplier
+        }]));
+        return { mode: MODE_SOLO, variant: VARIANT_CLASSIC, individual };
+      }
       const individual = {};
       const winnerPlayer = winnerPlayerId ? this.getPlayer(winnerPlayerId) : null;
       const winnerTeam = winnerPlayer?.team || null;
@@ -2184,6 +2285,7 @@
       return {
         version: this.state.version,
         mode: this.mode,
+        variant: this.variant,
         status: this.state.status,
 
         players: clone(this.players),
@@ -2243,6 +2345,7 @@
         openingGroups: clone(opening.groups),
         pairPotential: pairs.count,
         pairGroups: clone(pairs.groups),
+        winningDiscardIds: this.classicWinningDiscardIds(playerId),
         rackTotal: this.handPenalty(playerId),
         layoffCandidateTileIds: this.layoffCandidateTileIds(playerId),
         forcedUseTileId:
@@ -2300,9 +2403,22 @@
     }
   }
 
+  class ClassicOkey extends Okey101Game {
+    constructor(options = {}) {
+      super({ ...options, mode: MODE_SOLO, variant: VARIANT_CLASSIC, rules: {
+        playableDiscardPenalty: 0,
+        okeyDiscardPenalty: 0,
+        requireTakenDiscardToBeUsed: false,
+        ...(options.rules || {})
+      }});
+    }
+  }
+
   global.OKEY101 = Object.freeze({
     MODE_SOLO,
     MODE_TEAM,
+    VARIANT_101,
+    VARIANT_CLASSIC,
 
     TEAM_A,
     TEAM_B,
@@ -2314,7 +2430,8 @@
 
     Okey101Game,
     Solo101Okey,
-    Team101Okey
+    Team101Okey,
+    ClassicOkey
   });
 
 })(typeof window !== 'undefined' ? window : globalThis);

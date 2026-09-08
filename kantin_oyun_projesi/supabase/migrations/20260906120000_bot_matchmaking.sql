@@ -97,6 +97,9 @@ begin
     when 'upvp' then required_players := 4; seats := array['A1', 'B1', 'A2', 'B2'];
     when 'pistiSolo' then required_players := 2; seats := array['P1', 'P2'];
     when 'pistiTeam' then required_players := 4; seats := array['A1', 'B1', 'A2', 'B2'];
+    when 'okeyClassic' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
+    when 'batakKozMaca' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
+    when 'batakGommeli' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
     when 'okeySolo' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
     when 'okeyTeam' then required_players := 4; seats := array['A1', 'B1', 'A2', 'B2'];
     when 'sozcukDuel' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];

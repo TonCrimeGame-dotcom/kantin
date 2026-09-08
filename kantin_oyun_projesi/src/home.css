@@ -247,7 +247,7 @@
 
 /* Three-game arcade index */
 .arcade-home { grid-template-rows:auto minmax(0,1fr) auto; }
-.arcade-games { width:min(1380px,100%); height:100%; min-height:0; margin:0 auto; display:grid; grid-template-columns:1.2fr 1fr 1fr; align-items:stretch; gap:clamp(12px,1.6vw,24px); }
+.arcade-games { width:min(1380px,100%); height:100%; min-height:0; margin:0 auto; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); align-items:stretch; gap:clamp(12px,1.6vw,24px); }
 .arcade-card { min-width:0; min-height:0; height:100%; overflow:hidden; padding:0; display:grid; grid-template-rows:minmax(0,1fr) auto; border:1px solid #ffffff25; border-radius:22px; background:#211711d9; color:#fff; text-align:left; box-shadow:0 24px 50px #0009; transition:.2s ease; }
 .arcade-card:hover,.arcade-card:focus-visible { transform:translateY(-5px); border-color:#e9bd64; box-shadow:0 26px 58px #000b,0 0 30px #e2b45422; }
 .arcade-art { position:relative; min-height:0; overflow:hidden; }
@@ -284,6 +284,7 @@ body{background:radial-gradient(circle at 58% 38%,#6b422326,transparent 52%),lin
 @media(max-width:760px){.private-room-screen{min-height:100dvh;padding:12px}.private-room-screen>header{align-items:flex-start}.private-room-layout{grid-template-columns:1fr}.private-seat{min-height:125px}.private-room-layout>aside{padding:14px}.private-friends{max-height:34vh}}
 .arcade-dock{border-color:transparent;background:transparent;box-shadow:none;backdrop-filter:none}
 .reward-day,.mission-list article,.store-grid article,.inventory-slot{background:#211711a3;backdrop-filter:blur(7px)}
+.family-normalOkey .arcade-label i{background:#70d6b0}.family-normalOkey .arcade-art>span{color:#8ce2c1}
 
 /* Mode and stake lobby */
 .room-select { min-height:calc(100dvh - 72px); background:linear-gradient(90deg,#120b08ed,#15100ab0),url('../assets/backgrounds/kantin-home-hero.webp') center/cover; }

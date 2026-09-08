@@ -1,6 +1,6 @@
 create table if not exists public.online_matches (
   id uuid primary key default gen_random_uuid(),
-  mode text not null check (mode in ('spvp', 'upvp', 'pistiSolo', 'pistiTeam', 'okeySolo', 'okeyTeam', 'sozcukDuel')),
+  mode text not null check (mode in ('spvp', 'upvp', 'pistiSolo', 'pistiTeam', 'okeyClassic', 'okeySolo', 'okeyTeam', 'batakKozMaca', 'batakGommeli', 'sozcukDuel')),
   word_locale text check (word_locale is null or word_locale in ('tr', 'en', 'de', 'ru', 'es', 'hi', 'ar')),
   players jsonb not null,
   state jsonb,
@@ -16,7 +16,7 @@ create table if not exists public.online_matches (
 create table if not exists public.matchmaking_tickets (
   player_id text primary key,
   username text not null,
-  mode text not null check (mode in ('spvp', 'upvp', 'pistiSolo', 'pistiTeam', 'okeySolo', 'okeyTeam', 'sozcukDuel')),
+  mode text not null check (mode in ('spvp', 'upvp', 'pistiSolo', 'pistiTeam', 'okeyClassic', 'okeySolo', 'okeyTeam', 'batakKozMaca', 'batakGommeli', 'sozcukDuel')),
   word_locale text check (word_locale is null or word_locale in ('tr', 'en', 'de', 'ru', 'es', 'hi', 'ar')),
   status text not null default 'waiting' check (status in ('waiting', 'matched')),
   match_id uuid references public.online_matches(id) on delete set null,
@@ -89,6 +89,9 @@ begin
     when 'upvp' then required_players := 4; seats := array['A1', 'B1', 'A2', 'B2'];
     when 'pistiSolo' then required_players := 2; seats := array['P1', 'P2'];
     when 'pistiTeam' then required_players := 4; seats := array['A1', 'B1', 'A2', 'B2'];
+    when 'okeyClassic' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
+    when 'batakKozMaca' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
+    when 'batakGommeli' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
     when 'okeySolo' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];
     when 'okeyTeam' then required_players := 4; seats := array['A1', 'B1', 'A2', 'B2'];
     when 'sozcukDuel' then required_players := 4; seats := array['P1', 'P2', 'P3', 'P4'];

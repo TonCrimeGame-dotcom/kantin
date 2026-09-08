@@ -212,6 +212,15 @@
     'daily.eyebrow':'كل يوم في KANTIN','daily.title':'مكافأة الدخول اليومية','daily.copy':'حافظ على السلسلة واحصل على المكافأة الكبرى في اليوم السابع.','daily.day':'اليوم {day}','daily.claim':'استلم مكافأة اليوم · {amount} 🪙','daily.claimed':'تم استلام مكافأة اليوم','daily.adding':'جارٍ إضافة المكافأة…','daily.already':'لقد استلمت مكافأة اليوم بالفعل.','daily.added':'تمت إضافة {amount} Kantin Coin إلى حسابك.','missions.eyebrow':'مهام الحرم','missions.title':'المهام','missions.copy':'العب واربح مع أصدقائك واجمع المكافآت.','store.eyebrow':'متجر KANTIN','store.title':'المتجر','store.copy':'حزم العملات وعناصر خاصة لتخصيص طاولتك.','inventory.eyebrow':'المجموعة','inventory.title':'المقتنيات','inventory.copy':'استخدم العناصر التي تربحها أو تشتريها.','rotate.title':'أدر هاتفك','rotate.copy':'صُممت KANTİN للوضع الأفقي.','error.loginRequired':'يجب تسجيل الدخول لهذا الإجراء.','error.coinUnavailable':'خدمة العملات غير جاهزة بعد.','error.retry':'حاول مجددًا'
   };
 
+  for (const locale of [en, ru, es, hi, de, ar]) Object.assign(locale, {
+    'game.okeyClassic':'Normal Okey','game.okeyClassicSubtitle':'Arrange your hidden hand and finish',
+    'mode.okeyClassic':'Normal Okey','desc.okeyClassic':'Complete 14 tiles as runs, sets or seven pairs'
+  });
+  Object.assign(tr, {
+    'game.okeyClassic':'Normal Okey','game.okeyClassicSubtitle':'Elini diz, okeyle bit',
+    'mode.okeyClassic':'Normal Okey','desc.okeyClassic':'14 taşı perlere veya yedi çifte tamamla'
+  });
+
   const foreignPistiKeys = ['auth.subtitle', 'game.pisti', 'mode.pistiSolo', 'mode.pistiTeam'];
   for (const locale of [en, de, ru, es, hi, ar]) {
     for (const key of foreignPistiKeys) {

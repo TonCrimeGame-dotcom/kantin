@@ -52,6 +52,46 @@ function makePairs(count, color = 'yellow') {
   return { tiles, groups };
 }
 
+test('Normal Okey 15/14 taş dağıtır ve 48 taş ortada bırakır', () => {
+  const game = new OKEY101.ClassicOkey();
+  assert.equal(game.state.variant, 'classic');
+  assert.equal(game.state.hands.P1.length, 15);
+  assert.deepEqual(['P2','P3','P4'].map(id => game.state.hands[id].length), [14,14,14]);
+  assert.equal(game.state.stock.length, 48);
+});
+
+test('Normal Okey seri, renk grubu, 12-13-1 ve yedi çift bitişlerini tanır', () => {
+  const game = new OKEY101.ClassicOkey();
+  setTestOkey(game, 'red', 4);
+  const standard = [
+    ...[1,2,3,4].map(n => okeyTile('red', n)),
+    ...[5,6,7].map(n => okeyTile('blue', n)),
+    ...OKEY101.COLORS.map(color => okeyTile(color, 8)),
+    ...[12,13,1].map(n => okeyTile('yellow', n))
+  ];
+  assert.equal(game.classicWinningType(standard), 'melds');
+  assert.equal(game.classicWinningType(makePairs(7).tiles), 'pairs');
+  const invalid = standard.slice(); invalid[invalid.length - 1] = okeyTile('black', 2);
+  assert.equal(game.classicWinningType(invalid), null);
+});
+
+test('Normal Okey yalnız geçerli 14 taş kaldığında eli bitirir', () => {
+  const game = new OKEY101.ClassicOkey();
+  setTestOkey(game, 'red', 4);
+  const winning = [
+    ...[1,2,3,4].map(n => okeyTile('red', n)),
+    ...[5,6,7].map(n => okeyTile('blue', n)),
+    ...OKEY101.COLORS.map(color => okeyTile(color, 8)),
+    ...[12,13,1].map(n => okeyTile('yellow', n))
+  ];
+  const discard = okeyTile('black', 11);
+  game.state.hands.P1 = [...winning, discard];
+  game.discard('P1', discard.id);
+  assert.equal(game.state.status, 'finished');
+  assert.equal(game.state.winnerPlayerId, 'P1');
+  assert.equal(game.state.finishType, 'normal');
+});
+
 test('Standart tavla 24 hane ve 15’er pul ile başlar', () => {
   const game = new SPVP.StandardBackgammonPvP();
   const state = game.getState();

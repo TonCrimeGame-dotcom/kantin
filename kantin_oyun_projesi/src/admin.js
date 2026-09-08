@@ -52,7 +52,7 @@
     return new Date(date.getTime() - offset).toISOString().slice(0, 16);
   };
   const roleLabel = role => ({ owner: 'Kurucu yönetici', admin: 'Yönetici', support: 'Destek', analyst: 'Analist' })[role] || role;
-  const modeLabel = mode => ({ spvp: 'Klasik Tavla', upvp: 'Üniversite Tavlası', pistiSolo: 'Pişti', pistiTeam: 'Eşli Pişti', okeySolo: '101 Okey', okeyTeam: 'Eşli 101', sozcukDuel: 'Sözcük Kapışması' })[mode] || mode;
+  const modeLabel = mode => ({ spvp: 'Klasik Tavla', upvp: 'Üniversite Tavlası', pistiSolo: 'Pişti', pistiTeam: 'Eşli Pişti', okeyClassic: 'Normal Okey', okeySolo: '101 Okey', okeyTeam: 'Eşli 101', sozcukDuel: 'Sözcük Kapışması' })[mode] || mode;
   const statusLabel = status => ({ waiting: 'Bekliyor', playing: 'Aktif', finished: 'Bitti', abandoned: 'İptal', open: 'Açık', reviewed: 'İncelendi', resolved: 'Çözüldü', dismissed: 'Kapatıldı', paid: 'Ödendi', refunded: 'İade', pending: 'Bekliyor', failed: 'Başarısız' })[status] || status;
   const actionLabel = action => ({
     'admin.owner_bootstrapped': 'İlk yönetici oluşturuldu',
