@@ -770,3 +770,190 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
 /* Şeffaf buton alanı sabit kalır, yalnız yazı assetteki ovalin merkezine çıkar. */
 .okey-result-panel>footer button{padding:0 10px clamp(8px,2.2vh,14px)}
 .classic-okey-guide{left:28%;right:40%;top:12%;bottom:auto;min-height:72px;padding:10px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid #e3bd6255;border-radius:14px;background:linear-gradient(145deg,#0b493ca8,#062d36a8);box-shadow:0 10px 24px #001b24aa;text-align:center;pointer-events:none}.classic-okey-guide::before,.classic-okey-guide::after{display:none}.classic-okey-guide strong{color:#f4ca68;font:900 clamp(16px,2vw,25px) Georgia,serif;letter-spacing:.12em}.classic-okey-guide span{color:#fff;font-weight:800}.classic-okey-guide small{color:#8fdabb}.classic-okey-screen .classic-finish-counter{border-color:#5ec99c}.classic-okey-screen .classic-finish-counter.ready{box-shadow:0 0 25px #3bf0a488}.classic-okey-screen .tile.winning-discard{box-shadow:0 0 0 3px #52e3a3,0 0 18px #52e3a3}.classic-okey-screen .okey-action.finish-ready{background:linear-gradient(#39c889,#16714d);color:#fff}
+
+/* Normal Okey: lacivert masa, okunaklı kumandalar ve avatar yuvasına oturan profiller. */
+.classic-okey-screen{background:#071422}
+.classic-okey-screen .okey-felt{
+  background-color:#0b3151;
+  background-image:linear-gradient(135deg,#04152324,#0e41642e 48%,#020b1470),url('../assets/games/okey101/table-realistic-v1.webp');
+  background-position:center;
+  background-size:100% 100%;
+  box-shadow:inset 0 0 85px #01070dcc
+}
+.classic-okey-screen .classic-okey-guide{
+  left:27%;
+  right:40%;
+  top:13%;
+  min-height:68px;
+  border:1px solid #d7af5980;
+  background:linear-gradient(145deg,#0b2942e8,#061725e8);
+  box-shadow:inset 0 0 0 1px #7fcbe225,0 12px 28px #0009
+}
+.classic-okey-screen .classic-okey-guide strong{color:#f4cf72}
+.classic-okey-screen .classic-okey-guide small{color:#8bd8e8}
+
+.classic-okey-screen .okey-player,
+.classic-okey-screen .okey-me{
+  width:clamp(118px,13.5vw,164px);
+  height:clamp(42px,7.7vh,56px);
+  padding:5px 10px 5px 6px;
+  grid-template-columns:clamp(32px,3.7vw,44px) minmax(0,1fr);
+  gap:7px;
+  filter:drop-shadow(0 5px 8px #0009)
+}
+.classic-okey-screen .okey-player>span,
+.classic-okey-screen .okey-me>span{
+  width:clamp(32px,3.7vw,44px);
+  height:clamp(32px,3.7vw,44px);
+  aspect-ratio:1;
+  overflow:hidden;
+  border:2px solid #e8c66f;
+  border-radius:50%;
+  background:#071c2b
+}
+.classic-okey-screen .okey-player>span img,
+.classic-okey-screen .okey-me>span img{
+  width:100%;
+  height:100%;
+  max-width:none;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  border-radius:50%
+}
+.classic-okey-screen .okey-player b,
+.classic-okey-screen .okey-me b{
+  padding:0 4px 0 0;
+  color:#fff0b5;
+  font-size:clamp(9px,1vw,13px);
+  text-shadow:0 1px 2px #00150f
+}
+.classic-okey-screen .okey-player.top{top:2%}
+.classic-okey-screen .okey-player.left{left:1.5%;top:42%;bottom:auto}
+.classic-okey-screen .okey-player.right{right:1.5%;top:42%;bottom:auto}
+.classic-okey-screen .okey-me{left:1.5%;bottom:22%;display:grid}
+.classic-okey-screen .okey-me b{display:grid}
+
+.classic-okey-screen .okey-player .okey-turn-clock,
+.classic-okey-screen .okey-me .okey-turn-clock{
+  --okey-clock-progress:1;
+  left:calc(6px + clamp(16px,1.85vw,22px));
+  top:50%;
+  width:clamp(32px,3.7vw,44px);
+  height:clamp(32px,3.7vw,44px);
+  transform:translate(-50%,-50%);
+  border:0;
+  border-radius:50%;
+  background:radial-gradient(circle,#071927 0 57%,transparent 60%),conic-gradient(#35d883 calc(var(--okey-clock-progress)*1turn),#263949 0);
+  box-shadow:0 0 0 2px #e5c66e,0 0 14px #36d88799
+}
+.classic-okey-screen .okey-player .okey-turn-clock b,
+.classic-okey-screen .okey-me .okey-turn-clock b{font-size:clamp(14px,1.7vw,21px)}
+.classic-okey-screen .okey-player .okey-turn-clock.urgent,
+.classic-okey-screen .okey-me .okey-turn-clock.urgent{
+  background:radial-gradient(circle,#2b1013 0 57%,transparent 60%),conic-gradient(#ef554c calc(var(--okey-clock-progress)*1turn),#4a2527 0);
+  box-shadow:0 0 0 2px #f1c96c,0 0 17px #ef554ccc
+}
+
+.classic-okey-screen .okey-smart-tools{inset:0;width:auto;display:block;pointer-events:none}
+.classic-okey-screen .okey-smart-tools button[data-action="sort-runs"],
+.classic-okey-screen .okey-smart-tools button[data-action="sort-pairs"]{
+  left:1.5%;
+  right:auto;
+  width:clamp(92px,10.5vw,132px);
+  height:clamp(38px,8.5vh,54px);
+  padding:5px 10px;
+  display:grid;
+  place-content:center;
+  gap:1px;
+  writing-mode:horizontal-tb;
+  border:1px solid #d5b35f;
+  border-radius:12px;
+  background-image:linear-gradient(#164c66,#092b42);
+  color:#fff4cf;
+  box-shadow:inset 0 0 0 1px #80cce22d,inset 0 -5px 10px #00101daa,0 4px 9px #0009;
+  pointer-events:auto
+}
+.classic-okey-screen .okey-smart-tools button[data-action="sort-runs"]{bottom:10.5%}
+.classic-okey-screen .okey-smart-tools button[data-action="sort-pairs"]{bottom:1.5%}
+.classic-okey-screen .okey-smart-tools button small{color:#80d2e5;font-size:clamp(6px,.6vw,8px);letter-spacing:.12em}
+.classic-okey-screen .okey-smart-tools button b{font-size:clamp(9px,1vw,13px)}
+.classic-okey-screen .okey-smart-tools button.active{
+  border-color:#ffe17c;
+  background-image:linear-gradient(#b77a29,#704315);
+  filter:brightness(1.08) drop-shadow(0 0 8px #f5c65088)
+}
+.classic-okey-screen .okey-smart-tools button.active small{color:#ffe9a0}
+
+.classic-okey-screen .okey-actions{
+  right:1.5%;
+  bottom:1.5%;
+  width:clamp(96px,11vw,140px);
+  display:block
+}
+.classic-okey-screen .okey-action.draw,
+.classic-okey-screen .okey-action.take{display:none}
+.classic-okey-screen .okey-action.discard{
+  width:100%;
+  min-height:clamp(48px,10vh,66px);
+  padding:6px 10px;
+  display:grid;
+  place-content:center;
+  gap:1px;
+  border:2px solid #dda943;
+  border-radius:14px;
+  background:linear-gradient(#bd5938,#74261d);
+  color:#fff1cc;
+  box-shadow:inset 0 0 0 1px #ffe5a94a,inset 0 -7px 12px #3e100dcc,0 5px 10px #0009;
+  text-shadow:0 1px 2px #2b0906;
+  transition:transform .1s ease,filter .1s ease,box-shadow .1s ease
+}
+.classic-okey-screen .okey-action.discard small{font-size:clamp(7px,.7vw,9px);letter-spacing:.13em}
+.classic-okey-screen .okey-action.discard b{font:900 clamp(15px,1.7vw,22px)/1 Georgia,serif}
+.classic-okey-screen .okey-action.discard:not(:disabled):hover{filter:brightness(1.14);transform:translateY(-2px)}
+.classic-okey-screen .okey-action.discard:not(:disabled):active{transform:translateY(3px) scale(.97)}
+.classic-okey-screen .okey-action.discard:disabled{opacity:.52;filter:grayscale(.35)}
+.classic-okey-screen .okey-action.finish-ready{
+  border-color:#81f2b9;
+  background:linear-gradient(#35c88a,#116345);
+  box-shadow:inset 0 0 0 1px #d3ffe578,inset 0 -7px 12px #063c29cc,0 0 20px #38e9a288,0 5px 10px #0009
+}
+
+.classic-okey-screen .classic-finish-counter{
+  left:auto;
+  right:1.5%;
+  top:auto;
+  bottom:13.5%;
+  width:clamp(96px,11vw,140px);
+  height:auto;
+  min-height:clamp(40px,7vh,50px);
+  padding:5px 8px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  gap:0 6px;
+  border:1px solid #8eb7c4;
+  border-radius:10px;
+  background:linear-gradient(#112f45ee,#071b2cee);
+  color:#f7d77d;
+  box-shadow:inset 0 0 0 1px #aeeaff1c,0 4px 10px #0008;
+  transform:none
+}
+.classic-okey-screen .classic-finish-counter small,
+.classic-okey-screen .classic-finish-counter span{display:block}
+.classic-okey-screen .classic-finish-counter small{grid-column:1/3;color:#8bcfe0;font-size:clamp(6px,.6vw,8px);letter-spacing:.12em}
+.classic-okey-screen .classic-finish-counter b{grid-row:2;font-size:clamp(17px,1.9vw,24px)}
+.classic-okey-screen .classic-finish-counter span{align-self:center;color:#e9eff1;font-size:clamp(7px,.68vw,9px);font-weight:900;line-height:1.05}
+.classic-okey-screen .classic-finish-counter.ready{border-color:#74e6aa;color:#79f0b1;filter:none;box-shadow:inset 0 0 0 1px #8cfdc33d,0 0 18px #38e99a66}
+
+@media(orientation:landscape) and (max-height:560px){
+  .classic-okey-screen .okey-player,
+  .classic-okey-screen .okey-me{height:clamp(38px,10vh,46px)}
+  .classic-okey-screen .okey-me{bottom:23%}
+  .classic-okey-screen .classic-okey-guide{top:13%;min-height:58px;padding:7px 12px;gap:3px}
+  .classic-okey-screen .okey-smart-tools button[data-action="sort-runs"],
+  .classic-okey-screen .okey-smart-tools button[data-action="sort-pairs"]{height:clamp(34px,9.5vh,42px)}
+  .classic-okey-screen .okey-smart-tools button[data-action="sort-runs"]{bottom:11.5%}
+  .classic-okey-screen .classic-finish-counter{bottom:14.5%}
+  .classic-okey-screen .okey-action.discard{min-height:clamp(42px,11vh,50px)}
+}
