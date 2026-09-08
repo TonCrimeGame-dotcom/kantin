@@ -1,0 +1,17 @@
+# Development and test files are kept in Git but are not needed at runtime.
+docs/
+mobile/
+supabase/
+tests/
+tools/
+data/
+
+# The app uses the optimized WebP/SVG runtime assets. Keep large PNG masters,
+# rejected candidates, and visual mockups out of the production deployment.
+assets/**/*.png
+assets/**/candidates/
+assets/**/mockups/
+
+.cache-font/
+README.md
+TERMS_OF_USE.md
