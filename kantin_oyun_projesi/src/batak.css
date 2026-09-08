@@ -113,3 +113,176 @@ body:has(.batak-screen) .batak-table{width:100%;height:100%;max-width:none;margi
 
 @media(max-width:900px){.batak-scoreboard{width:225px}.batak-score-row{grid-template-columns:27px minmax(48px,1fr) 34px 30px 37px;height:35px;min-height:35px}.batak-score-row>span.batak-score-avatar{width:24px;height:24px}.batak-center{width:245px;height:160px}.batak-profile-copy small{font-size:7px}}
 @media(max-height:650px){.batak-scoreboard{width:220px;transform:none;padding-top:35px;gap:3px}.batak-scoreboard header{top:8px}.batak-score-row{height:32px;min-height:32px}.batak-score-stat strong,.batak-score-row>output strong{font-size:12px}.batak-profile-card{width:168px;height:56px}.batak-player-me .batak-profile-card{width:178px}.batak-center{width:230px;height:150px}.batak-turn-timer{width:32px!important;height:32px!important;min-width:32px!important}.batak-turn-timer:before{inset:3px}.batak-turn-timer em{font-size:9px}}
+
+/* Batak v3: gece mavisi dokulu masa, yazboz skor kâğıdı ve sabit profil yuvaları. */
+.batak-table{
+  border-color:#27170f;
+  background-color:#102d49;
+  background-image:radial-gradient(circle at 48% 38%,#477a9b55,transparent 52%),linear-gradient(#0b2c47a8,#061827d6),url('../assets/games/pisti/final/tablecloth-green.webp');
+  background-position:center;
+  background-size:cover;
+  background-blend-mode:screen,color,multiply;
+  box-shadow:inset 0 0 0 3px #b77c30,inset 0 0 110px #020b14e8,0 16px 50px #000b
+}
+.batak-table:before{border-color:#e3b75c59;box-shadow:inset 0 0 42px #020a12b8}
+.batak-table:after{border-color:#b77c305c;box-shadow:inset 0 0 65px #020911c9}
+
+.batak-profile-wrap{filter:drop-shadow(0 6px 7px #000a)}
+.batak-profile-card,
+.batak-player-me .batak-profile-card{
+  box-sizing:border-box;
+  width:clamp(166px,18vw,220px);
+  height:clamp(54px,6.1vw,70px);
+  padding:0 12px 0 clamp(54px,5.8vw,68px);
+  display:flex;
+  align-items:center
+}
+.batak-profile-avatar{
+  box-sizing:border-box;
+  left:clamp(9px,1vw,12px);
+  top:50%;
+  width:clamp(38px,4.2vw,50px);
+  height:clamp(38px,4.2vw,50px);
+  transform:translateY(-50%);
+  overflow:visible;
+  border:2px solid #d8b35d;
+  border-radius:50%;
+  background:#071c2b
+}
+.batak-profile-avatar>img{
+  width:100%;
+  height:100%;
+  max-width:none;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  border-radius:50%
+}
+.batak-profile-avatar>i{
+  right:-4px;
+  bottom:-4px;
+  min-width:18px;
+  height:18px;
+  padding:0 3px;
+  line-height:14px
+}
+.batak-profile-copy{width:100%;height:62%;min-width:0;justify-content:center;gap:3px;overflow:hidden}
+.batak-profile-copy b{
+  width:100%;
+  font-size:clamp(9px,1vw,12px);
+  line-height:1.05;
+  text-align:center
+}
+.batak-profile-copy small{
+  width:100%;
+  margin:0;
+  overflow:hidden;
+  color:#f4d88b;
+  font-size:clamp(6px,.68vw,8px);
+  line-height:1.05;
+  text-align:center;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
+.batak-scoreboard{
+  right:12px;
+  top:8px;
+  box-sizing:border-box;
+  width:clamp(150px,16vw,205px);
+  aspect-ratio:2/3;
+  height:auto;
+  padding:22% 10% 15%;
+  gap:0;
+  overflow:hidden;
+  border:0;
+  border-radius:0;
+  background:transparent url('../assets/games/pisti/final/score-paper-blank-v2.webp') center/100% 100% no-repeat;
+  box-shadow:none;
+  filter:drop-shadow(0 7px 8px #000a);
+  transform:rotate(1deg);
+  color:#29364c;
+  font-family:'Segoe Print','Comic Sans MS',cursive
+}
+.batak-scoreboard:before{display:none}
+.batak-scoreboard header{
+  position:absolute;
+  left:14%;
+  right:14%;
+  top:11%;
+  height:auto;
+  padding:0 0 3px;
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  border-bottom:1px solid #50617a66;
+  color:#263b5d;
+  text-shadow:none
+}
+.batak-scoreboard header b,.batak-scoreboard header small{font-size:0}
+.batak-scoreboard header b:after{content:'YAZBOZ';font:900 clamp(8px,.85vw,11px)/1 'Segoe Print','Comic Sans MS',cursive}
+.batak-scoreboard header small:after{content:'T · A · P';font:800 clamp(5px,.5vw,7px)/1 'Segoe Print','Comic Sans MS',cursive}
+.batak-score-row{
+  box-sizing:border-box;
+  width:100%;
+  height:25%;
+  min-height:0;
+  padding:1px 0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 18% 18% 22%;
+  gap:1px;
+  align-items:center;
+  border:0;
+  border-bottom:1px solid #58698155;
+  border-radius:0;
+  background:transparent!important;
+  color:#26364f
+}
+.batak-score-row:last-child{border-bottom:0}
+.batak-score-row>b{
+  min-width:0;
+  overflow:hidden;
+  color:#27354b;
+  font:800 clamp(6px,.67vw,9px)/1.05 'Segoe Print','Comic Sans MS',cursive;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.batak-score-stat,.batak-score-row>output{
+  border:0!important;
+  border-left:1px solid #56657a3d!important;
+  color:#263b5d!important;
+  font-family:'Segoe Print','Comic Sans MS',cursive
+}
+.batak-score-stat small,.batak-score-row>output small{font:800 clamp(4px,.4vw,6px)/1 Arial,sans-serif;color:#687389}
+.batak-score-stat strong,.batak-score-row>output strong{font:900 clamp(9px,1vw,13px)/1 'Segoe Print','Comic Sans MS',cursive;color:#243e67}
+.batak-score-row.mine{outline:0;background:transparent!important;color:#922d27}
+.batak-score-row.mine>b,.batak-score-row.mine strong{color:#922d27}
+
+.batak-turn-timer{
+  left:50%!important;
+  right:auto!important;
+  top:50%!important;
+  bottom:auto!important;
+  width:calc(100% + 4px)!important;
+  height:calc(100% + 4px)!important;
+  min-width:0!important;
+  transform:translate(-50%,-50%)!important;
+  box-shadow:0 0 0 2px #edcf78,0 0 11px color-mix(in srgb,var(--timer-color) 72%,transparent)
+}
+.batak-turn-timer:before{inset:4px;background:#0c2638}
+.batak-turn-timer em{font-size:clamp(10px,1.15vw,14px)}
+.batak-turn-timer.danger{animation:batak-avatar-timer-danger .55s ease-in-out infinite alternate}
+@keyframes batak-avatar-timer-danger{to{filter:drop-shadow(0 0 7px #f33);transform:translate(-50%,-50%) scale(1.07)!important}}
+
+@media(max-width:900px){
+  .batak-profile-card,.batak-player-me .batak-profile-card{width:150px;height:50px;padding-left:50px}
+  .batak-profile-avatar{left:8px;width:36px;height:36px}
+  .batak-scoreboard{width:142px}
+}
+@media(max-height:650px){
+  .batak-profile-card,.batak-player-me .batak-profile-card{width:150px;height:50px;padding-left:50px}
+  .batak-profile-avatar{left:8px;width:36px;height:36px}
+  .batak-scoreboard{width:140px;padding:29px 12px 20px;transform:rotate(1deg)}
+  .batak-scoreboard header{top:12%}
+  .batak-score-row{height:25%;min-height:0}
+}

@@ -3,7 +3,7 @@
   const MODES=Object.freeze({
     spvp:{title:'Standart Tavla',family:'backgammon',players:'1v1'},upvp:{title:'Üniversite Tavlası',family:'university',players:'2v2'},
     pistiSolo:{title:'Pişti',family:'pisti',players:'1v1',engineMode:'solo'},pistiTeam:{title:'Eşli Pişti',family:'pisti',players:'2v2',engineMode:'team'},
-    okeyClassic:{title:'Normal Okey',family:'okey',players:'4 kişi',engineMode:'classic'},
+    okeyClassic:{title:'Klasik Okey',family:'okey',players:'4 kişi',engineMode:'classic'},
     okeySolo:{title:'101 Okey',family:'okey',players:'4 kişi',engineMode:'solo'},okeyTeam:{title:'Eşli 101',family:'okey',players:'2v2',engineMode:'team'},
     batakKozMaca:{title:'Koz Maça',family:'batak',players:'4 kişi',engineMode:'kozMaca'},batakGommeli:{title:'Gömmeli Batak',family:'batak',players:'4 kişi',engineMode:'gommeli'},
     sozcukDuel:{title:'Sözcük Kapışması',family:'sozcuk',players:'4 kişi',engineMode:'solo'}

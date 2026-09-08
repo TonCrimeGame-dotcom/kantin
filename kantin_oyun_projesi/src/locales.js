@@ -213,12 +213,12 @@
   };
 
   for (const locale of [en, ru, es, hi, de, ar]) Object.assign(locale, {
-    'game.okeyClassic':'Normal Okey','game.okeyClassicSubtitle':'Arrange your hidden hand and finish',
-    'mode.okeyClassic':'Normal Okey','desc.okeyClassic':'Complete 14 tiles as runs, sets or seven pairs'
+    'game.okeyClassic':'Classic Okey','game.okeyClassicSubtitle':'Arrange your hidden hand and finish',
+    'mode.okeyClassic':'Classic Okey','desc.okeyClassic':'Complete 14 tiles as runs, sets or seven pairs'
   });
   Object.assign(tr, {
-    'game.okeyClassic':'Normal Okey','game.okeyClassicSubtitle':'Elini diz, okeyle bit',
-    'mode.okeyClassic':'Normal Okey','desc.okeyClassic':'14 taşı perlere veya yedi çifte tamamla'
+    'game.okeyClassic':'Klasik Okey','game.okeyClassicSubtitle':'Elini diz, okeyle bit',
+    'mode.okeyClassic':'Klasik Okey','desc.okeyClassic':'14 taşı perlere veya yedi çifte tamamla'
   });
 
   const foreignPistiKeys = ['auth.subtitle', 'game.pisti', 'mode.pistiSolo', 'mode.pistiTeam'];
