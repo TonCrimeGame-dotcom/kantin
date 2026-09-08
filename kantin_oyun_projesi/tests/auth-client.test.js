@@ -8,6 +8,7 @@ const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'auth-client.js'), 'utf8');
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.js'), 'utf8');
+const homeCss = fs.readFileSync(path.join(__dirname, '..', 'src', 'home.css'), 'utf8');
 const guestRecoveryMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901090000_guest_auth_recovery.sql'), 'utf8');
 const guestLinkingMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901113000_guest_account_linking.sql'), 'utf8');
 
@@ -154,6 +155,14 @@ test('oda kapsayicisinin veri alanlari ic dugmelerin tiklamalarini yutmaz', () =
   assert.match(appSource, /closest\('button\[data-mode\]'\)/);
   assert.doesNotMatch(appSource, /closest\('\[data-family\]'\)/);
   assert.doesNotMatch(appSource, /closest\('\[data-mode\]'\)/);
+});
+
+test('profil penceresi kaydirmak yerine bolum sekmeleri kullanir', () => {
+  assert.match(appSource, /data-profile-tab="\$\{tab\}"/);
+  assert.match(appSource, /data-profile-panel="\$\{tab\}"/);
+  assert.match(appSource, /Avatarlar.*İstatistikler.*Hesap/);
+  assert.match(homeCss, /\.profile-card[^}]+overflow:hidden/);
+  assert.match(homeCss, /\.profile-data[^}]+overflow:hidden/);
 });
 
 test('anonim Supabase kaydi eski cihaz profiliyle cakissa bile Auth islemini dusurmez', () => {
