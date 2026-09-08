@@ -10,7 +10,7 @@ const {
   identityForSession,
   rpc,
   serviceRequest
-} = require('./lib/match-service');
+} = require('../server/api-lib/match-service');
 
 function sendJson(res, status, payload) {
   res.statusCode = status;
@@ -326,4 +326,4 @@ module.exports = async function matchHandler(req, res) {
   }
 };
 
-module.exports._test = { bodyOf, guestIdentity: require('./lib/match-service').guestIdentity, packetFor, profileStats, roomFor };
+module.exports._test = { bodyOf, guestIdentity: require('../server/api-lib/match-service').guestIdentity, packetFor, profileStats, roomFor };

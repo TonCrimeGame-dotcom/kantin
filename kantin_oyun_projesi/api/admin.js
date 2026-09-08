@@ -7,7 +7,7 @@ const {
   assertSameOrigin,
   authorizeAdmin,
   rpc
-} = require('./lib/admin-auth');
+} = require('../server/api-lib/admin-auth');
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;

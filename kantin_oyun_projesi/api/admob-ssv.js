@@ -1,6 +1,6 @@
 'use strict';
 
-const { verifyCallback } = require('./lib/admob-ssv');
+const { verifyCallback } = require('../server/api-lib/admob-ssv');
 const ADMOB_VERIFICATION_CUSTOM_DATA = 'kantin-admob-verification';
 
 function sendJson(res, statusCode, payload) {

@@ -1,5 +1,5 @@
 'use strict';
-const{MatchApiError,assertSameOrigin,environment,identityForRequest,rpc,serviceRequest}=require('./lib/match-service');
+const{MatchApiError,assertSameOrigin,environment,identityForRequest,rpc,serviceRequest}=require('../server/api-lib/match-service');
 function sendJson(res,status,payload){res.statusCode=status;res.setHeader('content-type','application/json; charset=utf-8');res.setHeader('cache-control','no-store');res.setHeader('x-content-type-options','nosniff');res.end(JSON.stringify(payload))}
 function bodyOf(req){if(!req.body)return{};if(typeof req.body==='object')return req.body;try{return JSON.parse(req.body)}catch{throw new MatchApiError('invalid_json',400)}}
 const filter=value=>encodeURIComponent(String(value));

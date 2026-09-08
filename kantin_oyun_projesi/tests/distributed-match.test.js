@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const matchHandler = require('../api/match');
-const { verifyGuest } = require('../api/lib/match-service');
+const { verifyGuest } = require('../server/api-lib/match-service');
 
 function test(name, fn) {
   try {

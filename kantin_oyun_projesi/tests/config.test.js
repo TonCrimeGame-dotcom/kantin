@@ -2,6 +2,8 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const configHandler = require('../api/config');
 
 function mockResponse() {
@@ -62,4 +64,12 @@ test('public config sadece GET kabul eder', async () => {
   await configHandler({ method: 'POST' }, res);
   assert.equal(res.statusCode, 405);
   assert.equal(res.headers.allow, 'GET');
+});
+
+test('Vercel Hobby dagitimi en fazla 12 API fonksiyonu olusturur', () => {
+  const apiDirectory = path.join(__dirname, '..', 'api');
+  const functions = fs.readdirSync(apiDirectory, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith('.js'));
+  assert.ok(functions.length <= 12, `${functions.length} API fonksiyonu Vercel Hobby sinirini asiyor`);
+  assert.equal(fs.existsSync(path.join(apiDirectory, 'lib')), false, 'Yardimci moduller api/ altinda endpoint sayilir');
 });

@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { generateKeyPairSync, sign } = require('node:crypto');
-const { parseCallback, verifyCallback, resetKeyCache } = require('../api/lib/admob-ssv');
+const { parseCallback, verifyCallback, resetKeyCache } = require('../server/api-lib/admob-ssv');
 
 const migration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901143000_rewarded_ads_foundation.sql'), 'utf8');
 const economyClient = fs.readFileSync(path.join(__dirname, '..', 'src', 'economy-client.js'), 'utf8');
