@@ -81,8 +81,16 @@
     return enabled;
   }
 
+  function stopAll() {
+    channels.forEach(pool => pool.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    }));
+  }
+
   window.KANTIN_AUDIO = Object.freeze({
     play,
+    stopAll,
     toggle: () => setEnabled(!enabled),
     setEnabled,
     isEnabled: () => enabled,

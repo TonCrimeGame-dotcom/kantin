@@ -121,6 +121,29 @@ test('yerel yedek misafir Supabase duzelince ayni acilista bulut oturumuna yukse
   assert.ok(storage.getItem('kantin:supabase-session:v1'));
 });
 
+test('yerel misafir arkadas masasi acarken sayfa yenilemeden bulut oturumuna yukselir', async () => {
+  const storage = memoryStorage();
+  let online = false;
+  const fetchImpl = async (url) => {
+    if (!online) return { ok: false, status: 503, json: async () => ({ error: 'service_not_configured' }) };
+    if (url === '/api/config') return { ok: true, status: 200, json: async () => ({ supabaseUrl: 'https://project.supabase.co', supabasePublishableKey: 'public-key' }) };
+    if (url.endsWith('/auth/v1/settings')) return { ok: true, status: 200, json: async () => ({ external: { anonymous_users: true } }) };
+    if (url.endsWith('/auth/v1/signup')) return { ok: true, status: 200, json: async () => ({ access_token: 'access', refresh_token: 'refresh', expires_in: 3600, user: { id: '87654321-abcd-4000-8000-123456789abc', user_metadata: { username: 'Misafir 123456' } } }) };
+    if (url.includes('/rest/v1/profiles?')) return { ok: true, status: 200, json: async () => ([{ id: '87654321-abcd-4000-8000-123456789abc', username: 'Misafir 123456', player_code: 'KNT-000456', is_guest: true, preferred_locale: 'tr' }]) };
+    throw new Error(`Beklenmeyen istek: ${url}`);
+  };
+  const auth = boot(storage, fetchImpl);
+  await auth.ready;
+  await auth.signInAsGuest();
+  assert.equal(auth.localGuest, true);
+
+  online = true;
+  await auth.connectLocalGuest();
+  assert.equal(auth.localGuest, false);
+  assert.equal(auth.user.id, '87654321-abcd-4000-8000-123456789abc');
+  assert.equal(auth.getAccessToken(), 'access');
+});
+
 test('ana tiklama isleyicisi ceviri fonksiyonunu yerel tas degiskeniyle golgelemez', () => {
   assert.doesNotMatch(appSource, /const t=e\.target\.closest\('\[data-tile\]'\)/);
   assert.match(appSource, /const tileNode=e\.target\.closest\('\[data-tile\]'\)/);

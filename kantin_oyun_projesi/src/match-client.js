@@ -44,7 +44,8 @@
         invalid_match_session: 'Eşleşme oturumu geçersiz. Lütfen yeniden dene.',
         expired_match_session: 'Eşleşme oturumunun süresi doldu. Lütfen yeniden dene.',
         game_action_rejected: 'Bu hamle oyun kurallarına uygun değil.',
-        matchmaking_blocked: 'Hesabınız geçici olarak çevrimiçi eşleşmelere kapatılmış.'
+        matchmaking_blocked: 'Hesabınız geçici olarak çevrimiçi eşleşmelere kapatılmış.',
+        registered_account_required: 'Arkadaş masası için çevrimiçi misafir hesabına bağlanmalısın.'
       };
       const code = error?.code || error?.error || 'match_error';
       const message = error?.details || messages[code] || error?.message || 'Eşleşme işlemi tamamlanamadı.';
@@ -76,10 +77,21 @@
 
     connect(username = 'Oyuncu') {
       this.username = username;
+      const auth = global.KANTIN_AUTH, cloudPlayerId = auth?.getAccessToken?.() ? auth?.user?.id : null;
+      if (this.playerId && cloudPlayerId && this.playerId !== cloudPlayerId) {
+        this.playerId = null;
+        this.profile = null;
+        this.matchSessionToken = null;
+        this.socialPlayerId = null;
+        this.privateRooms = [];
+        this.privateInvites = [];
+        clearInterval(this.privateRoomPollTimer);
+        this.privateRoomPollTimer = null;
+        sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      }
       if (this.playerId) return Promise.resolve(this.profile);
       if (this.connecting) return this.connecting;
       this.connecting = (async () => {
-        const auth = global.KANTIN_AUTH;
         await auth?.ready;
         const installationId = auth?.user?.user_metadata?.installation_id || auth?.user?.user_metadata?.installationId || null;
         let payload;

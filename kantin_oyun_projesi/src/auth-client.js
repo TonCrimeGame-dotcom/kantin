@@ -380,24 +380,37 @@
     return snapshot();
   }
 
+  async function createCloudGuest(guest = localGuestRecord()) {
+    const payload = await request('/auth/v1/signup', {
+      method: 'POST',
+      body: {
+        data: {
+          username: guest.username,
+          installation_id: guest.installationId,
+          is_guest: true,
+          preferred_locale: guest.preferredLocale
+        }
+      }
+    });
+    return establishSession(payload);
+  }
+
   async function signInAsGuest() {
     if (state.status === 'authenticated') return snapshot();
     const guest = localGuestRecord();
     try {
-      const payload = await request('/auth/v1/signup', {
-        method: 'POST',
-        body: {
-          data: {
-            username: guest.username,
-            installation_id: guest.installationId,
-            is_guest: true,
-            preferred_locale: guest.preferredLocale
-          }
-        }
-      });
-      return await establishSession(payload);
+      return await createCloudGuest(guest);
     } catch {
       return establishLocalGuest(guest);
+    }
+  }
+
+  async function connectLocalGuest() {
+    if (!state.localGuest) return snapshot();
+    try {
+      return await createCloudGuest(localGuestRecord());
+    } catch (error) {
+      throw authError(error?.message || 'Arkadaş masası için hesap sunucusuna bağlanılamadı.');
     }
   }
 
@@ -526,6 +539,7 @@
     signUp,
     signIn,
     signInAsGuest,
+    connectLocalGuest,
     signInWithOAuth,
     requestEmailUpgrade,
     setAccountPassword,

@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   window.KANTIN_ASSET_MANIFEST = Object.freeze({
-  "version": "20260907-1",
+  "version": "20260908-2",
   "assets": [
     {
       "url": "./assets/avatars/aslan.webp",
@@ -408,8 +408,8 @@
       "bytes": 149476
     },
     {
-      "url": "./assets/games/tavla/board-playfield-24pt-v3.webp",
-      "bytes": 182224
+      "url": "./assets/games/tavla/board-playfield-hd.webp",
+      "bytes": 289536
     },
     {
       "url": "./assets/games/tavla/board-surface.svg",
