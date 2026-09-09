@@ -75,9 +75,32 @@
       return payload;
     }
 
+    connectLocalSocket() {
+      this.useWebSocketMatch = true;
+      const activate = payload => {
+        this.socialPlayerId = payload?.id || this.socialPlayerId;
+        this.playerId = this.socialPlayerId;
+        this.profile = { ...this.profile, ...payload, id: this.playerId };
+        this.emit('identity', this.profile);
+        return this.profile;
+      };
+      if (this.socialPlayerId) return Promise.resolve(activate({ id: this.socialPlayerId }));
+      return new Promise((resolve, reject) => {
+        const onIdentity = event => { clearTimeout(timer); resolve(activate(event.detail)); };
+        const timer = setTimeout(() => {
+          this.removeEventListener('socket:identity', onIdentity);
+          reject(new Error('Yerel eşleşme sunucusuna bağlanılamadı.'));
+        }, 5000);
+        this.addEventListener('socket:identity', onIdentity, { once: true });
+        if (this.socket?.readyState === WebSocket.OPEN) {
+          this.socket.send(JSON.stringify({ type: 'hello', payload: { username: this.username, token: localStorage.getItem('kantinAuthToken'), avatarUrl: localStorage.getItem('kantin:profile-avatar:v1') } }));
+        } else this.connectSocial();
+      });
+    }
+
     connect(username = 'Oyuncu') {
       this.username = username;
-      const auth = global.KANTIN_AUTH, cloudPlayerId = auth?.getAccessToken?.() ? auth?.user?.id : null;
+      const auth = global.KANTIN_AUTH, cloudPlayerId = auth?.getAccessToken?.() ? auth?.user?.id : null, localHost = ['localhost','127.0.0.1'].includes(location.hostname);
       if (this.playerId && cloudPlayerId && this.playerId !== cloudPlayerId) {
         this.playerId = null;
         this.profile = null;
@@ -93,17 +116,12 @@
       if (this.connecting) return this.connecting;
       this.connecting = (async () => {
         await auth?.ready;
+        if (localHost) return this.connectLocalSocket();
         const installationId = auth?.user?.user_metadata?.installation_id || auth?.user?.user_metadata?.installationId || null;
         let payload;
         try { payload = await this.request({ action: 'session', username: this.username, installationId }); }
         catch (error) {
-          if (!['localhost','127.0.0.1'].includes(location.hostname)) throw error;
-          this.useWebSocketMatch = true;
-          this.connectSocial();
-          return new Promise((resolve, reject) => {
-            const timer = setTimeout(() => reject(new Error('Yerel eşleşme sunucusuna bağlanılamadı.')), 5000);
-            this.addEventListener('socket:identity', event => { clearTimeout(timer); resolve(event.detail); }, { once: true });
-          });
+          throw error;
         }
         const identity = payload.identity;
         this.playerId = identity.id;

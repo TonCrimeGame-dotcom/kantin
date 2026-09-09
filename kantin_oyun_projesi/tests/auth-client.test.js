@@ -9,6 +9,8 @@ const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'auth-client.js'), 'utf8');
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.js'), 'utf8');
 const homeCss = fs.readFileSync(path.join(__dirname, '..', 'src', 'home.css'), 'utf8');
+const matchClientSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'match-client.js'), 'utf8');
+const localServerSource = fs.readFileSync(path.join(__dirname, '..', 'server', 'server.js'), 'utf8');
 const guestRecoveryMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901090000_guest_auth_recovery.sql'), 'utf8');
 const guestLinkingMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901113000_guest_account_linking.sql'), 'utf8');
 
@@ -163,6 +165,13 @@ test('profil penceresi kaydirmak yerine bolum sekmeleri kullanir', () => {
   assert.match(appSource, /Avatarlar.*İstatistikler.*Hesap/);
   assert.match(homeCss, /\.profile-card[^}]+overflow:hidden/);
   assert.match(homeCss, /\.profile-data[^}]+overflow:hidden/);
+});
+
+test('yerel arkadas masasi REST yerine hazir WebSocket kimligini kullanir', () => {
+  assert.match(matchClientSource, /if \(localHost\) return this\.connectLocalSocket\(\)/);
+  assert.match(matchClientSource, /if \(this\.socialPlayerId\) return Promise\.resolve\(activate/);
+  assert.match(matchClientSource, /this\.socket\?\.readyState === WebSocket\.OPEN/);
+  assert.match(localServerSource, /\{ok:true,localMode:true\}/);
 });
 
 test('anonim Supabase kaydi eski cihaz profiliyle cakissa bile Auth islemini dusurmez', () => {
