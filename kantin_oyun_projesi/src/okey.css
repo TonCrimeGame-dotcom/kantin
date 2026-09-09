@@ -960,8 +960,10 @@ body:has(.okey-table-screen) .topbar{display:none}body:has(.okey-table-screen) #
 
 /* Klasik Okey v2: ıstaka çevresindeki bütün kumandalar güvenli boşluklara çekilir. */
 .classic-okey-screen .okey-me{
-  left:1.2%;
+  left:50%;
+  right:auto;
   bottom:35%;
+  transform:translateX(-50%);
 }
 .classic-okey-screen .okey-smart-tools button[data-action="sort-runs"],
 .classic-okey-screen .okey-smart-tools button[data-action="sort-pairs"]{
