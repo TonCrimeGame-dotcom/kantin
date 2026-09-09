@@ -341,3 +341,91 @@ body:has(.batak-screen) .batak-table{width:100%;height:100%;max-width:none;margi
   .batak-opponent.left,.batak-opponent.right{top:59%}
   .batak-scoreboard{width:118px;padding:24px 10px 16px}
 }
+
+/* Batak v5: kompakt koz rozeti, gerçek kart adedi ve tek avatar/sayaç yuvası. */
+.batak-trump-indicator{
+  left:auto;
+  right:clamp(62px,6.5vw,82px);
+  top:10px;
+  width:clamp(76px,8.5vw,104px);
+  min-height:44px;
+  box-sizing:border-box;
+  padding:4px 6px;
+  display:grid;
+  grid-template-columns:clamp(28px,3vw,38px) minmax(0,1fr);
+  grid-template-rows:1fr 1fr;
+  align-items:center;
+  gap:0 5px;
+  transform:none;
+  border-radius:10px;
+  text-align:left
+}
+.batak-trump-indicator>div,
+.batak-trump-indicator .batak-trump-card,
+.batak-trump-indicator .batak-kitty-pile{
+  grid-row:1/3;
+  width:clamp(28px,3vw,38px);
+  height:clamp(38px,5.2vw,52px);
+  margin:0;
+  box-sizing:border-box
+}
+.batak-trump-indicator .batak-kitty-pile i{
+  width:clamp(24px,2.6vw,33px);
+  height:clamp(35px,4.6vw,46px)
+}
+.batak-trump-indicator .batak-trump-card b{font-size:clamp(20px,2.4vw,29px)}
+.batak-trump-indicator>b{margin:0;font-size:clamp(10px,1.05vw,14px);line-height:1}
+.batak-trump-indicator>small{font-size:clamp(5px,.52vw,7px);line-height:1.05}
+
+.batak-card-fan.top{width:192px;max-width:none}
+.batak-card-fan.left,.batak-card-fan.right{height:178px;max-height:none}
+.batak-table .batak-card-fan.top span:nth-child(1){left:0!important}
+.batak-table .batak-card-fan.top span:nth-child(2){left:12px!important}
+.batak-table .batak-card-fan.top span:nth-child(3){left:24px!important}
+.batak-table .batak-card-fan.top span:nth-child(4){left:36px!important}
+.batak-table .batak-card-fan.top span:nth-child(5){left:48px!important}
+.batak-table .batak-card-fan.top span:nth-child(6){left:60px!important}
+.batak-table .batak-card-fan.top span:nth-child(7){left:72px!important}
+.batak-table .batak-card-fan.top span:nth-child(8){left:84px!important}
+.batak-table .batak-card-fan.top span:nth-child(9){left:96px!important}
+.batak-table .batak-card-fan.top span:nth-child(10){left:108px!important}
+.batak-table .batak-card-fan.top span:nth-child(11){left:120px!important}
+.batak-table .batak-card-fan.top span:nth-child(12){left:132px!important}
+.batak-table .batak-card-fan.top span:nth-child(13){left:144px!important}
+.batak-table .batak-card-fan.left span:nth-child(1),.batak-table .batak-card-fan.right span:nth-child(1){top:0!important}
+.batak-table .batak-card-fan.left span:nth-child(2),.batak-table .batak-card-fan.right span:nth-child(2){top:9px!important}
+.batak-table .batak-card-fan.left span:nth-child(3),.batak-table .batak-card-fan.right span:nth-child(3){top:18px!important}
+.batak-table .batak-card-fan.left span:nth-child(4),.batak-table .batak-card-fan.right span:nth-child(4){top:27px!important}
+.batak-table .batak-card-fan.left span:nth-child(5),.batak-table .batak-card-fan.right span:nth-child(5){top:36px!important}
+.batak-table .batak-card-fan.left span:nth-child(6),.batak-table .batak-card-fan.right span:nth-child(6){top:45px!important}
+.batak-table .batak-card-fan.left span:nth-child(7),.batak-table .batak-card-fan.right span:nth-child(7){top:54px!important}
+.batak-table .batak-card-fan.left span:nth-child(8),.batak-table .batak-card-fan.right span:nth-child(8){top:63px!important}
+.batak-table .batak-card-fan.left span:nth-child(9),.batak-table .batak-card-fan.right span:nth-child(9){top:72px!important}
+.batak-table .batak-card-fan.left span:nth-child(10),.batak-table .batak-card-fan.right span:nth-child(10){top:81px!important}
+.batak-table .batak-card-fan.left span:nth-child(11),.batak-table .batak-card-fan.right span:nth-child(11){top:90px!important}
+.batak-table .batak-card-fan.left span:nth-child(12),.batak-table .batak-card-fan.right span:nth-child(12){top:99px!important}
+.batak-table .batak-card-fan.left span:nth-child(13),.batak-table .batak-card-fan.right span:nth-child(13){top:108px!important}
+
+.batak-player-me .batak-profile-avatar{
+  width:clamp(38px,4.2vw,50px);
+  height:clamp(38px,4.2vw,50px);
+  display:grid;
+  border:2px solid #d8b35d;
+  background:#071c2b
+}
+.batak-player-me .batak-profile-copy{
+  width:100%;
+  height:62%;
+  display:flex;
+  border:0;
+  border-radius:0;
+  background:none
+}
+.batak-profile-avatar>i:not(.batak-turn-timer){right:-1px;bottom:-1px;min-width:16px;height:16px;padding:0 2px;border-width:1px;font-size:8px;line-height:14px}
+.batak-profile-avatar:has(.batak-turn-timer)>i:not(.batak-turn-timer){display:none}
+
+@media(max-width:900px), (max-height:650px){
+  .batak-player-me .batak-profile-avatar{width:36px;height:36px}
+  .batak-trump-indicator{top:8px;right:58px;width:80px;min-height:42px;padding:3px 5px;grid-template-columns:28px minmax(0,1fr)}
+  .batak-trump-indicator>div,.batak-trump-indicator .batak-trump-card,.batak-trump-indicator .batak-kitty-pile{width:28px;height:38px}
+}
