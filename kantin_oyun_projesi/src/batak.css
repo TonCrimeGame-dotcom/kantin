@@ -429,3 +429,23 @@ body:has(.batak-screen) .batak-table{width:100%;height:100%;max-width:none;margi
   .batak-trump-indicator{top:8px;right:58px;width:80px;min-height:42px;padding:3px 5px;grid-template-columns:28px minmax(0,1fr)}
   .batak-trump-indicator>div,.batak-trump-indicator .batak-trump-card,.batak-trump-indicator .batak-kitty-pile{width:28px;height:38px}
 }
+
+/* Oynanabilir kartlar pasif kartların üstünde kalır; tahmin satırı hiçbir ölçüde gizlenmez. */
+.batak-hand .card{position:relative;z-index:1}
+.batak-hand .card:disabled{z-index:1}
+.batak-hand button.card:not(:disabled){z-index:3}
+.batak-hand button.card:not(:disabled):hover,
+.batak-hand button.card:not(:disabled):focus{z-index:7}
+.batak-hand .card.selected{z-index:8}
+.batak-profile-copy small,
+.batak-player-me .batak-profile-copy small{
+  display:block!important;
+  min-height:1em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+@media(max-width:620px){
+  .batak-profile-copy small,
+  .batak-player-me .batak-profile-copy small{font-size:6px}
+}
