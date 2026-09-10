@@ -30,7 +30,7 @@ test('acilis indirme ekrani tum kullanilan web gorsellerini onbellege alir', () 
   assert.match(loaderSource, /previousVersion === manifest\.version \? 'force-cache' : 'reload'/);
   assert.match(loaderSource, /localStorage\.setItem\(versionKey, manifest\.version\)/);
   assert.ok(manifest.assets.length >= 100);
-  assert.ok(total > 1_000_000 && total < 10_000_000, `optimize paket 1-10 MB araliginda olmali: ${total}`);
+  assert.ok(total > 1_000_000 && total < 12_000_000, `optimize paket 1-12 MB araliginda olmali: ${total}`);
   assert.ok(manifest.assets.every(asset => fs.existsSync(path.join(root, asset.url.replace(/^\.\//, '')))));
   assert.doesNotMatch(runtimeSource.replace(/\/\*[\s\S]*?\*\//g, ''), /assets\/[^'"`()\s]+\.png/);
   assert.match(runtimeSource, /assets\/games\/pisti\/cards\/\$\{String\(c\.rank\).*?\.webp/);

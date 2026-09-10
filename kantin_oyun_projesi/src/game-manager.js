@@ -5,7 +5,7 @@
     pistiSolo:{title:'Pişti',family:'pisti',players:'1v1',engineMode:'solo'},pistiTeam:{title:'Eşli Pişti',family:'pisti',players:'2v2',engineMode:'team'},
     okeyClassic:{title:'Klasik Okey',family:'okey',players:'4 kişi',engineMode:'classic'},
     okeySolo:{title:'101 Okey',family:'okey',players:'4 kişi',engineMode:'solo'},okeyTeam:{title:'Eşli 101',family:'okey',players:'2v2',engineMode:'team'},
-    batakKozMaca:{title:'Koz Maça',family:'batak',players:'4 kişi',engineMode:'kozMaca'},batakGommeli:{title:'Gömmeli Batak',family:'batak',players:'4 kişi',engineMode:'gommeli'},
+    batakKozMaca:{title:'Koz Maça',family:'batak',players:'4 kişi',engineMode:'kozMaca'},batakGommeli:{title:'Gömmeli Batak',family:'batak',players:'3 kişi',engineMode:'gommeli'},
     sozcukDuel:{title:'Sözcük Kapışması',family:'sozcuk',players:'4 kişi',engineMode:'solo'}
   });
   class GameManager{

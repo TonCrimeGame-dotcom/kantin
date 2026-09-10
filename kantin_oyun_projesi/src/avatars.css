@@ -12,3 +12,29 @@
 .mini-avatar img,.player-avatar img,.university-profile-avatar img,.pisti-opponent button>span img,.pisti-player-me>span img,.okey-player>span img,.okey-me>span img,.word-mini-avatar>img,.word-result-avatar img,.result-avatar img{width:100%;height:100%;display:block;border-radius:inherit;object-fit:cover}
 @media(max-width:760px){.avatar-grid{grid-template-columns:repeat(4,minmax(54px,1fr))}}
 @media(orientation:landscape) and (max-height:560px){.avatar-picker{margin-bottom:8px;padding:7px}.avatar-picker header{margin-bottom:6px}.avatar-picker header h3{font-size:14px}.avatar-grid{grid-template-columns:repeat(6,minmax(42px,1fr));gap:5px}.avatar-choice{padding:3px}.avatar-choice span{margin-top:2px;font-size:7px}}
+.avatar-choice:disabled{cursor:not-allowed;opacity:.65;transform:none}
+.avatar-choice:disabled img{filter:grayscale(.85);opacity:.7}
+.avatar-choice small{display:block;color:#efca77;margin-top:4px;font-size:10px}
+
+/* Fit the complete avatar collection to the available profile panel. */
+#profileModal .profile-panel-appearance{padding:10px;overflow:hidden}
+#profileModal .avatar-picker{height:100%;min-height:0;margin:0;display:grid;grid-template-rows:auto minmax(0,1fr);padding:8px;overflow:hidden}
+#profileModal .avatar-picker header{margin:0 0 6px}
+#profileModal .avatar-grid{min-height:0;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));gap:5px}
+#profileModal .avatar-choice{min-height:0;min-width:0;padding:3px;display:grid;grid-template-rows:minmax(0,1fr) auto auto;overflow:hidden}
+#profileModal .avatar-choice img{width:100%;height:100%;min-height:0;aspect-ratio:auto;object-fit:contain;background:transparent}
+#profileModal .avatar-choice span{margin-top:2px;font-size:9px;line-height:1.1}
+#profileModal .avatar-choice small{margin-top:2px;font-size:8px;line-height:1.1}
+@media(max-width:700px) and (orientation:portrait){
+ #profileModal .profile-main:has(.profile-panel-appearance.active){grid-template-columns:minmax(90px,25%) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+ #profileModal .avatar-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:3px}
+ #profileModal .profile-main:has(.profile-panel-appearance.active) .identity-card{padding:8px}
+ #profileModal .profile-main:has(.profile-panel-appearance.active) .profile-photo{width:70px;height:70px}
+ #profileModal .profile-main:has(.profile-panel-appearance.active) .identity-card h3{font-size:14px;overflow-wrap:anywhere}
+ #profileModal .profile-main:has(.profile-panel-appearance.active) .identity-card>p{font-size:9px;overflow-wrap:anywhere}
+ #profileModal .avatar-picker header small{display:none}
+ #profileModal .avatar-picker header h3{font-size:14px}
+ #profileModal .profile-sheet>header{padding-left:12px;gap:6px}
+ #profileModal .profile-sheet>header h2{font-size:20px}
+ #profileModal .profile-tabs button{padding:6px;font-size:9px}
+}

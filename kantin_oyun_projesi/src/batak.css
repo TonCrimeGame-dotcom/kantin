@@ -45,7 +45,7 @@ body:has(.batak-screen) .batak-table{width:100%;height:100%;max-width:none;margi
 @media(max-height:650px){.batak-result-board{width:min(620px,96vw);max-height:none;overflow:visible;padding:16px 26px;border-width:9px}.batak-result-board header{padding-bottom:5px}.batak-result-board header small{font-size:8px}.batak-result-board h2{font-size:29px}.batak-result-board header p{display:none}.batak-result-columns{margin:7px 0;gap:8px}.batak-result-columns article{padding:7px 11px}.batak-result-columns h3{min-height:16px;margin:1px 0;font-size:10px}.batak-result-columns output{font-size:34px;line-height:1}.batak-result-columns dl{display:grid;grid-template-columns:1fr 1fr;margin-top:3px}.batak-result-columns dl div{padding:2px 4px;font-size:8px}.batak-result-note{margin-bottom:6px;padding:4px 11px}.batak-result-board footer button{padding:6px 13px;font-size:10px}}
 
 /* 52 kartın her biri doğrudan PNG asset olarak kullanılır. */
-.batak-screen .card.batak-face-asset,.batak-flying-card.batak-face-asset{box-sizing:border-box!important;padding:0!important;border:0!important;background:none!important;overflow:hidden}
+.batak-screen .card.batak-face-asset,.batak-flying-card.batak-face-asset,.batak-play-flight.batak-face-asset{box-sizing:border-box!important;padding:0!important;border:0!important;background:none!important;overflow:hidden}
 .card.batak-face-asset>img{display:block;width:100%;height:100%;object-fit:fill;pointer-events:none}
 .batak-flying-card.batak-face-asset{box-sizing:border-box!important;padding:0!important}
 .batak-scoreboard{height:auto;aspect-ratio:auto;padding:12px;border:1px solid #e0b75f88;border-radius:14px;background:#17100ee8;filter:drop-shadow(0 8px 10px #0009)}
@@ -449,3 +449,31 @@ body:has(.batak-screen) .batak-table{width:100%;height:100%;max-width:none;margi
   .batak-profile-copy small,
   .batak-player-me .batak-profile-copy small{font-size:6px}
 }
+/* Approved table layout: two short score-paper columns leave room for the left seat. */
+.batak-table .batak-scoreboard{
+  left:10px;right:auto;top:8px;
+  width:clamp(220px,25vw,280px);height:clamp(84px,22vh,112px);
+  max-height:none;aspect-ratio:auto;transform:none;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-flow:column;
+  padding:25px 12px 8px;column-gap:24px;row-gap:0;
+  background-size:50% 100%;background-position:left top;background-repeat:repeat-x;
+}
+.batak-table .batak-scoreboard header{left:14px;right:auto;top:10px;width:calc(50% - 28px)}
+.batak-table .batak-score-row{height:auto;min-height:0;width:100%;padding:1px 0}
+.batak-table .batak-score-row:nth-child(3){border-bottom:0}
+.batak-table .batak-opponent.left,.batak-table .batak-opponent.right{top:47%}
+.batak-table .batak-choice:not(.compact):not(.suits){width:min(510px,60vw);box-sizing:border-box;top:53%;padding:10px 12px}
+.batak-table .batak-choice:not(.compact):not(.suits) button{min-width:42px;min-height:32px}
+@media(max-width:700px){
+  .batak-table .batak-scoreboard{width:clamp(180px,31vw,220px);padding-inline:9px;column-gap:18px}
+  .batak-table .batak-scoreboard header{left:11px;width:calc(50% - 22px)}
+  .batak-table .batak-choice:not(.compact):not(.suits){width:64vw;padding:8px}
+  .batak-table .batak-choice:not(.compact):not(.suits) button{min-width:30px;min-height:28px;padding:4px 6px}
+}
+.batak-revealed-kitty{position:absolute;left:50%;top:23%;transform:translateX(-50%);z-index:12;text-align:center;color:#ffe5a5;pointer-events:none}
+.batak-revealed-kitty small{display:block;margin-bottom:5px;font-size:11px}
+.batak-revealed-kitty>div,.batak-kitty-transfer{display:flex;gap:5px}
+.batak-revealed-kitty .card,.batak-kitty-transfer .card{position:relative!important;inset:auto!important;transform:none!important;width:clamp(32px,4vw,58px)!important;height:auto!important;aspect-ratio:2/3;opacity:1!important}
+.batak-kitty-transfer{position:fixed;left:40%;top:35%;z-index:10000;pointer-events:none}
+.batak-kitty-transfer .card{padding:0;border:0;background:transparent;overflow:hidden;box-shadow:none}
+.batak-kitty-transfer .card img{display:block;width:100%;height:100%;object-fit:fill}

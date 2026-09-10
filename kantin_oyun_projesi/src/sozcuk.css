@@ -208,3 +208,5 @@
 @keyframes word-result-rise{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
 @media(max-width:620px) and (orientation:portrait){.word-result-overlay{position:fixed}.word-result-board{width:min(520px,94vw,106dvh)}}
 @media(prefers-reduced-motion:reduce){.word-result-overlay,.word-result-board{animation:none}}
+/* Board coordinates always increase left to right; the engine reads Arabic right to left. */
+.word-board{direction:ltr}

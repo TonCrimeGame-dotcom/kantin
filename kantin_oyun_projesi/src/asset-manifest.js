@@ -1,7 +1,5 @@
-(() => {
-  'use strict';
-  window.KANTIN_ASSET_MANIFEST = Object.freeze({
-  "version": "20260908-2",
+(()=>{window.KANTIN_ASSET_MANIFEST=Object.freeze({
+  "version": "20260909-avatars-1",
   "assets": [
     {
       "url": "./assets/avatars/aslan.webp",
@@ -408,7 +406,7 @@
       "bytes": 149476
     },
     {
-      "url": "./assets/games/tavla/board-playfield-hd.webp",
+      "url": "./assets/games/tavla/board-playfield-24pt-v3.webp",
       "bytes": 289536
     },
     {
@@ -542,7 +540,54 @@
     {
       "url": "./assets/social-gifts/terlik.webp",
       "bytes": 54088
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-02.webp",
+      "bytes": 15408
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-04.webp",
+      "bytes": 7928
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-06.webp",
+      "bytes": 11334
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-08.webp",
+      "bytes": 9430
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-10.webp",
+      "bytes": 13056
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-12.webp",
+      "bytes": 8076
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-14.webp",
+      "bytes": 8792
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-16.webp",
+      "bytes": 10092
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-18.webp",
+      "bytes": 13256
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-20.webp",
+      "bytes": 10852
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-22.webp",
+      "bytes": 11176
+    },
+    {
+      "url": "./assets/avatars/avatars2/level-24.webp",
+      "bytes": 6220
     }
   ]
-});
-})();
+});})();

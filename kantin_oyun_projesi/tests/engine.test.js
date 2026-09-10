@@ -795,3 +795,23 @@ test('Sözcük Kapışması dört bireysel oyuncuyla başlar ve sırayı saat y�
   assert.equal(game.current().id, 'P4');
   assert.equal(game.state.status, 'playing');
 });
+
+test('Üniversite tavlasında girilemeyen kırık pul iki eşi de durdurur',()=>{
+ for(const blockedBoard of ['board1','board2'])for(const team of ['teamA','teamB'])for(let d1=1;d1<=6;d1++)for(let d2=1;d2<=6;d2++){
+  const game=new UPVP.UniversityBackgammonPvP({startingTeam:team});
+  const color=team==='teamA'?'white':'black',enemy=color==='white'?'black':'white';
+  const board=game.boards[blockedBoard];board.state.bar[color]=1;
+  for(const die of [d1,d2])board.state.points[color==='white'?24-die:die-1]={owner:enemy,count:2};
+  const before=JSON.stringify(Object.values(game.boards).map(b=>b.state.points));
+  game.setSharedDice(d1,d2,game.getCurrentRollerId());
+  assert.notEqual(game.match.activeTeam,team);assert.equal(game.match.sharedRollOpen,false);
+  for(const player of Object.values(game.players).filter(p=>p.team===team)){assert.deepEqual(game.getLegalMovesForPlayer(player.id),[]);assert.throws(()=>game.move(player.id,5,4,1),/Aktif ortak zar yok/)}
+  assert.equal(JSON.stringify(Object.values(game.boards).map(b=>b.state.points)),before);
+ }
+});
+test('Kırık pul bir zarla girebiliyorsa eşin oynaması engellenmez',()=>{
+ const game=new UPVP.UniversityBackgammonPvP();const board=game.boards.board1;
+ board.state.bar.white=1;board.state.points[23]={owner:'black',count:2};board.state.points[22]={owner:null,count:0};
+ game.setSharedDice(1,2,game.getCurrentRollerId());
+ assert.equal(game.match.activeTeam,'teamA');assert.equal(game.match.boardRollStatus.board2,'playing');
+});

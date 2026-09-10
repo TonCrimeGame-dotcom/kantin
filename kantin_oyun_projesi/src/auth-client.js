@@ -471,6 +471,7 @@
   }
 
   async function updateProfile(changes) {
+    if(changes.avatar_url && globalThis.KANTIN_AVATAR_UNLOCKS && !globalThis.KANTIN_AVATAR_UNLOCKS.canSelect(changes.avatar_url,state.profile?.level||1))throw authError('Bu avatar için seviyen yeterli değil.');
     if (!state.user) throw authError('Profilini düzenlemek için giriş yapmalısın.');
     if (changes.username !== undefined && state.profile?.is_guest) {
       throw authError('Misafir hesabında kullanıcı adı değiştirilemez. Önce hesabını bağlamalısın.');

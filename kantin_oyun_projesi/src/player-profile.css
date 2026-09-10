@@ -1,0 +1,102 @@
+/* One profile silhouette for every table. Game selectors retain seat placement. */
+#screen .game-player-profile {
+  --profile-size: clamp(72px, 13vh, 104px);
+  box-sizing: border-box!important;
+  width: var(--profile-size)!important; min-width: 0!important; max-width: none!important;
+  height: auto!important; min-height: 0!important;
+  display: flex!important; flex-direction: column!important; align-items: center!important;
+  gap: 0!important; padding: 0!important; margin: 0!important;
+  border: 0!important; border-radius: 0!important; background: none!important;
+  box-shadow: none!important; filter: none!important; animation: none!important;
+  color: #fff4cd!important; text-align: center!important; overflow: visible!important;
+  font-family: Arial, sans-serif!important;
+  pointer-events: auto!important; cursor: pointer;
+}
+#screen .game-player-profile::before,#screen .game-player-profile::after { display: none!important }
+#screen .game-player-profile > :not(.game-player-avatar):not(.game-player-nameplate):not(.game-player-detail):not(.table-gift-button) { display: none!important }
+#screen .game-player-profile .game-player-avatar {
+  position: relative!important; inset: auto!important; transform: none!important;
+  display: block!important; width: var(--profile-size)!important; height: var(--profile-size)!important; aspect-ratio: 1!important; flex: none!important;
+  min-width: 0!important; max-width: none!important; padding: 0!important; margin: 0!important;
+  border: 0!important; border-radius: 0!important; background: transparent!important;
+  overflow: visible!important; box-shadow: none!important; filter: none!important;
+}
+#screen .game-player-avatar > img {
+  display: block!important; width: 100%!important; height: 100%!important;
+  position: static!important; object-fit: contain!important; border-radius: 0!important;
+  background: none!important; opacity: 1!important; filter: none!important; transform: none!important;
+}
+#screen .game-player-avatar > i:not(.player-profile-timer) { display: none!important }
+#screen .game-player-avatar::before,#screen .game-player-avatar::after { display: none!important }
+#screen .game-player-profile .game-player-nameplate {
+  position: relative!important; display: flex!important; flex-direction: column!important;
+  align-items: center!important; justify-content: center!important;
+  width: 94%!important; height: auto!important; min-height: 27px; box-sizing: border-box; aspect-ratio: auto!important;
+  margin: -3px 0 0!important; padding: 3px 4px!important; gap: 1px!important;
+  border: 1px solid #d9b35d!important; border-radius: 3px!important;
+  background: linear-gradient(#10594a,#043a30)!important;
+  box-shadow: 0 2px 4px #0007!important; overflow: hidden!important;
+}
+#screen .game-player-nameplate > b {
+  display: block!important; width: 100%!important; max-width: none!important;
+  font: 700 clamp(8px,1.1vh,11px)/1.15 Arial,sans-serif!important;
+  color: #fff9df!important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#screen .game-player-profile .game-player-balance {
+  display: flex!important; flex-direction: row!important; align-items: center!important; justify-content: center!important;
+  width: auto!important; height: auto!important; margin: 0!important; padding: 0!important; gap: 3px!important; aspect-ratio: auto!important;
+  border: 0!important; border-radius: 0!important; background: none!important;
+}
+#screen .game-player-balance img { width: 12px!important; height: 12px!important; object-fit: contain!important; border: 0!important }
+#screen .game-player-balance strong { font: 800 clamp(10px,1.4vh,14px)/1 Arial,sans-serif!important; color: #ffdb69!important }
+#screen .game-player-profile .game-player-detail {
+  display: block!important; position: static!important; width: 120%!important; margin: 3px 0 0!important;
+  padding: 0!important; font: 700 8px/1.2 Arial,sans-serif!important; color: #eadba9!important;
+  background: none!important; border: 0!important; white-space: normal!important;
+}
+/* Transparent center: only a thin green arc and the number overlay the avatar. */
+#screen .game-player-avatar .player-profile-timer {
+  position: absolute!important; z-index: 3!important;
+  inset: 8%!important; width: auto!important; height: auto!important;
+  min-width: 0!important; min-height: 0!important; max-width: none!important;
+  display: grid!important; place-items: center!important; padding: 0!important; margin: 0!important;
+  border: 0!important; border-radius: 50%!important; background: transparent!important;
+  box-shadow: none!important; transform: none!important; filter: none!important; animation: none!important;
+  color: #fff!important; font: 800 calc(var(--profile-size)*.29)/1 Arial,sans-serif!important;
+  font-style: normal!important; text-shadow: 0 1px 3px #000,0 0 5px #000!important;
+  pointer-events: none!important; overflow: visible!important;
+}
+/* Countdown is text only; the avatar remains fully visible. */
+#screen .game-player-avatar .player-profile-timer::before { display: none!important }
+#screen .game-player-avatar .player-profile-timer::after { display: none!important }
+#screen .player-profile-timer > :is(b,strong,em) {
+  position: static!important; display: block!important; width: auto!important; height: auto!important;
+  padding: 0!important; margin: 0!important; color: inherit!important; font: inherit!important;
+  background: none!important; border: 0!important; text-shadow: inherit!important;
+  transform: none!important; inset: auto!important; grid-area: 1 / 1!important; align-self: center!important; justify-self: center!important;
+}
+#screen .player-profile-timer > :is(small,i) { display: none!important }
+#screen .university-profile-card:not(.active) .player-profile-timer { display: none!important }
+#screen .batak-player-me { padding: 0!important; border: 0!important; background: none!important; box-shadow: none!important; transform: none!important }
+#screen .batak-profile-wrap { width: auto!important; height: auto!important }
+#screen .batak-opponent.top,#screen .pisti-opponent.top { flex-direction: column!important; align-items: center!important; gap: 0!important }
+#screen .batak-opponent.top .batak-card-fan,#screen .pisti-opponent.top .pisti-card-fan { position: absolute!important; left: calc(100% + 12px)!important; top: 16px!important; margin: 0!important }
+#screen .tavla-player { max-width: none!important; height: auto!important; min-height: 0!important; background: none!important; border: 0!important; padding: 0!important; box-shadow: none!important }
+#screen .word-rack-profile.game-player-profile { transform: none!important }
+#screen .word-rack-profile.left { left: 8px!important }
+#screen .word-rack-profile.right { right: 8px!important }
+#screen .pisti-player-me.game-player-profile { transform: none!important }
+#screen .university-side-pane { height: 100%; max-height: 100%; min-height: 0; display: grid; grid-template-rows: auto auto minmax(0,1fr) auto }
+#screen .university-profiles { justify-items: center }
+#screen .university-partner-bundle { min-height: 0; height: 100%; display: grid; place-items: center }
+#screen .university-partner-bundle .university-partner-board { height: 100%; max-height: 100%; min-height: 0 }
+@media(min-height:601px) {
+  /* Keep the lower profile inside the viewport on wide desktop boards. */
+  #screen .tavla-game:not(.university-game) { height: calc(100dvh - 72px); box-sizing: border-box }
+  #screen .tavla-game:not(.university-game) .tavla-stage { max-width: calc((100dvh - 104px)/.7); margin-inline: auto }
+  #screen .tavla-game:not(.university-game) .tavla-board { height: 100%; max-height: 100% }
+}
+@media(max-height:500px) {
+  #screen .game-player-profile { --profile-size: 64px }
+  #screen .game-player-profile .game-player-detail { font-size: 7px!important }
+}

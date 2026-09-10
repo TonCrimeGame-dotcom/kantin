@@ -19,7 +19,7 @@ body:has(.tavla-board) {
   gap: 2px 0;
   border: 0;
   border-radius: clamp(18px, 3vw, 40px);
-  background: url('../assets/games/tavla/board-playfield-hd.webp') center / 100% 100% no-repeat;
+  background: url('../assets/games/tavla/board-playfield-24pt-v3.webp') center / 100% 100% no-repeat;
   box-shadow: 0 18px 48px #000c, 0 3px 8px #0009;
   overflow: hidden;
 }
@@ -795,4 +795,17 @@ body:has(.tavla-board) #toast { display: none; }
   .dice-scene.is-rolling::after,
   .dice-scene.is-rolling .dice-cube { animation: none; }
   .checker, .dice-cube { transition: none; }
+}
+
+/* Anchor the outermost checker inside the point; overlap only later pieces.
+   Fifteen checkers occupy the same depth as five, in either board direction. */
+.tavla-board .point.stack-dense .checker {
+  width: 92%;
+  margin: 0;
+}
+.tavla-board .point.stack-dense:not(.bottom) .checker + .checker {
+  margin-top: calc(-.92 * (1 - 4 / (var(--stack-count) - 1)) * 100%);
+}
+.tavla-board .point.stack-dense.bottom .checker + .checker {
+  margin-bottom: calc(-.92 * (1 - 4 / (var(--stack-count) - 1)) * 100%);
 }

@@ -1027,3 +1027,18 @@ body:has(.classic-okey-screen) .game-menu-layer{
   .classic-okey-screen .okey-smart-tools button[data-action="sort-pairs"]{height:clamp(26px,7vh,34px)}
   .classic-okey-screen .okey-action.discard{min-height:clamp(34px,8vh,42px)}
 }
+
+/* Discard gestures target the actual pile, never a separate action button. */
+.classic-okey-screen [data-discard-zone]{pointer-events:auto;touch-action:none;min-width:44px;min-height:58px}
+.classic-okey-screen [data-discard-zone].enabled{border-color:#d9b35d}
+.classic-okey-screen [data-discard-zone].drop-ready{outline:2px solid #49e886;outline-offset:3px;background:#155344;box-shadow:0 0 15px #49e88677}
+.classic-okey-screen [data-discard-zone]>.discard-drop-hint{position:absolute;inset:0;display:grid;place-items:center;transform:none;color:#eac966;font-size:24px;pointer-events:none}
+/* 101: keep discard wells between the profiles and the meld grids. */
+.okey-table-screen:not(.classic-okey-screen){--discard-width:clamp(36px,4vw,48px);--discard-inset:max(82px,8vw)}
+.okey-table-screen:not(.classic-okey-screen) .okey-open-melds{left:calc(var(--discard-inset) + var(--discard-width) + 10px);right:calc(var(--discard-inset) + var(--discard-width) + 10px)}
+.okey-table-screen:not(.classic-okey-screen) :is(.okey-discard-lane,.okey-discard-tray){width:var(--discard-width);height:calc(var(--discard-width)*1.5);min-width:var(--discard-width);min-height:calc(var(--discard-width)*1.5);padding:0;transform:none}
+.okey-table-screen:not(.classic-okey-screen) .okey-discard-lane.top{left:var(--discard-inset);right:auto;top:12%;bottom:auto}
+.okey-table-screen:not(.classic-okey-screen) .okey-discard-lane.right{right:var(--discard-inset);left:auto;top:12%;bottom:auto}
+.okey-table-screen:not(.classic-okey-screen) .okey-discard-lane.left{left:var(--discard-inset);right:auto;top:auto;bottom:34%}
+.okey-table-screen:not(.classic-okey-screen) .okey-discard-tray{right:var(--discard-inset);left:auto;top:auto;bottom:34%}
+.okey-table-screen:not(.classic-okey-screen) :is(.okey-discard-lane,.okey-discard-tray) .tile{width:100%;height:100%;margin:0;transform:none}

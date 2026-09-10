@@ -103,3 +103,30 @@ test('tahtaya geçici konan harf ıstakada ikinci kez görünmez',()=>{
   assert.equal(g.getStateForPlayer('P1').yourRack.some(item=>item.id===tile.id),true);
   assert.equal(g.getStateForPlayer('P1').yourRackSlots[0].id,tile.id);
 });
+
+test('tek harf eklemesi yalnız yatay ve dikey kelimeleri tarar',()=>{
+ const g=new SOZCUK.WordClashGame({dictionary:['EL','AL']});
+ g.state.board[7][6]={id:'old-e',letter:'E',value:1};
+ g.state.board[6][7]={id:'old-a',letter:'A',value:1};
+ const tile=g.state.racks.P1[0];Object.assign(tile,{letter:'L',value:1,blank:false});
+ g.stage('P1',tile.id,7,7);
+ assert.deepEqual(g.submit('P1').words,['EL','AL']);
+ assert.throws(()=>g.wordAt(7,7,1,1),/yatay veya dikey/);
+});
+
+test('Arapça yatay sağdan sola, dikey yukarıdan aşağı okunur',()=>{
+ for(const vertical of [false,true]){
+  const g=new SOZCUK.WordClashGame({language:'ar',dictionary:['باب']});
+  const letters=['ب','ا','ب'];
+  letters.forEach((letter,i)=>{const tile=g.state.racks.P1[i];Object.assign(tile,{letter,value:1,blank:false});g.stage('P1',tile.id,vertical?6+i:7,vertical?7:8-i)});
+  const cells=g.validate()[0];
+  assert.deepEqual(cells.map(c=>[c.row,c.col]),vertical?[[6,7],[7,7],[8,7]]:[[7,8],[7,7],[7,6]]);
+  assert.deepEqual(g.submit('P1').words,['باب']);
+ }
+});
+
+test('Arapça çapraz taş yerleşimi de reddedilir',()=>{
+ const g=new SOZCUK.WordClashGame({language:'ar'});
+ const [a,b]=g.state.racks.P1;Object.assign(a,{letter:'ب',blank:false});Object.assign(b,{letter:'ا',blank:false});
+ g.stage('P1',a.id,7,7);assert.throws(()=>g.stage('P1',b.id,8,8),/Çapraz/);
+});

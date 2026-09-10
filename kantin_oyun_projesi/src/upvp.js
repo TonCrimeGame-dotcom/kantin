@@ -17,8 +17,7 @@
  * - Takım sırası geldiğinde o round için belirlenmiş TEK oyuncu zar atar.
  * - Atılan aynı zar, takımın iki oyuncusuna / iki tahtaya da uygulanır.
  * - Her oyuncu kendi tahtasında aynı zarları standart tavla kurallarına göre oynar.
- * - Bir tahtada hamle yoksa o tahta o zar için otomatik tamamlanabilir;
- *   diğer eş kendi tahtasında oynamaya devam eder.
+ * - Eşlerden birinin kırık pulu iki zarla da giremiyorsa takım turu pas geçer.
  * - İki aktif tahta da ortak zar turunu bitirmeden rakip takıma sıra geçmez.
  * - Her round sonunda zar atan oyuncular takım içinde değişir.
  * - Varsayılan maç 4 round'dur.
@@ -448,6 +447,22 @@
       this.match.sharedRollId =
         rollId || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       this.match.sharedRollOpen = true;
+
+      const blockedByBar = Object.values(this.boards).some(board => {
+        if (board.state.status === 'finished' || !board.state.bar[activeColor]) return false;
+        return [d1, d2].every(die => {
+          const point = board.state.points[activeColor === WHITE ? 24 - die : die - 1];
+          return point.owner !== activeColor && point.count >= 2;
+        });
+      });
+      if (blockedByBar) {
+        this.emit('sharedDice', {
+          rollId: this.match.sharedRollId, rollerId, team: this.match.activeTeam,
+          dice: [d1, d2], blockedByBar: true,
+        });
+        this.finishSharedRoll();
+        return this.getState();
+      }
 
       for (const boardId of [BOARD_1, BOARD_2]) {
         const board = this.boards[boardId];
