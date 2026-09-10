@@ -5,6 +5,7 @@
       "maxDuration": 300
     },
     "api/match.js": {
+      "includeFiles": "assets/data/**",
       "maxDuration": 30
     },
     "api/admin.js": {

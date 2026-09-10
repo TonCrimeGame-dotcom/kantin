@@ -4,7 +4,7 @@ mobile/
 supabase/
 tests/
 tools/
-data/
+/data/
 
 # The app uses the optimized WebP/SVG runtime assets. Keep large PNG masters,
 # rejected candidates, and visual mockups out of the production deployment.
@@ -15,3 +15,7 @@ assets/**/mockups/
 .cache-font/
 README.md
 TERMS_OF_USE.md
+
+# Word dictionary is required by the live match engine.
+!assets/data/
+!assets/data/**
