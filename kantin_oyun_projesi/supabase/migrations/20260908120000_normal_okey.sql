@@ -3,8 +3,8 @@ alter table public.matchmaking_tickets drop constraint if exists matchmaking_tic
 alter table public.matchmaking_tickets add constraint matchmaking_tickets_mode_check check(mode in('spvp','upvp','pistiSolo','pistiTeam','okeyClassic','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel'));
 alter table public.online_matches drop constraint if exists online_matches_mode_check;
 alter table public.online_matches add constraint online_matches_mode_check check(mode in('spvp','upvp','pistiSolo','pistiTeam','okeyClassic','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel'));
-alter table public.private_rooms drop constraint if exists private_rooms_mode_check;
-alter table public.private_rooms add constraint private_rooms_mode_check check(mode in('spvp','upvp','pistiSolo','pistiTeam','okeyClassic','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel'));
+alter table public.private_game_rooms drop constraint if exists private_game_rooms_mode_check;
+alter table public.private_game_rooms add constraint private_game_rooms_mode_check check(mode in('spvp','upvp','pistiSolo','pistiTeam','okeyClassic','okeySolo','okeyTeam','batakKozMaca','batakGommeli','sozcukDuel'));
 
 create or replace function public.kantin_join_matchmaking(
   p_player_id text,
