@@ -21,7 +21,7 @@ test('Herkes pas derse mecburcuya ihale 4 kalır',()=>{const game=new BatakGame(
 
 test('Renge uyan oyuncu mümkünse yükseltmek zorundadır',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players});game.state.phase='playing';game.state.currentPlayerIndex=0;game.state.leadSuit='hearts';game.state.currentTrick=[{playerId:'P4',card:card('9','hearts')}];game.state.hands.P1=[card('7','hearts'),card('J','hearts'),card('A','clubs')];assert.deepEqual(game.legalCards('P1').map(item=>item.id),['J_hearts']);assert.throws(()=>game.playCard('P1','7_hearts'),/aykırı/)});
 
-test('Renk yoksa koz atılır ve mümkünse yerdeki koz yükseltilir',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players});game.state.phase='playing';game.state.currentPlayerIndex=0;game.state.leadSuit='hearts';game.state.currentTrick=[{playerId:'P3',card:card('A','hearts')},{playerId:'P4',card:card('10','spades')}];game.state.hands.P1=[card('5','spades'),card('K','spades'),card('A','clubs')];assert.deepEqual(game.legalCards('P1').map(item=>item.id),['K_spades'])});
+test('Renk yoksa koz atılır; kesilmiş elde küçük koz da oynanabilir',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players});game.state.phase='playing';game.state.currentPlayerIndex=0;game.state.leadSuit='hearts';game.state.currentTrick=[{playerId:'P3',card:card('A','hearts')},{playerId:'P4',card:card('10','spades')}];game.state.hands.P1=[card('5','spades'),card('K','spades'),card('A','clubs')];assert.deepEqual(game.legalCards('P1').map(item=>item.id),['5_spades','K_spades'])});
 
 test('Koz kırılmadan kozla çıkılamaz; elde yalnız koz varsa çıkılabilir',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players});game.state.phase='playing';game.state.currentPlayerIndex=0;game.state.hands.P1=[card('A','spades'),card('2','clubs')];assert.deepEqual(game.legalCards('P1').map(item=>item.id),['2_clubs']);game.state.hands.P1=[card('A','spades')];assert.deepEqual(game.legalCards('P1').map(item=>item.id),['A_spades'])});
 
@@ -92,5 +92,36 @@ test('Bütün Batak elleri maça kupa sinek karo sırasındadır',()=>{
  const game=new BatakGame({mode});
  const order=['spades','hearts','clubs','diamonds'];
  for(const p of game.players){const hand=game.getHand(p.id);for(let i=1;i<hand.length;i++)assert.ok(order.indexOf(hand[i-1].suit)<=order.indexOf(hand[i].suit));}
+ }
+});
+
+test('Her iki modda yükseltme zorunlu; yalnız başka renk kozla kesilince serbest',()=>{
+ for(const mode of [MODE_KOZ_MACA,MODE_GOMMELI]){
+  const g=new BatakGame({mode});g.state.phase='playing';g.state.trump='spades';g.state.currentPlayerIndex=0;
+  for(const lead of ['hearts','spades']){
+   g.state.leadSuit=lead;g.state.currentTrick=[{playerId:'P2',card:card('9',lead)}];
+   g.state.hands.P1=[card('7',lead),card('J',lead),card('A','clubs')];
+   assert.deepEqual(g.legalCards('P1').map(c=>c.id),['J_'+lead]);
+   assert.throws(()=>g.playCard('P1','7_'+lead),/aykırı/);
+  }
+  g.state.leadSuit='hearts';g.state.currentTrick=[{playerId:'P2',card:card('9','hearts')},{playerId:'P3',card:card('10','spades')}];
+  g.state.hands.P1=[card('7','hearts'),card('J','hearts'),card('A','clubs')];
+  assert.deepEqual(g.legalCards('P1').map(c=>c.id),['7_hearts','J_hearts']);
+  g.state.hands.P1=[card('5','spades'),card('K','spades'),card('A','clubs')];
+  assert.deepEqual(g.legalCards('P1').map(c=>c.id),['5_spades','K_spades']);
+ }
+});
+
+test('İki modda yerde en yüksek kart varsa veya elde daha büyüğü yoksa küçük kart serbesttir',()=>{
+ for(const mode of [MODE_KOZ_MACA,MODE_GOMMELI]){
+  for(const lead of ['hearts','spades']){
+   for(const top of ['A','K']){
+    const g=new BatakGame({mode});g.state.phase='playing';g.state.trump='spades';g.state.currentPlayerIndex=0;
+    g.state.leadSuit=lead;g.state.currentTrick=[{playerId:'P2',card:card(top,lead)}];
+    g.state.hands.P1=[card('2',lead),card('Q',lead),card('A','clubs')];
+    assert.deepEqual(g.legalCards('P1').map(c=>c.id),['2_'+lead,'Q_'+lead]);
+    assert.doesNotThrow(()=>g.playCard('P1','2_'+lead));
+   }
+  }
  }
 });

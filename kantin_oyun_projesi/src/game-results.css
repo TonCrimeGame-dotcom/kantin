@@ -36,3 +36,18 @@
 .match-ending-notice.victory{color:#fff0bc;text-shadow:0 0 8px #ffedb5,0 0 26px #e7b547,0 0 65px #bc8b22}
 @keyframes match-ending-announcement{0%{opacity:0;transform:scale(1.35);filter:blur(8px)}20%,75%{opacity:1;transform:scale(1);filter:blur(0)}100%{opacity:0;transform:scale(.94)}}
 @media(prefers-reduced-motion:reduce){.match-ending-notice{animation:none!important}}
+/* Keep entrance transforms out of the panel's scrollable area. */
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel){overflow-x:hidden!important;overflow-y:auto!important;min-width:0!important}
+:is(.word-result-players,.batak-result-columns,.pisti-result-columns,.university-result-teams,.okey-result-rows){overflow:clip!important;flex-shrink:0!important;min-width:0!important;padding:3px!important;box-sizing:border-box!important}
+:is(.word-result-player,.batak-result-columns>article,.pisti-result-columns>article,.university-result-teams>article,.okey-result-row){min-width:0!important;flex-shrink:0!important}
+:is(.batak-result-columns,.pisti-result-columns,.university-result-teams) h3,.okey-result-row>strong,.word-result-player-copy{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.batak-result-columns article.winner:after{display:none!important}
+@media(max-height:340px){
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel){padding:6px 12px!important;gap:3px!important}
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel) h2{font-size:20px!important}
+:is(.word-result-player,.batak-result-columns>article,.pisti-result-columns>article,.university-result-teams>article,.okey-result-row){min-height:29px!important;padding:2px 8px!important;gap:7px!important}
+:is(.word-result-players,.batak-result-columns,.pisti-result-columns,.university-result-teams,.okey-result-rows){gap:3px!important}
+:is(.word-result-player,.batak-result-columns>article,.pisti-result-columns>article,.university-result-teams>article,.okey-result-row) output{font-size:20px!important}
+.word-result-avatar,.result-avatar{width:25px!important;height:25px!important}
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel)>footer button{height:29px!important;font-size:12px!important;min-width:110px!important}
+}
