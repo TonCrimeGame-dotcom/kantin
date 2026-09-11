@@ -21,3 +21,17 @@ test('Normal Okey sunucu odası 15/14 dağıtır ve elleri gizler',()=>{const ro
 test('101 geri bırak aksiyonu taşı kaynağına koyar ve sırayı değiştirmez',()=>{const room=new GameRoom(match('okeySolo',['P1','P2','P3','P4']),{send}),starter=room.players.find(p=>p.seat==='P1'),tileId=room.engine.state.hands.P1[0].id;room.act(starter.id,{actionId:'discard-101',turnId:room.turnId(),action:'discard',payload:{tileId}});const taker=room.players.find(p=>p.seat===room.engine.getCurrentPlayer().id),turnNumber=room.engine.state.turnNumber;room.act(taker.id,{actionId:'take-10101',turnId:room.turnId(),action:'take'});room.act(taker.id,{actionId:'return-101',turnId:room.turnId(),action:'returnDiscard'});assert.equal(room.engine.getCurrentPlayer().id,taker.seat);assert.equal(room.engine.state.turnNumber,turnNumber);assert.equal(room.engine.state.phase,'draw');assert.equal(room.engine.state.discardPile.at(-1).id,tileId)});
 test('Sözcük dört kişilik bireysel sırada ilerler ve süre dolunca pas geçer',()=>{const room=new GameRoom(match('sozcukDuel',['P1','P2','P3','P4']),{send}),before=room.engine.state.turnNumber,late=room.engine.current().id;assert.equal(room.engine.players.length,4);assert.ok(room.players.every(player=>player.team===null));assert.ok(room.engine.state.turnDeadlineAt>Date.now());room.handleTimeout(room.clockKey());assert.equal(room.engine.state.turnNumber,before+1);assert.equal(room.engine.current().id,'P2');assert.notEqual(room.engine.current().id,late);assert.equal(room.engine.state.history[0].words[0],'PAS')});
 test('Aktif oda state ve turn sürümü SQLite üzerinden geri yüklenir',()=>{const{UserRegistry}=require('../server/user-registry'),repository=new UserRegistry(),room=new GameRoom(match('spvp',['white','black']),{send,repository});room.act(room.players[0].id,{actionId:'action-restore',turnId:room.turnId(),action:'roll'});const saved=repository.activeMatches()[0],restored=new GameRoom(saved,{send,repository});assert.equal(restored.turnId(),room.turnId());assert.deepEqual(restored.engine.state.dice,room.engine.state.dice);repository.close()});
+
+test('Okey zaman aşımı kullanılması zorunlu yer taşını geri bırakır ve masayı kilitlemez',()=>{
+ for(const mode of ['okeySolo','okeyTeam','okeyClassic']){
+  const room=new GameRoom(match(mode,['P1','P2','P3','P4']),{send,manageClock:false});
+  const e=room.engine,player=e.getCurrentPlayer().id;
+  const taken=e.state.hands[player].at(-1);
+  e.state.forcedUseTileId=taken.id;
+  e.state.phase='discard';
+  assert.doesNotThrow(()=>room.handleTimeout(room.clockKey()));
+  assert.equal(e.state.forcedUseTileId,null);
+  assert.ok(!e.state.hands[player].some(t=>t.id===taken.id));
+  assert.notEqual(e.getCurrentPlayer().id,player);
+ }
+});

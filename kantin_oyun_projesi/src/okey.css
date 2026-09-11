@@ -1042,3 +1042,6 @@ body:has(.classic-okey-screen) .game-menu-layer{
 .okey-table-screen:not(.classic-okey-screen) .okey-discard-lane.left{left:var(--discard-inset);right:auto;top:auto;bottom:34%}
 .okey-table-screen:not(.classic-okey-screen) .okey-discard-tray{right:var(--discard-inset);left:auto;top:auto;bottom:34%}
 .okey-table-screen:not(.classic-okey-screen) :is(.okey-discard-lane,.okey-discard-tray) .tile{width:100%;height:100%;margin:0;transform:none}
+
+/* Preserve tile proportions at both short and tall landscape viewports. */
+.okey-rack .okey-rack-row .tile{height:auto;aspect-ratio:2 / 3;bottom:0;max-height:100%;object-fit:contain}
