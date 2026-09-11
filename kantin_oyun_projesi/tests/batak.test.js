@@ -7,7 +7,7 @@ function test(name,fn){try{fn();console.log(`✓ ${name}`)}catch(error){console.
 
 test('Koz Maça 13 kart dağıtır, kozu maçaya sabitler ve tahmin aşamasıyla başlar',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players,deck:createDeck()});assert.equal(game.state.phase,'bidding');assert.equal(game.state.trump,'spades');assert.deepEqual(Object.values(game.getHandCounts()),[13,13,13,13]);assert.equal(game.state.deck.length,0)});
 
-test('Eldeki kartlar renklere ayrılmış ve büyükten küçüğe sabit dizilir',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players,deck:createDeck()}),hand=game.getHand('P1'),suits={spades:0,hearts:1,diamonds:2,clubs:3},ranks={A:14,K:13,Q:12,J:11,'10':10,'9':9,'8':8,'7':7,'6':6,'5':5,'4':4,'3':3,'2':2};for(let index=1;index<hand.length;index++){const before=hand[index-1],after=hand[index];assert.ok(suits[before.suit]<suits[after.suit]||suits[before.suit]===suits[after.suit]&&ranks[before.rank]>=ranks[after.rank])}});
+test('Eldeki kartlar renklere ayrılmış ve büyükten küçüğe sabit dizilir',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players,deck:createDeck()}),hand=game.getHand('P1'),suits={spades:0,hearts:1,clubs:2,diamonds:3},ranks={A:14,K:13,Q:12,J:11,'10':10,'9':9,'8':8,'7':7,'6':6,'5':5,'4':4,'3':3,'2':2};for(let index=1;index<hand.length;index++){const before=hand[index-1],after=hand[index];assert.ok(suits[before.suit]<suits[after.suit]||suits[before.suit]===suits[after.suit]&&ranks[before.rank]>=ranks[after.rank])}});
 
 test('Koz Maça dört oyuncunun bağımsız tahmini bitince kart oyununa geçer',()=>{const game=new BatakGame({mode:MODE_KOZ_MACA,players});game.bid('P1',0);game.bid('P2',2);game.bid('P3',4);game.bid('P4',3);assert.equal(game.state.phase,'playing');assert.equal(game.getCurrentPlayer().id,'P1');assert.throws(()=>game.pass('P1'),/tahmin/)});
 
@@ -15,7 +15,7 @@ test('Tamamlanan dört kartlık el, sonraki kart oynanana kadar masada tutulur',
 
 test('Gömmeli Batak 16 kart ve kapalı dört kartlık gömü dağıtır',()=>{const game=new BatakGame({mode:MODE_GOMMELI,players:players.slice(0,3),deck:createDeck()});assert.equal(game.state.phase,'auction');assert.deepEqual(Object.values(game.getHandCounts()),[16,16,16]);assert.equal(game.state.kitty.length,4);const view=game.getStateForPlayer('P1');assert.equal(view.kittyCount,4);assert.equal('kitty' in view,false)});
 
-test('Gömmeli ihale yükselir; kazanan önce koz seçer, gömüyü alır ve dört kart gömer',()=>{const game=new BatakGame({mode:MODE_GOMMELI,players:players.slice(0,3)});game.bid('P1',5);game.pass('P2');game.pass('P3');assert.equal(game.state.phase,'trump');assert.equal(game.getHand('P1').length,16);game.selectTrump('P1','hearts');assert.equal(game.state.phase,'bury');assert.equal(game.state.bidder,'P1');assert.equal(game.getHand('P1').length,20);const buried=game.getHand('P1').slice(0,4).map(item=>item.id);game.buryCards('P1',buried);assert.equal(game.getHand('P1').length,16);assert.equal(game.state.phase,'playing');assert.equal(game.state.trump,'hearts')});
+test('Gömmeli ihale yükselir; kazanan önce koz seçer, gömüyü alır ve dört kart gömer',()=>{const game=new BatakGame({mode:MODE_GOMMELI,players:players.slice(0,3)});game.bid('P1',5);game.pass('P2');game.pass('P3');assert.equal(game.state.phase,'trump');assert.equal(game.getHand('P1').length,16);game.selectTrump('P1','hearts');assert.equal(game.state.phase,'bury');assert.equal(game.state.bidder,'P1');assert.equal(game.getHand('P1').length,16);const buried=game.getHand('P1').slice(0,4).map(item=>item.id);game.buryCards('P1',buried);assert.equal(game.getHand('P1').length,16);assert.equal(game.state.phase,'playing');assert.equal(game.state.trump,'hearts')});
 
 test('Herkes pas derse mecburcuya ihale 4 kalır',()=>{const game=new BatakGame({mode:MODE_GOMMELI,players:players.slice(0,3)});players.slice(0,3).forEach(player=>game.pass(player.id));assert.equal(game.state.bidder,'P1');assert.equal(game.state.bidAmount,4);assert.equal(game.state.phase,'trump')});
 
@@ -70,5 +70,27 @@ test('Koz Maça açarın iki fazlasına kadar kabul eder, üç ve üzeri fazlada
   game.state.tricksWon={P1:won,P2:13-won,P3:0,P4:0};
   const expected=won<bid||won-bid>=3?-bid:won;
   assert.equal(game.finishGame().scores.P1,expected,`${bid} dedi, ${won} aldı`);
+ }
+});
+
+test('Gömmeli açık dört kart yalnız gömme onayında seçilen dört kartla takas edilir',()=>{
+ const game=new BatakGame({mode:MODE_GOMMELI,players:players.slice(0,3)});
+ const original=game.getHand('P1'),kitty=game.state.kitty.map(c=>c.id);
+ game.bid('P1',16);game.selectTrump('P1','spades');
+ assert.deepEqual(game.getHand('P1'),original);
+ const removed=original.slice(0,4).map(c=>c.id);
+ game.buryCards('P1',removed);
+ const ids=game.getHand('P1').map(c=>c.id);
+ assert.equal(ids.length,16);
+ for(const id of kitty)assert.ok(ids.includes(id));
+ for(const id of removed)assert.ok(!ids.includes(id));
+ assert.equal(new Set([...Object.values(game.state.hands).flat(),...game.state.buried].map(c=>c.id)).size,52);
+ for(const player of game.players)assert.equal(game.getStateForPlayer(player.id).buried,undefined);
+});
+test('Bütün Batak elleri maça kupa sinek karo sırasındadır',()=>{
+ for(const mode of [MODE_KOZ_MACA,MODE_GOMMELI]){
+ const game=new BatakGame({mode});
+ const order=['spades','hearts','clubs','diamonds'];
+ for(const p of game.players){const hand=game.getHand(p.id);for(let i=1;i<hand.length;i++)assert.ok(order.indexOf(hand[i-1].suit)<=order.indexOf(hand[i].suit));}
  }
 });
