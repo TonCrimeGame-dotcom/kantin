@@ -1,0 +1,190 @@
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+
+const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'auth-client.js'), 'utf8');
+const appSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.js'), 'utf8');
+const homeCss = fs.readFileSync(path.join(__dirname, '..', 'src', 'home.css'), 'utf8');
+const matchClientSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'match-client.js'), 'utf8');
+const localServerSource = fs.readFileSync(path.join(__dirname, '..', 'server', 'server.js'), 'utf8');
+const guestRecoveryMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901090000_guest_auth_recovery.sql'), 'utf8');
+const guestLinkingMigration = fs.readFileSync(path.join(__dirname, '..', 'supabase', 'migrations', '20260901113000_guest_account_linking.sql'), 'utf8');
+
+function memoryStorage() {
+  const values = new Map();
+  return {
+    getItem(key) { return values.has(key) ? values.get(key) : null; },
+    setItem(key, value) { values.set(key, String(value)); },
+    removeItem(key) { values.delete(key); }
+  };
+}
+
+class TestCustomEvent extends Event {
+  constructor(type, options = {}) {
+    super(type);
+    this.detail = options.detail;
+  }
+}
+
+function boot(storage, fetchImpl = async () => ({ ok: false, status: 503, json: async () => ({ error: 'service_not_configured' }) })) {
+  const window = {
+    KANTIN_I18N: {
+      locale: 'tr',
+      normalize(value) { return ['tr', 'en', 'de', 'ru', 'es', 'hi', 'ar'].includes(value) ? value : null; }
+    }
+  };
+  const context = {
+    window,
+    localStorage: storage,
+    Event,
+    EventTarget,
+    CustomEvent: TestCustomEvent,
+    URLSearchParams,
+    location: { hash: '', pathname: '/', search: '', origin: 'http://127.0.0.1:4173' },
+    history: { replaceState() {} },
+    crypto: { randomUUID: () => '12345678-abcd-4000-8000-123456789abc' },
+    fetch: fetchImpl,
+    setTimeout(...args) {
+      const timer = setTimeout(...args);
+      timer.unref?.();
+      return timer;
+    },
+    clearTimeout,
+    console
+  };
+  vm.runInNewContext(source, context, { filename: 'auth-client.js' });
+  return window.KANTIN_AUTH;
+}
+
+test('Supabase yokken misafir girisi cihaza kaydolur ve acilis ekranini gecer', async () => {
+  const storage = memoryStorage();
+  const auth = boot(storage);
+  await auth.ready;
+  assert.equal(auth.isAuthenticated(), false);
+
+  await auth.signInAsGuest();
+  assert.equal(auth.isAuthenticated(), true);
+  assert.equal(auth.localGuest, true);
+  assert.equal(auth.profile.is_guest, true);
+  assert.equal(auth.profile.username, 'Misafir 123456');
+  assert.match(auth.profile.player_code, /^KNT-\d{6}$/);
+  assert.ok(storage.getItem('kantin:device-guest:v1'));
+});
+
+test('ayni cihaz sayfa yenilenince ayni misafir profiline otomatik girer', async () => {
+  const storage = memoryStorage();
+  const first = boot(storage);
+  await first.ready;
+  await first.signInAsGuest();
+  const firstId = first.user.id;
+  const firstCode = first.profile.player_code;
+
+  const second = boot(storage);
+  await second.ready;
+  assert.equal(second.isAuthenticated(), true);
+  assert.equal(second.user.id, firstId);
+  assert.equal(second.profile.player_code, firstCode);
+});
+
+test('misafir kullanici istemci uzerinden adini degistiremez', async () => {
+  const auth = boot(memoryStorage());
+  await auth.ready;
+  await auth.signInAsGuest();
+
+  await assert.rejects(
+    auth.updateProfile({ username: 'Yeni Misafir Adi' }),
+    /Misafir hesabında kullanıcı adı değiştirilemez/
+  );
+  assert.equal(auth.profile.username, 'Misafir 123456');
+});
+
+test('yerel yedek misafir Supabase duzelince ayni acilista bulut oturumuna yukselir', async () => {
+  const storage = memoryStorage();
+  const offline = boot(storage);
+  await offline.ready;
+  await offline.signInAsGuest();
+
+  const cloudFetch = async (url) => {
+    if (url === '/api/config') return { ok: true, status: 200, json: async () => ({ supabaseUrl: 'https://project.supabase.co', supabasePublishableKey: 'public-key' }) };
+    if (url.endsWith('/auth/v1/settings')) return { ok: true, status: 200, json: async () => ({ external: { anonymous_users: true } }) };
+    if (url.endsWith('/auth/v1/signup')) return { ok: true, status: 200, json: async () => ({ access_token: 'access', refresh_token: 'refresh', expires_in: 3600, user: { id: 'server-user', user_metadata: { username: 'Misafir 123456' } } }) };
+    if (url.includes('/rest/v1/profiles?')) return { ok: true, status: 200, json: async () => ([{ id: 'server-user', username: 'Misafir 123456', player_code: 'KNT-000123', is_guest: true, preferred_locale: 'tr' }]) };
+    throw new Error(`Beklenmeyen istek: ${url}`);
+  };
+
+  const upgraded = boot(storage, cloudFetch);
+  await upgraded.ready;
+  assert.equal(upgraded.isAuthenticated(), true);
+  assert.equal(upgraded.localGuest, false);
+  assert.equal(upgraded.user.id, 'server-user');
+  assert.ok(storage.getItem('kantin:supabase-session:v1'));
+});
+
+test('yerel misafir arkadas masasi acarken sayfa yenilemeden bulut oturumuna yukselir', async () => {
+  const storage = memoryStorage();
+  let online = false;
+  const fetchImpl = async (url) => {
+    if (!online) return { ok: false, status: 503, json: async () => ({ error: 'service_not_configured' }) };
+    if (url === '/api/config') return { ok: true, status: 200, json: async () => ({ supabaseUrl: 'https://project.supabase.co', supabasePublishableKey: 'public-key' }) };
+    if (url.endsWith('/auth/v1/settings')) return { ok: true, status: 200, json: async () => ({ external: { anonymous_users: true } }) };
+    if (url.endsWith('/auth/v1/signup')) return { ok: true, status: 200, json: async () => ({ access_token: 'access', refresh_token: 'refresh', expires_in: 3600, user: { id: '87654321-abcd-4000-8000-123456789abc', user_metadata: { username: 'Misafir 123456' } } }) };
+    if (url.includes('/rest/v1/profiles?')) return { ok: true, status: 200, json: async () => ([{ id: '87654321-abcd-4000-8000-123456789abc', username: 'Misafir 123456', player_code: 'KNT-000456', is_guest: true, preferred_locale: 'tr' }]) };
+    throw new Error(`Beklenmeyen istek: ${url}`);
+  };
+  const auth = boot(storage, fetchImpl);
+  await auth.ready;
+  await auth.signInAsGuest();
+  assert.equal(auth.localGuest, true);
+
+  online = true;
+  await auth.connectLocalGuest();
+  assert.equal(auth.localGuest, false);
+  assert.equal(auth.user.id, '87654321-abcd-4000-8000-123456789abc');
+  assert.equal(auth.getAccessToken(), 'access');
+});
+
+test('ana tiklama isleyicisi ceviri fonksiyonunu yerel tas degiskeniyle golgelemez', () => {
+  assert.doesNotMatch(appSource, /const t=e\.target\.closest\('\[data-tile\]'\)/);
+  assert.match(appSource, /const tileNode=e\.target\.closest\('\[data-tile\]'\)/);
+});
+
+test('oda kapsayicisinin veri alanlari ic dugmelerin tiklamalarini yutmaz', () => {
+  assert.match(appSource, /closest\('button\[data-family\]'\)/);
+  assert.match(appSource, /closest\('button\[data-mode\]'\)/);
+  assert.doesNotMatch(appSource, /closest\('\[data-family\]'\)/);
+  assert.doesNotMatch(appSource, /closest\('\[data-mode\]'\)/);
+});
+
+test('profil penceresi kaydirmak yerine bolum sekmeleri kullanir', () => {
+  assert.match(appSource, /data-profile-tab="\$\{tab\}"/);
+  assert.match(appSource, /data-profile-panel="\$\{tab\}"/);
+  assert.match(appSource, /Avatarlar.*İstatistikler.*Hesap/);
+  assert.match(homeCss, /\.profile-card[^}]+overflow:hidden/);
+  assert.match(homeCss, /\.profile-data[^}]+overflow:hidden/);
+});
+
+test('yerel arkadas masasi REST yerine hazir WebSocket kimligini kullanir', () => {
+  assert.match(matchClientSource, /if \(localHost\) return this\.connectLocalSocket\(\)/);
+  assert.match(matchClientSource, /if \(this\.socialPlayerId\) return Promise\.resolve\(activate/);
+  assert.match(matchClientSource, /this\.socket\?\.readyState === WebSocket\.OPEN/);
+  assert.match(localServerSource, /\{ok:true,localMode:true\}/);
+});
+
+test('anonim Supabase kaydi eski cihaz profiliyle cakissa bile Auth islemini dusurmez', () => {
+  assert.match(guestRecoveryMigration, /drop index if exists public\.profiles_installation_id_unique/i);
+  assert.match(guestRecoveryMigration, /to_jsonb\(new\) ->> 'is_anonymous'/i);
+  assert.match(guestRecoveryMigration, /installation := 'anonymous:' \|\| new\.id::text/i);
+  assert.match(guestRecoveryMigration, /preferred_locale/i);
+});
+
+test('misafir adi veritabaninda da kalici hesaba gecene kadar kilitlidir', () => {
+  assert.match(guestLinkingMigration, /before update of username on public\.profiles/i);
+  assert.match(guestLinkingMigration, /old\.is_guest and new\.username is distinct from old\.username/i);
+  assert.match(guestLinkingMigration, /auth\.jwt\(\) ->> 'is_anonymous'/i);
+  assert.match(appSource, /Misafir hesaplarda kullanıcı adı değiştirilemez/);
+  assert.match(appSource, /data-link-provider/);
+});
