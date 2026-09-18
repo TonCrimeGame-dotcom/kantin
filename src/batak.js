@@ -250,6 +250,7 @@
         trumpSelector: null,
 
         currentPlayerIndex: this.startingPlayerIndex,
+        phase: this.mode === MODE_KOZ_MACA ? 'bidding' : 'trump',
         trickNumber: 0,
         leadSuit: null,
         currentTrick: [],
@@ -288,6 +289,7 @@
 
       this.state.deck = source;
       this.state.trump = null;
+      this.state.phase = this.mode === MODE_KOZ_MACA ? 'bidding' : 'trump';
       this.state.trumpSelector = null;
       this.state.currentTrick = [];
       this.state.leadSuit = null;
@@ -392,6 +394,30 @@
       }
 
       return out;
+    }
+
+    canBid(playerId, amount) {
+      if (this.mode !== MODE_KOZ_MACA || this.state.phase !== 'bidding') return false;
+      if (this.getCurrentPlayer().id !== playerId) return false;
+      if (!Number.isInteger(amount) || amount < 0 || amount > this.rules.maxBid) return false;
+      return this.state.bids[playerId] === null;
+    }
+
+    bid(playerId, amount) {
+      if (!this.canBid(playerId, amount)) throw new Error('Bu oyuncu şu anda ihale veremez.');
+      this.state.bids[playerId] = amount;
+      if (this.state.bidAmount === null || amount > this.state.bidAmount) {
+        this.state.bidAmount = amount;
+        this.state.bidder = playerId;
+      }
+      const nextIndex = (this.state.currentPlayerIndex + 1) % this.players.length;
+      this.state.currentPlayerIndex = nextIndex;
+      if (this.players.every(player => this.state.bids[player.id] !== null)) {
+        this.state.phase = 'playing';
+        this.state.currentPlayerIndex = this.startingPlayerIndex;
+      }
+      this.emit('state', this.getPublicState());
+      return { playerId, amount, phase: this.state.phase };
     }
 
     canSelectTrump(playerId, suit) {
@@ -674,6 +700,7 @@
         status: this.state.status,
 
         trump: this.state.trump,
+        phase: this.state.phase,
         trumpSelector: this.state.trumpSelector,
 
         currentPlayerIndex: this.state.currentPlayerIndex,
