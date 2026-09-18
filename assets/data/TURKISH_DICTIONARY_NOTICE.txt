@@ -1,0 +1,9 @@
+Türkçe sözlük verisi
+
+Kaynak: bora-7/tdk-12-kindle
+Adres: https://github.com/bora-7/tdk-12-kindle
+Lisans: MIT
+
+Oyunda kullanılan turkish-words.json dosyası, kaynaktaki sözlükten yalnızca
+tek parçalı, özel isim olmayan ve Türkçe oyun harfleriyle yazılabilen maddeler
+seçilerek türetilmiştir.
