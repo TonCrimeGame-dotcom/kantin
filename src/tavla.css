@@ -808,11 +808,7 @@ body:has(.tavla-board) #toast { display: none; }
 }
 .tavla-board .point.stack-dense.bottom .checker + .checker {
   margin-bottom: calc(-.92 * (1 - 4 / (var(--stack-count) - 1)) * 100%);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/main
 
 /* Shared gingham table with a wood floor in the surrounding space. */
 body:has(.tavla-board){background:#08261e;}

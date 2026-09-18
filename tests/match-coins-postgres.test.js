@@ -52,8 +52,4 @@ const {PGlite}=require('@electric-sql/pglite');
  assert.equal(rights.allowed,false);
  console.log('✓ Abandon refunds, free tables, next match and service-only permissions');
  await db.close();
-<<<<<<< HEAD
 })().catch(error=>{console.error(error.message);process.exitCode=1});
-=======
-})().catch(error=>{console.error(error.message);process.exitCode=1});
->>>>>>> origin/main

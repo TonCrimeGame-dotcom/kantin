@@ -129,8 +129,4 @@ test('Arapça çapraz taş yerleşimi de reddedilir',()=>{
  const g=new SOZCUK.WordClashGame({language:'ar'});
  const [a,b]=g.state.racks.P1;Object.assign(a,{letter:'ب',blank:false});Object.assign(b,{letter:'ا',blank:false});
  g.stage('P1',a.id,7,7);assert.throws(()=>g.stage('P1',b.id,8,8),/Çapraz/);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> origin/main

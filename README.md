@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # KANTİN
 
 Mobil öncelikli Türk masa oyunları platformu. Yerel antrenman ve authoritative WebSocket çevrimiçi oyun destekler.
@@ -124,19 +123,3 @@ node tests/social-smoke.js
 Copyright 2026 Bülent Yağız ÖZGÜNEY. Bu depodaki kaynak kod, [Apache License 2.0](../LICENSE) ile lisanslanmıştır. Apache 2.0; kaynak kodun kullanılması, değiştirilmesi ve dağıtılması için izin verir, değiştirilen dosyaların belirtilmesini ve lisans/atıf bildirimlerinin korunmasını ister. Lisans, KANTİN markasını kullanma hakkı vermez.
 
 KANTİN adı, logoları, avatarları, oyun görselleri, sesleri ve diğer medya varlıkları Apache 2.0 kapsamına dahil değildir; ilgili dosyada açıkça aksi belirtilmedikçe tüm hakları saklıdır. Barındırılan oyunun hesap, eşleştirme, Kantin Coin, sohbet ve kabul edilebilir kullanım kuralları [Kullanım Şartları](./TERMS_OF_USE.md) belgesinde açıklanır. Üçüncü taraf bileşenler kendi lisanslarına tabidir.
-=======
-# KANTİN görsel seti
-
-- `brand/kantin-logo.png`: Saydam arka planlı yüksek çözünürlüklü Kantin amblemi kaynağı.
-- `brand/kantin-logo-ui.webp`: Oyun, giriş ve yönetim panelinde kullanılan hafif logo.
-- `brand/kantin-mark.svg`: Tarayıcı sekmesinde kullanılan eski altın K simgesi.
-- `backgrounds/kantin-home-hero.webp`: Ana sayfa kahraman alanının web için sıkıştırılmış arka planı.
-- `backgrounds/kantin-loading-v1.webp`: Açılış indirme ekranının web arka planı.
-- `backgrounds/kantin-loading-master-v1.png`: Açılış görselinin yüksek çözünürlüklü ana kaynağı.
-- `menu/tavla.svg`: Tavla menü kartı.
-- `menu/pisti.svg`: Pişti menü kartı.
-- `menu/okey.svg`: 101 Okey menü kartı.
-- `games/tavla/`: Animasyona hazır tahta yüzeyi, iki pul ve altı zar yüzü.
-
-SVG dosyaları çözünürlükten bağımsızdır. Arka plan görselinin odak noktası merkezdeki logo ve metin alanı boş kalacak biçimde hazırlanmıştır.
->>>>>>> origin/main
