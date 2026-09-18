@@ -27,15 +27,26 @@
 @keyframes kantin-result-title{from{opacity:0;transform:scale(1.18);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
 @keyframes kantin-result-row{from{opacity:0;transform:translateX(65px)}to{opacity:1;transform:none}}
 @media(max-height:500px){:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel){padding:10px 18px!important;gap:6px!important}:is(.word-result-player,.batak-result-columns>article,.pisti-result-columns>article,.university-result-teams>article,.okey-result-row){min-height:42px!important;padding:4px 10px!important}.word-result-avatar,.result-avatar{width:34px!important;height:34px!important}}
+<<<<<<< HEAD
 @media(prefers-reduced-motion:reduce){:is(.word-result-overlay,.batak-result-overlay,.pisti-result-overlay,.university-result-overlay,.okey-result-overlay),:is(.word-result-overlay,.batak-result-overlay,.pisti-result-overlay,.university-result-overlay,.okey-result-overlay) *{animation:none!important}}
 :is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel)>header{display:block!important;height:auto!important;width:100%!important;opacity:1!important;visibility:visible!important;transform:none!important}
 :is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel) h2{display:block!important;height:auto!important;visibility:visible!important;line-height:1.2!important}
 :is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel) h2{position:static!important;inset:auto!important;transform:none!important;width:auto!important}
+=======
+@media(prefers-reduced-motion:reduce){:is(.word-result-overlay,.batak-result-overlay,.pisti-result-overlay,.university-result-overlay,.okey-result-overlay),:is(.word-result-overlay,.batak-result-overlay,.pisti-result-overlay,.university-result-overlay,.okey-result-overlay) *{animation:none!important}}
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel)>header{display:block!important;height:auto!important;width:100%!important;opacity:1!important;visibility:visible!important;transform:none!important}
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel) h2{display:block!important;height:auto!important;visibility:visible!important;line-height:1.2!important}
+:is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel) h2{position:static!important;inset:auto!important;transform:none!important;width:auto!important}
+>>>>>>> origin/main
 .match-ending-intro>section[hidden]{display:none!important}
 .match-ending-notice{font-family:Arial,sans-serif;font-weight:900;font-style:italic;font-size:clamp(40px,8vw,90px);color:#e8f8ff;letter-spacing:2px;text-align:center;text-shadow:0 0 8px #bfefff,0 0 26px #5eacff,0 0 65px #3983db;animation:match-ending-announcement 1.8s ease both;pointer-events:none}
 .match-ending-notice.victory{color:#fff0bc;text-shadow:0 0 8px #ffedb5,0 0 26px #e7b547,0 0 65px #bc8b22}
 @keyframes match-ending-announcement{0%{opacity:0;transform:scale(1.35);filter:blur(8px)}20%,75%{opacity:1;transform:scale(1);filter:blur(0)}100%{opacity:0;transform:scale(.94)}}
+<<<<<<< HEAD
 @media(prefers-reduced-motion:reduce){.match-ending-notice{animation:none!important}}
+=======
+@media(prefers-reduced-motion:reduce){.match-ending-notice{animation:none!important}}
+>>>>>>> origin/main
 /* Keep entrance transforms out of the panel's scrollable area. */
 :is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel){overflow-x:hidden!important;overflow-y:auto!important;min-width:0!important}
 :is(.word-result-players,.batak-result-columns,.pisti-result-columns,.university-result-teams,.okey-result-rows){overflow:clip!important;flex-shrink:0!important;min-width:0!important;padding:3px!important;box-sizing:border-box!important}
@@ -50,7 +61,11 @@
 :is(.word-result-player,.batak-result-columns>article,.pisti-result-columns>article,.university-result-teams>article,.okey-result-row) output{font-size:20px!important}
 .word-result-avatar,.result-avatar{width:25px!important;height:25px!important}
 :is(.word-result-board,.batak-result-board,.pisti-result-board,.university-result-board,.okey-result-panel)>footer button{height:29px!important;font-size:12px!important;min-width:110px!important}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/main
 
 .match-coin-result{margin:12px auto;padding:10px 14px;border-radius:10px;background:#142b24;color:#b8f7cf;font-weight:800;text-align:center;font-size:clamp(14px,3vw,20px)}
 .match-coin-result.loss{background:#40231e;color:#ffcfbb}.match-coin-result.refund{background:#30302c;color:#f5e4af}

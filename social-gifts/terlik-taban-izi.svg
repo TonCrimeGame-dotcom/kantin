@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 420" role="img" aria-label="Terlik taban izi">
+  <defs>
+    <filter id="rough" x="-15%" y="-10%" width="130%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="17" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4"/>
+    </filter>
+    <clipPath id="sole"><path d="M119 13C57 12 31 59 29 120c-2 48 9 86 14 128 5 43-6 79 4 113 11 38 39 51 73 47 43-5 66-28 72-65 7-42-7-78-2-122 5-46 22-85 14-131-9-52-34-76-85-77z"/></clipPath>
+  </defs>
+  <g filter="url(#rough)" opacity=".86">
+    <path fill="#402318" d="M119 13C57 12 31 59 29 120c-2 48 9 86 14 128 5 43-6 79 4 113 11 38 39 51 73 47 43-5 66-28 72-65 7-42-7-78-2-122 5-46 22-85 14-131-9-52-34-76-85-77z"/>
+    <g clip-path="url(#sole)" fill="none" stroke="#b97643" stroke-width="10" opacity=".66">
+      <path d="M20 72l199 55M17 112l199 55M18 157l195 54M23 202l185 52M30 248l170 48M36 297l158 44M44 345l140 39"/>
+      <path d="M64 18l-23 372M108 12L85 411M153 17l-20 393M194 42l-18 341" stroke-width="5" opacity=".48"/>
+      <path d="M39 88l173-22M32 181l179-18M37 276l164-21M47 365l132-20" stroke-width="4" opacity=".42"/>
+    </g>
+    <path d="M119 25C67 24 46 63 44 121c-1 44 9 83 14 126 5 45-5 76 3 105 7 26 26 39 57 36 34-4 52-22 58-51 7-37-7-76-2-118 5-46 20-83 14-126-7-45-27-67-69-68z" fill="none" stroke="#1d100c" stroke-width="8" opacity=".8"/>
+  </g>
+</svg>

@@ -39,4 +39,8 @@
     },remaining);
   }
   root.KANTIN_GAME_RESULTS={install,installCoins};
+<<<<<<< HEAD
 })(window);
+=======
+})(window);
+>>>>>>> origin/main

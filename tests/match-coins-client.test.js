@@ -16,4 +16,8 @@ console.log('✓ HTTP wallet updates, loss results and duplicate polling');
  const economy=context.window.KANTIN_ECONOMY;await economy.ready;
  economy.applyWallet({balance:3000,version:4});economy.applyWallet({balance:2000,version:3});assert.equal(economy.balance,3000);economy.applyWallet({balance:1500,version:5});assert.equal(economy.balance,1500);
  console.log('✓ Older wallet responses cannot undo a newer balance');
+<<<<<<< HEAD
 })().catch(error=>{console.error(error);process.exitCode=1});
+=======
+})().catch(error=>{console.error(error);process.exitCode=1});
+>>>>>>> origin/main

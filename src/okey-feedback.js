@@ -22,4 +22,8 @@
  KANTIN_MATCH.addEventListener('game:settled',clear);
  KANTIN_MATCH.addEventListener('error',clear);
  new MutationObserver(()=>{if(flight&&!document.querySelector('.okey-table-screen'))clear()}).observe(document.getElementById('screen'),{childList:true});
+<<<<<<< HEAD
 })();
+=======
+})();
+>>>>>>> origin/main

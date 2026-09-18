@@ -7,4 +7,8 @@ const context={KANTIN_AVATAR_UNLOCKS:unlocks,AVATAR_OPTIONS:unlocks.avatars,esc:
 assert.equal((context.avatarPicker('',1).match(/ disabled /g)||[]).length,12);
 assert.equal((context.avatarPicker('',4).match(/ disabled /g)||[]).length,10);
 assert.match(src,/closest\('button\[data-profile-tab\]'\)/);
+<<<<<<< HEAD
 console.log('Avatar locks: levels 1–25, disabled picker, and profile close routing passed.');
+=======
+console.log('Avatar locks: levels 1–25, disabled picker, and profile close routing passed.');
+>>>>>>> origin/main
