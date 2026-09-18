@@ -1,0 +1,296 @@
+
+> kantin-oyunlari@0.1.0 test
+> node tests/engine.test.js && node tests/batak.test.js && node tests/batak-animation.test.js && node tests/okey-gestures.test.js && node tests/sozcuk.test.js && node tests/matchmaker.test.js && node tests/user-registry.test.js && node tests/avatar-unlocks.test.js && node tests/game-room.test.js && node tests/tournament.test.js && node tests/mission.test.js && node tests/private-room.test.js && node tests/distributed-match.test.js && node tests/match-coins-client.test.js && node tests/match-coins-postgres.test.js && node tests/health.test.js && node tests/config.test.js && node tests/auth-client.test.js && node tests/economy-schema.test.js && node tests/rewarded-ads.test.js && node tests/admin-console.test.js && node tests/localization.test.js && node tests/branding.test.js && node tests/asset-loader.test.js && node --check api/admin.js && node --check server/api-lib/admin-auth.js && node --check api/match.js && node --check api/tournament.js && node --check api/missions.js && node --check api/friends.js && node --check api/private-rooms.js && node --check server/api-lib/match-service.js && node --check server/tournament-manager.js && node --check server/mission-manager.js && node --check server/private-room-manager.js && node --check src/locales.js && node --check src/i18n.js && node --check src/auth-client.js && node --check src/economy-client.js && node --check src/rewarded-ads.js && node --check src/admin.js && node --check src/match-client.js && node --check src/asset-manifest.js && node --check src/asset-loader.js && node --check src/telegram-shell.js && node --check src/audio.js && node --check src/batak.js && node --check src/player-profile.js && node --check src/app.js
+
+✓ Normal Okey 15/14 taş dağıtır ve 48 taş ortada bırakır
+✓ Normal Okey seri, renk grubu, 12-13-1 ve yedi çift bitişlerini tanır
+✓ Normal Okey yalnız geçerli 14 taş kaldığında eli bitirir
+✓ Standart tavla 24 hane ve 15’er pul ile başlar
+✓ Başlangıçta büyük tek zarı atan oyuncu başlar
+✓ Katlama hakkı başlangıç kazananından kabul eden rakibe geçer
+✓ Katlamayı reddeden oyuncu mevcut bahis değeriyle hükmen kaybeder
+✓ İkinci 20 saniye ihlali hükmen mağlubiyet durumuna çevrilebilir
+✓ Farklı zarlar oynanabildiğinde oyuncu istediği sıradan başlayabilir
+✓ İki zar ara hane açıksa tek toplam hamlede kullanılabilir
+✓ Tüm pullar evdeyken pul yan cebe toplanabilir
+✓ Çift zar dört hamle üretir ve zar yüzleri 1–6 ile sınırlıdır
+✓ Standart tavlada zarlar tamamlanınca sıra rakibe geçer
+✓ Kırılan tavla pulu bara gider ve bardan yeniden oyuna girer
+✓ Üniversite Tavlası aynı zarı iki bağımsız tahtaya yollar
+✓ Üniversite overlay görünümü ana ve eş tahtasını 24 hane döndürür
+✓ Pişti 52 benzersiz kart kullanır ve oyuncuya yalnız kendi elini açar
+✓ Pişti eşli oturma sırası A-B-A-B şeklindedir
+✓ Pişti sıra dışı ve art arda kart atışını reddeder
+✓ Pişti blöf kararı beklerken yeni kart oynatmaz
+✓ Vale yalnız tek Valeyi alınca 20 puanlık Vale piştisi yapar
+✓ Blöflü Pişti kapalı kartı rakip state’ine sızdırmaz
+✓ Blöf kabul edilirse 10, doğru açılırsa 20, yakalanırsa rakibe 10 puan yazar
+✓ 101 seti 106 benzersiz taş, 22/21 başlangıç dağılımı üretir
+✓ 101 istemci durumu rakip ellerini sızdırmaz
+✓ 101 atılan taşları oyuncunun masa yönünde ayrı tutar
+✓ 101 katlamalı açılış hedefi masadaki en yüksek açılıştan bir fazladır
+✓ 101 ıstaka sayacı yalnız birbiriyle çakışmayan geçerli perleri toplar
+✓ Sahte okey gerçek okeyin renk ve sayısıyla normal taş sayılır
+✓ Sahte okey seri açıldıktan sonra yeni grupta kullanılabilir
+✓ Gerçek okey istenen seri ve çifti joker olarak tamamlar
+✓ 101 masa sırası P1 → P2 ilerler
+✓ 101 yeni elde başlama hakkını P2 oyuncusuna geçirir
+✓ Katlamalı seri ve çift barajları birbirinden bağımsız ilerler
+✓ Katlamalı çift açılışı önceki çiftten bir fazla ister
+✓ Eksik katlamalı çift açma girişimi 101 ceza yazar
+✓ Seri açmış oyuncu sonraki turda barajsız yeni per koyabilir
+✓ Seri açan oyuncu masadaki çift alanına yeni çift işleyebilir
+✓ Taş işle komutu masadaki çift alanına uygun çifti otomatik işler
+✓ Çift açan oyuncu serilere bir turda en fazla iki taş işler
+✓ Açmış oyuncu gerçek karşılığını koyarak masadaki okeyi alır
+✓ Normal 101 puanlaması açmayanı 202, çift açanı iki kat yazar
+✓ Elde kalan gerçek okey taş başına 101 ceza değerindedir
+✓ Elden okey bitişi cezaları dört katına çıkarır
+✓ Eşli 101’de bitiren oyuncunun eşinin el sonu cezası silinir
+✓ Okeyi normal taş gibi atmak 101 ceza oluşturur
+✓ Masadaki pere işleyen taşı atmak 101 ceza oluşturur
+✓ İşlenebilen taş listesi yalnızca bu turda masadaki pere eklenebilen taşları verir
+✓ Masaya bütün taşları işleyip bitmek yerine son atış taşı bırakılır
+✓ Taşlar bitince açmamış oyuncuya sabit 202 yazılır
+✓ Taşlar bitince açmış oyunculardan elde en az toplamı kalan kazanır
+✓ 101’de 12-13-1 dizilimi geçersizdir
+✓ Yandan alınan taş kullanılmadan başka taş atılamaz fakat aynı taş normal atılabilir
+✓ Yandan alınan taş kaynağına geri bırakılınca sıra oyuncuda kalır
+✓ Çiftten bitiş rakip cezalarını iki katına çıkarır
+✓ Dört oyuncu da çift açarsa el puansız iptal edilir
+✓ Sözcük Kapışması dört bireysel oyuncuyla başlar ve sırayı saat yönünde ilerletir
+✓ Üniversite tavlasında girilemeyen kırık pul iki eşi de durdurur
+✓ Kırık pul bir zarla girebiliyorsa eşin oynaması engellenmez
+✓ Koz Maça 13 kart dağıtır, kozu maçaya sabitler ve tahmin aşamasıyla başlar
+✓ Eldeki kartlar renklere ayrılmış ve büyükten küçüğe sabit dizilir
+✓ Koz Maça dört oyuncunun bağımsız tahmini bitince kart oyununa geçer
+✓ Tamamlanan dört kartlık el, sonraki kart oynanana kadar masada tutulur
+✓ Gömmeli Batak 16 kart ve kapalı dört kartlık gömü dağıtır
+✓ Gömmeli ihale yükselir; kazanan önce koz seçer, gömüyü alır ve dört kart gömer
+✓ Herkes pas derse mecburcuya ihale 4 kalır
+✓ Renge uyan oyuncu mümkünse yükseltmek zorundadır
+✓ Renk yoksa koz atılır; kesilmiş elde küçük koz da oynanabilir
+✓ Koz kırılmadan kozla çıkılamaz; elde yalnız koz varsa çıkılabilir
+✓ Koz Maça puanlaması eksik, üç fazla ve El Almaz durumlarını uygular
+✓ Gömmeli puanlaması ihaleci ve sıfır el alan rakibi batırır
+✓ Oyuncu durumu yalnız kendi kartlarını içerir
+✓ Gömmeli üç oyuncuyla 16 eli bitirir; alınan kartlar açık, gömülenler gizlidir
+✓ Gömmeli koz kırılmadan kozla çıkabilir; renge uyma zorunluluğu sürer
+✓ Koz Maça açarın iki fazlasına kadar kabul eder, üç ve üzeri fazlada batırır
+✓ Gömmeli açık dört kart yalnız gömme onayında seçilen dört kartla takas edilir
+✓ Bütün Batak elleri maça kupa sinek karo sırasındadır
+✓ Her iki modda yükseltme zorunlu; yalnız başka renk kozla kesilince serbest
+✓ İki modda yerde en yüksek kart varsa veya elde daha büyüğü yoksa küçük kart serbesttir
+✓ 3 deyip 3 alan, 3 deyip 7 alan oyuncuyu yener
+✓ Koz Maça eksik ve üç fazla alanlar en yüksek ihale kadar batar
+✓ Higher fulfilled bid wins: 4/4 scores 40 while 3/4 scores 31
+Batak scene: each played card stays visible in local and online games.
+Batak collection: final-flight ordering, bottom-center destination, fade and cleanup passed.
+Batak animation: hand center, opponent fan, image readiness and cancellation passed.
+Okey gestures: local/online double taps, native double-click, selection, turn changes and discard guards passed.
+✔ Sözcük Kapışması 15x15 tahta ve yedişer taşla başlar (206.1122ms)
+✔ yedi harfin tamamı oynanınca 50 puan bonus gelir (186.7657ms)
+✔ harf değiştirmek puan getirmez ve sırayı geçirir (185.4868ms)
+✔ sekiz ardışık pas dört kişilik oyunu bitirip elde kalan puanları düşürür (183.2148ms)
+✔ ilk sözcük merkezden geçer ve puanlanır (184.0389ms)
+✔ ana veya çapraz sözcük sözlükte yoksa hamle reddedilir (185.7017ms)
+✔ aynı hamlede çapraz konuma taş bırakılamaz (183.4811ms)
+✔ ana kelimeden boşlukla ayrılan taş hamleye sızamaz (180.7445ms)
+✔ günlük kullanım sözlüğündeki TİREN kabul edilir (190.5743ms)
+✔ aynı sözcük tek hamlede iki kez puanlanmaz (182.6024ms)
+✔ sırası olmayan oyuncu taş koyamaz (186.6848ms)
+✔ tahtaya geçici konan harf ıstakada ikinci kez görünmez (182.8775ms)
+✔ tek harf eklemesi yalnız yatay ve dikey kelimeleri tarar (1.2966ms)
+✔ Arapça yatay sağdan sola, dikey yukarıdan aşağı okunur (1.8081ms)
+✔ Arapça çapraz taş yerleşimi de reddedilir (0.5464ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2248.2952
+✓ Modların doğru oyuncu kapasitesi vardır
+✓ Normal Okey kendi dört kişilik kuyruğunda eşleşir
+✓ Sözcük Kapışması dört bağımsız koltukla eşleşir
+✓ İki kişilik kuyruk eşleşme ve benzersiz koltuk üretir
+✓ Eşli kuyruk A-B-A-B takım koltukları atar
+✓ Aynı oyuncu ikinci kuyruğa geçtiğinde eski bileti temizlenir
+✓ Ayrılan oyuncu kuyruktan ve indeksten silinir
+✓ Rakip bulunamazsa 3–4 saniye sonra botlar birer saniye arayla gelir
+✓ Batak modları kendi oyuncu sayısına göre bireysel P koltuğu üretir
+✓ Her kullanıcı kalıcı KNT kimliği ve oturum anahtarı alır
+✓ Arkadaş isteği kabul edilmeden arkadaş listesine girmez
+✓ Kendini ekleme ve yinelenen istek engellenir
+✓ Herkese açık profil tamamlanmış maç istatistiklerini hesaplar
+✓ Bot profili gerçek misafir adı, seviye, kategori ve kalıcı maç istatistiği taşır
+✓ Avatar seviyesi sunucuda doğrulanır ve açılan avatar kalıcıdır
+✓ Coin sonucu kazanana net kazanç, kaybedene tekrar kesmeden net kayıp döndürür
+Avatar locks: levels 1–25, disabled picker, and profile close routing passed.
+✓ GameRoom Tavla başlangıcında iki oyuncuya tek zar attırır
+✓ GameRoom katlama teklifini yalnız hak sahibinden kabul eder
+✓ GameRoom ilk süre ihlalinde turu botla oynar, ikincide hükmen bitirir
+✓ Eski turnId reddedilir, aynı actionId ikinci kez uygulanmaz
+✓ Üniversite Tavlası sunucuda aynı zarı iki boarda yollar
+✓ Üniversite Tavlası beş oyun sürer ve zar atan tavlayı oyunlar arasında değiştirir
+✓ Üniversite Tavlası ortak tur kapanınca rakip takımın zarını kabul eder
+✓ Üniversite Tavlasında hiç pul toplayamayan oyuncu MARS olur ve 2 sayı kaybeder
+✓ Pişti oyuncu state’i rakip ellerini içermez
+✓ Koz Maça sunucuda dört tahmini işler ve rakip ellerini gizler
+✓ Batak insan oyuncu sırası sunucuda 15 saniye sürer
+✓ Normal Okey insan oyuncu sırası sunucuda 15 saniye sürer
+✓ İYİ Pişti botu masadaki kartı alabilen hamleyi seçer
+✓ Pişti botu bekleyen blöf kararını kart oynamadan çözer
+✓ Yeni bot turu önceki oyuncunun son saniyesini devralmaz
+✓ Aktif maçtan çıkan oyuncunun koltuğunu bot devralır ve yeni kuyruğa girebilir
+✓ Üniversite Tavlasında bot eş ortak zarla kendi tahtasında oynar
+✓ 101 oyuncu state’i yalnız kendi elini içerir
+✓ Normal Okey sunucu odası 15/14 dağıtır ve elleri gizler
+✓ 101 geri bırak aksiyonu taşı kaynağına koyar ve sırayı değiştirmez
+✓ Sözcük dört kişilik bireysel sırada ilerler ve süre dolunca pas geçer
+✓ Aktif oda state ve turn sürümü SQLite üzerinden geri yüklenir
+✓ Okey zaman aşımı kullanılması zorunlu yer taşını geri bırakır ve masayı kilitlemez
+✓ Tüm Okey modlarında rakip botun tur süresi 15 saniyedir
+✓ Turnuva kaydı, yarı final, final ve şampiyon ödülü tamamlanır
+✓ Başlamamış turnuva kaydı iptal edilince ücret iade edilir
+✓ Supabase turnuva şeması kayıt, ilerleme ve ödül RPC’lerini içerir
+✓ Görev ilerlemesi maç, arkadaş ve reklam kayıtlarından authoritative hesaplanır
+✓ Supabase görev ödülleri ve arkadaş davetleri servis rolüyle doğrulanır
+✓ İki kişilik özel masa davet kabul edilince otomatik başlar
+✓ Dört kişilik Batak özel masası doğru bireysel koltuklarla başlar
+✓ Sözcük dili sabitlenir; yabancı daveti engellenir ve masa kapatılabilir
+✓ Supabase özel masa şeması tüm oyunları, arkadaş kontrolünü ve maç başlangıcını içerir
+✓ Yerel misafir için imzalı ve kararlı eşleşme kimliği üretir
+✓ Maç paketi yalnız ilgili oyuncunun özel durumunu döndürür
+✓ Sunucusuz geri yükleme süre ihlali ve bot devrini korur
+✓ Migration ortak kuyruk ve iyimser maç kilidini içerir
+✓ Bot migration kalıcı profilleri ve kademeli kuyruk dolumunu içerir
+✓ Bot profil istatistiği galibiyet ve mod sayılarını hesaplar
+✓ HTTP wallet updates, loss results and duplicate polling
+✓ Older wallet responses cannot undo a newer balance
+✓ Win/loss, atomic entry, duplicate result and result immutability
+✓ Draw refunds and losing to a bot
+✓ Team payouts and multiple winners split the pot
+✓ Insufficient funds roll back all entry fees
+✓ Separate stake queues and bot backfill charge the correct fee
+✔ health endpoint eksik Supabase ayarinda 503 doner (1.4984ms)
+✔ health endpoint Supabase RPC basarisini raporlar ve anahtari sizdirmaz (0.4411ms)
+✔ health endpoint yalnizca GET kabul eder (0.1258ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7.5877
+✔ public config sadece tarayiciya uygun Supabase ayarlarini dondurur (1.0823ms)
+✔ public config eksik ayarda 503 dondurur (0.7191ms)
+✔ public config sadece GET kabul eder (0.1249ms)
+✔ Vercel Hobby dagitimi en fazla 12 API fonksiyonu olusturur (0.5247ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8.8226
+✔ Supabase yokken misafir girisi cihaza kaydolur ve acilis ekranini gecer (4.9651ms)
+✔ ayni cihaz sayfa yenilenince ayni misafir profiline otomatik girer (1.8272ms)
+✔ misafir kullanici istemci uzerinden adini degistiremez (1.4734ms)
+✔ yerel yedek misafir Supabase duzelince ayni acilista bulut oturumuna yukselir (2.4372ms)
+✔ yerel misafir arkadas masasi acarken sayfa yenilemeden bulut oturumuna yukselir (1.6671ms)
+✔ ana tiklama isleyicisi ceviri fonksiyonunu yerel tas degiskeniyle golgelemez (0.235ms)
+✔ oda kapsayicisinin veri alanlari ic dugmelerin tiklamalarini yutmaz (0.3329ms)
+✔ profil penceresi kaydirmak yerine bolum sekmeleri kullanir (0.2194ms)
+✔ yerel arkadas masasi REST yerine hazir WebSocket kimligini kullanir (0.1349ms)
+✔ anonim Supabase kaydi eski cihaz profiliyle cakissa bile Auth islemini dusurmez (0.2245ms)
+✔ misafir adi veritabaninda da kalici hesaba gecene kadar kilitlidir (0.1837ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21.3274
+✔ ekonomi semasi mevcut profil bakiyelerini kaybetmeden cuzdanlara tasir (1.0241ms)
+✔ coin islemleri degistirilemez ve idempotenttir (0.1866ms)
+✔ istemci cuzdan bakiyesine dogrudan yazamaz (0.2812ms)
+✔ gunluk odul Istanbul gununde bir kez verilir (0.1836ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7.2227
+✔ reklam oturumlari kullanicidan gizli yazma yetkisi ve tekil saglayici islemi kullanir (1.2066ms)
+✔ coin sadece service role reklam dogrulamasindan idempotent deftere gider (0.2687ms)
+✔ gunluk limit ve bekleme suresi sunucuda uygulanir (0.1894ms)
+✔ istemci dogrudan coin yazmak yerine reklam oturumu ve durum RPClerini kullanir (0.1701ms)
+✔ AdMob callback imzasi ham sorgu sirasi bozulmadan ECDSA ile dogrulanir (3.486ms)
+✔ AdMob imza ve anahtar parametreleri sonda ve dogru sirada olmalidir (0.4804ms)
+✔ AdMob sunucusu yeni Supabase secret anahtarini ve Android kimliklerini destekler (0.1764ms)
+✔ AdMob SSV kurulum testi coin vermeden dogrulanir ve sayisal reklam birimini kabul eder (1.1197ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12.6391
+✔ admin tabloları istemciye kapalı ve audit kaydı değiştirilemezdir (1.0344ms)
+✔ ilk yönetici yalnız doğrulanmış kalıcı hesap ve service role ile oluşturulur (0.233ms)
+✔ manuel coin işlemi rol kontrolü, idempotency ve açıklamalı audit kullanır (0.1915ms)
+✔ reklam politikası güvenli sunucu fonksiyonundan ve sınırlarla güncellenir (0.1903ms)
+✔ admin özeti ödüllü reklam tablosunun gerçek coin alanını kullanır (0.1527ms)
+✔ admin API bearer oturumu, same-origin yazma ve yetenek kontrolü uygular (0.1438ms)
+✔ admin sayfası indekslenmez, frame içine alınmaz ve gizli anahtar içermez (0.4999ms)
+✔ admin API desteklenmeyen yöntemi Supabase çağrısı yapmadan reddeder (6.7954ms)
+✔ operasyon paneli kuyruk ve maç yönetimini sunucuda yetkilendirip denetler (0.333ms)
+✔ moderasyon engelleri RLS ile kapalıdır ve eşleşme katılımında uygulanır (0.3573ms)
+✔ ekonomi siparişleri, içerik ve yönetici rolleri audit kayıtlı servis işlemleridir (0.5055ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17.1146
+✔ ilk surumde yedi dil ve Almanca paketi bulunur (3.3977ms)
+✔ Pisti adi Turkcede korunur ve yabanci dillerde Pishti olur (1.3636ms)
+✔ her dil Ingilizce temel arayuz anahtarlarini kapsar (2.0519ms)
+✔ istemci Ingilizce geri donusu, Telegram dili ve RTL uygular (0.153ms)
+✔ dil tercihi profile baglanir ve mevsimsel metinler sunucudan yonetilebilir (0.195ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12.4964
+✔ yeni Kantin logosu saydam PNG olarak tum marka alanlarina baglidir (2.1394ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7.3194
+✔ acilis indirme ekrani tum kullanilan web gorsellerini onbellege alir (12.1779ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16.9785

@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');const unlocks=require('../src/avatar-unlocks.js');
+assert.equal(unlocks.avatars.length,12);
+for(let level=1;level<=25;level++)assert.equal(unlocks.avatars.filter(a=>unlocks.canSelect(a.image,level)).length,Math.min(12,Math.floor(level/2)));
+for(const avatar of unlocks.avatars)assert.ok(fs.existsSync(avatar.image));
+const src=fs.readFileSync('src/app.js','utf8');const picker=src.slice(src.indexOf('  function avatarPicker('),src.indexOf('\n',src.indexOf('  function avatarPicker(')));
+const context={KANTIN_AVATAR_UNLOCKS:unlocks,AVATAR_OPTIONS:unlocks.avatars,esc:String};vm.createContext(context);vm.runInContext(picker,context);
+assert.equal((context.avatarPicker('',1).match(/ disabled /g)||[]).length,12);
+assert.equal((context.avatarPicker('',4).match(/ disabled /g)||[]).length,10);
+assert.match(src,/closest\('button\[data-profile-tab\]'\)/);
+console.log('Avatar locks: levels 1–25, disabled picker, and profile close routing passed.');
