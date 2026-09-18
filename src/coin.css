@@ -1,0 +1,11 @@
+.coin-icon{width:1.15em;height:1.15em;display:inline-block;flex:0 0 auto;object-fit:contain;vertical-align:-.2em;filter:drop-shadow(0 2px 3px #0007)}
+.wallet strong,.room-balance{display:flex;align-items:center;gap:6px}
+.wallet .coin-icon{width:22px;height:22px}
+.room-balance .coin-icon{width:25px;height:25px}
+.stake-card>span .coin-icon{width:clamp(28px,3vw,44px);height:clamp(28px,3vw,44px)}
+.match-coin-hud{position:fixed;z-index:19;right:14px;top:78px;min-width:118px;padding:7px 11px;border:1px solid #e8bd5a99;border-radius:12px;background:linear-gradient(145deg,#26190eee,#100b08ee);box-shadow:0 7px 20px #0009;color:#f8df92;text-align:right;pointer-events:none}
+.match-coin-hud span{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.match-coin-hud .coin-icon{width:22px;height:22px}
+.match-coin-hud b{font:900 18px Georgia,serif}
+.match-coin-hud small{display:block;margin-top:2px;color:#bda981;font-size:8px;font-weight:900;letter-spacing:.06em}
+@media(orientation:landscape) and (max-height:560px){.match-coin-hud{right:8px;top:8px;min-width:94px;padding:4px 7px}.match-coin-hud .coin-icon{width:16px;height:16px}.match-coin-hud b{font-size:13px}.match-coin-hud small{font-size:6px}}

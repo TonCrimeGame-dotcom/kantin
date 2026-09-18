@@ -1,0 +1,11 @@
+/* Shared generated artwork keeps hand, table and flight faces identical. */
+img[src*="cards-readable/"]{background-image:url('../assets/games/pisti/cards-readable/parchment-atlas.webp');background-size:400% 200%;background-repeat:no-repeat;--face-x:0%;--face-y:0%;background-position:var(--face-x) var(--face-y)}
+img[src*="cards-readable/"][src*="_hearts.svg"]{--face-x:33.333333%}
+img[src*="cards-readable/"][src*="_clubs.svg"]{--face-x:66.666667%}
+img[src*="cards-readable/"][src*="_diamonds.svg"]{--face-x:100%}
+img[src*="cards-readable/"]:is([src*="/j_"],[src*="/q_"],[src*="/k_"]){--face-y:100%}
+
+img[src*="cards-readable/"][src*="/j_"]{background-image:url("../assets/games/pisti/cards-readable/jack-atlas.webp")}
+
+img[src*="cards-readable/"]:is([src*="/q_"],[src*="/k_"]){background-image:url("../assets/games/pisti/cards-readable/royal-atlas.webp")}
+img[src*="cards-readable/"][src*="/q_"]{--face-y:0%}
