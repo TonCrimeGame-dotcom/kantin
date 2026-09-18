@@ -58,6 +58,11 @@
     return audio;
   }
 
+  function markMissing(audio) {
+    audio.dataset.kantinMissing = 'true';
+    return audio;
+  }
+
   function play(name, options = {}) {
     if (!enabled) return Promise.resolve(false);
     const now = performance.now();
@@ -67,10 +72,15 @@
     if (!file) return Promise.resolve(false);
     lastPlayedAt.set(name, now);
     const audio = channelFor(file);
+    if (audio.dataset.kantinMissing === 'true') return Promise.resolve(false);
     audio.currentTime = 0;
     audio.volume = Math.max(0, Math.min(1, (defaultVolume[name] ?? .5) * (options.volume ?? 1)));
     audio.playbackRate = Math.max(.72, Math.min(1.3, options.rate ?? 1));
-    return audio.play().then(() => true).catch(() => false);
+    return audio.play().then(() => true).catch(error => {
+      const unsupportedCode = typeof MediaError !== 'undefined' ? MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED : 3;
+      if (error?.name === 'NotSupportedError' || audio.error?.code === unsupportedCode) markMissing(audio);
+      return false;
+    });
   }
 
   function setEnabled(value) {
